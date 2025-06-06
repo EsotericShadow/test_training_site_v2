@@ -1,21 +1,6 @@
-const sqlite3 = require('sqlite3').verbose();
-const path = require('path');
-
-// Database connection
-const dbPath = path.join(process.cwd(), 'karma_cms.db');
-const db = new sqlite3.Database(dbPath);
+import { sql } from '@vercel/postgres';
 
 console.log('🚀 Starting content migration...');
-
-// Promisify database operations
-const dbRun = (sql, params = []) => {
-  return new Promise((resolve, reject) => {
-    db.run(sql, params, function(err) {
-      if (err) reject(err);
-      else resolve({ id: this.lastID, changes: this.changes });
-    });
-  });
-};
 
 // Company Information Data
 const companyInfo = {
@@ -129,7 +114,7 @@ const courseCategories = [
   { name: 'Heavy Equipment', description: 'Heavy machinery operation', display_order: 14 }
 ];
 
-// Courses Data (from the course detail page)
+// Courses Data
 const courses = [
   {
     slug: 'kist-orientation',
@@ -277,12 +262,18 @@ const courses = [
 async function migrateCompanyInfo() {
   console.log('📊 Migrating company information...');
   
-  const sql = `INSERT OR REPLACE INTO company_info 
+  const sqlQuery = `
+    INSERT INTO company_info 
     (id, company_name, slogan, description, mission, total_experience, 
      students_trained_count, established_year, total_courses, updated_at)
-    VALUES (1, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)`;
+    VALUES (1, $1, $2, $3, $4, $5, $6, $7, $8, CURRENT_TIMESTAMP)
+    ON CONFLICT (id) DO UPDATE SET
+    company_name = $1, slogan = $2, description = $3, mission = $4,
+    total_experience = $5, students_trained_count = $6, 
+    established_year = $7, total_courses = $8, updated_at = CURRENT_TIMESTAMP
+  `;
   
-  await dbRun(sql, [
+  await sql.query(sqlQuery, [
     companyInfo.company_name, companyInfo.slogan, companyInfo.description, 
     companyInfo.mission, companyInfo.total_experience, companyInfo.students_trained_count,
     companyInfo.established_year, companyInfo.total_courses
@@ -294,14 +285,13 @@ async function migrateCompanyInfo() {
 async function migrateCompanyValues() {
   console.log('💎 Migrating company values...');
   
-  // Clear existing values
-  await dbRun('DELETE FROM company_values');
+  await sql`DELETE FROM company_values`;
   
   for (const value of companyValues) {
-    await dbRun(
-      'INSERT INTO company_values (title, description, icon, display_order) VALUES (?, ?, ?, ?)',
-      [value.title, value.description, value.icon, value.display_order]
-    );
+    await sql`
+      INSERT INTO company_values (title, description, icon, display_order)
+      VALUES (${value.title}, ${value.description}, ${value.icon}, ${value.display_order})
+    `;
   }
   
   console.log(`✅ ${companyValues.length} company values migrated`);
@@ -310,14 +300,13 @@ async function migrateCompanyValues() {
 async function migrateWhyChooseUs() {
   console.log('🎯 Migrating why choose us points...');
   
-  // Clear existing points
-  await dbRun('DELETE FROM company_why_choose_us');
+  await sql`DELETE FROM company_why_choose_us`;
   
   for (const item of whyChooseUs) {
-    await dbRun(
-      'INSERT INTO company_why_choose_us (point, display_order) VALUES (?, ?)',
-      [item.point, item.display_order]
-    );
+    await sql`
+      INSERT INTO company_why_choose_us (point, display_order)
+      VALUES (${item.point}, ${item.display_order})
+    `;
   }
   
   console.log(`✅ ${whyChooseUs.length} why choose us points migrated`);
@@ -326,17 +315,15 @@ async function migrateWhyChooseUs() {
 async function migrateTeamMembers() {
   console.log('👥 Migrating team members...');
   
-  // Clear existing team members
-  await dbRun('DELETE FROM team_members');
+  await sql`DELETE FROM team_members`;
   
   for (const member of teamMembers) {
-    await dbRun(
-      `INSERT INTO team_members 
-       (name, role, bio, experience_years, specializations, featured, display_order)
-       VALUES (?, ?, ?, ?, ?, ?, ?)`,
-      [member.name, member.role, member.bio, member.experience_years, 
-       member.specializations, member.featured, member.display_order]
-    );
+    await sql`
+      INSERT INTO team_members 
+      (name, role, bio, experience_years, specializations, featured, display_order)
+      VALUES (${member.name}, ${member.role}, ${member.bio}, ${member.experience_years}, 
+              ${member.specializations}, ${member.featured}, ${member.display_order})
+    `;
   }
   
   console.log(`✅ ${teamMembers.length} team members migrated`);
@@ -345,17 +332,15 @@ async function migrateTeamMembers() {
 async function migrateTestimonials() {
   console.log('💬 Migrating testimonials...');
   
-  // Clear existing testimonials
-  await dbRun('DELETE FROM testimonials');
+  await sql`DELETE FROM testimonials`;
   
   for (const testimonial of testimonials) {
-    await dbRun(
-      `INSERT INTO testimonials 
-       (client_name, client_role, company, industry, content, rating, featured)
-       VALUES (?, ?, ?, ?, ?, ?, ?)`,
-      [testimonial.client_name, testimonial.client_role, testimonial.company,
-       testimonial.industry, testimonial.content, testimonial.rating, testimonial.featured]
-    );
+    await sql`
+      INSERT INTO testimonials 
+      (client_name, client_role, company, industry, content, rating, featured)
+      VALUES (${testimonial.client_name}, ${testimonial.client_role}, ${testimonial.company},
+              ${testimonial.industry}, ${testimonial.content}, ${testimonial.rating}, ${testimonial.featured})
+    `;
   }
   
   console.log(`✅ ${testimonials.length} testimonials migrated`);
@@ -364,12 +349,19 @@ async function migrateTestimonials() {
 async function migrateHeroSection() {
   console.log('🦸 Migrating hero section...');
   
-  const sql = `INSERT OR REPLACE INTO hero_section 
+  const sqlQuery = `
+    INSERT INTO hero_section 
     (id, slogan, main_heading, highlight_text, subtitle, 
      primary_button_text, primary_button_link, secondary_button_text, secondary_button_link, updated_at)
-    VALUES (1, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)`;
+    VALUES (1, $1, $2, $3, $4, $5, $6, $7, $8, CURRENT_TIMESTAMP)
+    ON CONFLICT (id) DO UPDATE SET
+    slogan = $1, main_heading = $2, highlight_text = $3, subtitle = $4,
+    primary_button_text = $5, primary_button_link = $6,
+    secondary_button_text = $7, secondary_button_link = $8,
+    updated_at = CURRENT_TIMESTAMP
+  `;
   
-  await dbRun(sql, [
+  await sql.query(sqlQuery, [
     heroSection.slogan, heroSection.main_heading, heroSection.highlight_text, heroSection.subtitle,
     heroSection.primary_button_text, heroSection.primary_button_link,
     heroSection.secondary_button_text, heroSection.secondary_button_link
@@ -381,14 +373,13 @@ async function migrateHeroSection() {
 async function migrateHeroStats() {
   console.log('📈 Migrating hero stats...');
   
-  // Clear existing stats
-  await dbRun('DELETE FROM hero_stats');
+  await sql`DELETE FROM hero_stats`;
   
   for (const stat of heroStats) {
-    await dbRun(
-      'INSERT INTO hero_stats (number_text, label, description, display_order) VALUES (?, ?, ?, ?)',
-      [stat.number_text, stat.label, stat.description, stat.display_order]
-    );
+    await sql`
+      INSERT INTO hero_stats (number_text, label, description, display_order)
+      VALUES (${stat.number_text}, ${stat.label}, ${stat.description}, ${stat.display_order})
+    `;
   }
   
   console.log(`✅ ${heroStats.length} hero stats migrated`);
@@ -397,14 +388,13 @@ async function migrateHeroStats() {
 async function migrateHeroFeatures() {
   console.log('⭐ Migrating hero features...');
   
-  // Clear existing features
-  await dbRun('DELETE FROM hero_features');
+  await sql`DELETE FROM hero_features`;
   
   for (const feature of heroFeatures) {
-    await dbRun(
-      'INSERT INTO hero_features (title, description, display_order) VALUES (?, ?, ?)',
-      [feature.title, feature.description, feature.display_order]
-    );
+    await sql`
+      INSERT INTO hero_features (title, description, display_order)
+      VALUES (${feature.title}, ${feature.description}, ${feature.display_order})
+    `;
   }
   
   console.log(`✅ ${heroFeatures.length} hero features migrated`);
@@ -413,14 +403,13 @@ async function migrateHeroFeatures() {
 async function migrateCourseCategories() {
   console.log('📚 Migrating course categories...');
   
-  // Clear existing categories
-  await dbRun('DELETE FROM course_categories');
+  await sql`DELETE FROM course_categories`;
   
   for (const category of courseCategories) {
-    await dbRun(
-      'INSERT INTO course_categories (name, description, display_order) VALUES (?, ?, ?)',
-      [category.name, category.description, category.display_order]
-    );
+    await sql`
+      INSERT INTO course_categories (name, description, display_order)
+      VALUES (${category.name}, ${category.description}, ${category.display_order})
+    `;
   }
   
   console.log(`✅ ${courseCategories.length} course categories migrated`);
@@ -429,29 +418,23 @@ async function migrateCourseCategories() {
 async function migrateCourses() {
   console.log('🎓 Migrating courses...');
   
-  // Clear existing courses and features
-  await dbRun('DELETE FROM course_features');
-  await dbRun('DELETE FROM courses');
+  await sql`DELETE FROM course_features`;
+  await sql`DELETE FROM courses`;
   
   for (const course of courses) {
     // Get category ID
-    const category = await new Promise((resolve, reject) => {
-      db.get('SELECT id FROM course_categories WHERE name = ?', [course.category_name], (err, row) => {
-        if (err) reject(err);
-        else resolve(row);
-      });
-    });
-    
-    const categoryId = category ? category.id : null;
+    const { rows: category } = await sql`
+      SELECT id FROM course_categories WHERE name = ${course.category_name}
+    `;
+    const categoryId = category[0]?.id || null;
     
     // Insert course
-    const result = await dbRun(
-      `INSERT INTO courses 
-       (slug, title, description, duration, audience, category_id, popular, image_alt)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-      [course.slug, course.title, course.description, course.duration, 
-       course.audience, categoryId, course.popular, course.image_alt]
-    );
+    await sql`
+      INSERT INTO courses 
+      (slug, title, description, duration, audience, category_id, popular, image_alt)
+      VALUES (${course.slug}, ${course.title}, ${course.description}, ${course.duration}, 
+              ${course.audience}, ${categoryId}, ${course.popular}, ${course.image_alt})
+    `;
     
     console.log(`  ✅ Course: ${course.title}`);
   }
@@ -495,8 +478,6 @@ async function runMigration() {
     
   } catch (error) {
     console.error('❌ Migration failed:', error);
-  } finally {
-    db.close();
   }
 }
 
@@ -505,5 +486,4 @@ if (require.main === module) {
   runMigration();
 }
 
-module.exports = { runMigration };
-
+export { runMigration };
