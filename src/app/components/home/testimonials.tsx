@@ -81,7 +81,7 @@ export default function Testimonials() {
             What Our Clients Say
           </h2>
           <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
-            Hear from industry leaders who trust Karma Training for their workplace safety needs
+            Hear from industry leaders who trust Karma Training for their workplace safety needs!
           </p>
         </div>
 
