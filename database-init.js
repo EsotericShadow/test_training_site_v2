@@ -21,18 +21,19 @@ async function initializeDatabase() {
     const testResult = await pool.sql`SELECT NOW() as current_time`;
     console.log('✅ Database connection successful:', testResult.rows[0].current_time);
 
-    // Admin users table
-    await pool.sql`
-      CREATE TABLE IF NOT EXISTS admin_users (
-        id SERIAL PRIMARY KEY,
-        username TEXT UNIQUE NOT NULL,
-        password_hash TEXT NOT NULL,
-        email TEXT,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        last_login TIMESTAMP
-      )
-    `;
-    console.log('✅ admin_users table created');
+  // Admin users table
+  await pool.sql`
+    CREATE TABLE IF NOT EXISTS admin_users (
+      id SERIAL PRIMARY KEY,
+      username TEXT UNIQUE NOT NULL,
+      password_hash TEXT NOT NULL,
+      email TEXT,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      last_login TIMESTAMP,
+      token_version INTEGER DEFAULT 0
+    )
+  `;
+  console.log('✅ admin_users table created');
 
     // Admin sessions table
     await pool.sql`

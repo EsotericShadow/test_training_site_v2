@@ -79,14 +79,38 @@ export default function AdminDashboard() {
 
   const handleLogout = async () => {
     try {
-      // Fixed: Call the correct logout route
-      await fetch('/api/admin/logout', { method: 'POST' });
-      // Fixed: Redirect to /admin instead of /admin/login
-      router.push('/admin');
+      // First, fetch a CSRF token
+      const csrfResponse = await fetch('/api/admin/csrf-token');
+      const csrfData = await csrfResponse.json();
+      
+      if (!csrfResponse.ok) {
+        console.error('Failed to get CSRF token:', csrfData.error);
+        return;
+      }
+      
+      // Then, send the logout request with the CSRF token
+      const logoutResponse = await fetch('/api/admin/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          csrfToken: csrfData.csrfToken
+        }),
+      });
+      
+      if (logoutResponse.ok) {
+        // Redirect to login page
+        router.push('/admin');
+      } else {
+        const errorData = await logoutResponse.json();
+        console.error('Logout failed:', errorData.error);
+      }
     } catch (error) {
       console.error('Logout error:', error);
     }
   };
+
 
   if (loading || !authenticated) {
     return (
