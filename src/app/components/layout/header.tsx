@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Menu, X, ChevronDown, Phone, Mail, Sun, Moon } from 'lucide-react'
+import { Menu, X, ChevronDown, Phone, Mail } from 'lucide-react'
 import Logo from '../ui/Logo'
 
 const courseCategories = {
@@ -31,12 +31,6 @@ const courseCategories = {
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isCoursesOpen, setIsCoursesOpen] = useState(false)
-  const [isDarkMode, setIsDarkMode] = useState(false)
-
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode)
-    document.documentElement.classList.toggle('dark')
-  }
 
   return (
     <header className="bg-white dark:bg-black shadow-lg sticky top-0 z-50 transition-colors duration-300">
@@ -62,8 +56,8 @@ export default function Header() {
       {/* Main navigation */}
       <nav className="container mx-auto px-4 py-4">
         <div className="flex justify-between items-center">
-          {/* Logo */}
-          <Logo size="md" />
+          {/* Logo - Made much bigger and removed text */}
+          <Logo size="lg" showText={false} />
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center space-x-8">
@@ -85,11 +79,11 @@ export default function Header() {
               </button>
               
               {isCoursesOpen && (
-                <div className="absolute top-full left-0 mt-2 w-96 bg-white dark:bg-black rounded-lg shadow-xl border dark:border-gray-800 z-50">
+                <div className="absolute top-full left-0 mt-2 w-96 bg-white dark:bg-black rounded-lg shadow-xl border border-gray-200 dark:border-gray-800 z-50">
                   <div className="py-2">
                     <Link
                       href="/courses"
-                      className="block px-4 py-3 text-gray-900 dark:text-white hover:bg-brand-yellow hover:text-black font-semibold border-b dark:border-gray-800 transition-colors"
+                      className="block px-4 py-3 text-gray-900 dark:text-white hover:bg-brand-yellow hover:text-black font-semibold border-b border-gray-200 dark:border-gray-800 transition-colors"
                     >
                       View All Courses
                     </Link>
@@ -116,34 +110,20 @@ export default function Header() {
             <Link href="/contact" className="text-gray-700 dark:text-gray-300 hover:text-brand-yellow font-medium transition-colors">
               Contact
             </Link>
-
-            {/* Dark mode toggle */}
-            <button
-              onClick={toggleDarkMode}
-              className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-            >
-              {isDarkMode ? <Sun className="h-5 w-5 text-brand-yellow" /> : <Moon className="h-5 w-5 text-gray-600" />}
-            </button>
             
             <Link 
               href="/contact" 
-              className="bg-brand-yellow hover:bg-brand-yellow-dark text-black px-6 py-2 rounded-lg font-semibold transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 duration-200"
+              className="bg-yellow-400 hover:bg-yellow-500 text-black px-6 py-2 rounded-lg font-semibold transition-colors duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
             >
               Get Started
             </Link>
           </div>
 
           {/* Mobile menu button */}
-          <div className="lg:hidden flex items-center space-x-2">
-            <button
-              onClick={toggleDarkMode}
-              className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-            >
-              {isDarkMode ? <Sun className="h-5 w-5 text-brand-yellow" /> : <Moon className="h-5 w-5 text-gray-600" />}
-            </button>
+          <div className="lg:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="p-2"
+              className="p-2 text-gray-700 dark:text-gray-300"
             >
               {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
@@ -152,7 +132,7 @@ export default function Header() {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="lg:hidden mt-4 pb-4 border-t dark:border-gray-800">
+          <div className="lg:hidden mt-4 pb-4 border-t border-gray-200 dark:border-gray-800">
             <div className="flex flex-col space-y-4 pt-4">
               <Link href="/" className="text-gray-700 dark:text-gray-300 hover:text-brand-yellow font-medium transition-colors">
                 Home
@@ -168,7 +148,7 @@ export default function Header() {
               </Link>
               <Link 
                 href="/contact" 
-                className="bg-brand-yellow hover:bg-brand-yellow-dark text-black px-6 py-2 rounded-lg font-semibold transition-colors text-center"
+                className="bg-yellow-400 hover:bg-yellow-500 text-black px-6 py-2 rounded-lg font-semibold transition-colors duration-200 text-center"
               >
                 Get Started
               </Link>

@@ -103,7 +103,7 @@ export default function HeroSection() {
             {heroSection.primary_button_text && heroSection.primary_button_link && (
               <Link
                 href={heroSection.primary_button_link}
-                className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 px-8 py-4 rounded-lg font-semibold text-lg transition-colors duration-200"
+                className="bg-yellow-400 hover:bg-yellow-500 text-black px-8 py-4 rounded-lg font-semibold text-lg transition-colors duration-200"
               >
                 {heroSection.primary_button_text}
               </Link>
@@ -135,3 +135,4 @@ export default function HeroSection() {
     </section>
   );
 }
+
