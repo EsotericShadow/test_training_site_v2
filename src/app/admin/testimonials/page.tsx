@@ -57,20 +57,26 @@ export default function TestimonialManagement() {
 
   const loadData = useCallback(async () => {
     try {
-      const response = await fetch('/api/admin/testimonials');
+      const response = await fetch('/api/admin/testimonials', {
+        credentials: 'include'
+      });
       if (response.ok) {
         const data = await response.json();
         setTestimonials(data.testimonials || []);
+      } else if (response.status === 401) {
+        router.push('/admin');
       }
     } catch (error) {
       console.error('Error loading testimonials:', error);
       setMessage('Failed to load testimonials');
     }
-  }, [setTestimonials, setMessage]);
+  }, [router]);
 
   const checkAuth = useCallback(async () => {
     try {
-      const response = await fetch('/api/admin/auth');
+      const response = await fetch('/api/admin/auth', {
+        credentials: 'include'
+      });
       if (response.ok) {
         const data = await response.json();
         setUser(data.user);
@@ -83,7 +89,7 @@ export default function TestimonialManagement() {
     } finally {
       setLoading(false);
     }
-  }, [router, setUser, loadData, setLoading]);
+  }, [router, loadData]);
 
   useEffect(() => {
     checkAuth();
@@ -130,12 +136,7 @@ export default function TestimonialManagement() {
 
       const response = await fetch('/api/admin/upload', {
         method: 'POST',
-        headers: {
-          Authorization: `Bearer ${document.cookie
-            .split(';')
-            .find((row) => row.trim().startsWith('token='))
-            ?.split('=')[1]}`,
-        },
+        credentials: 'include',
         body: formData,
       });
 
@@ -143,6 +144,8 @@ export default function TestimonialManagement() {
         const data = await response.json();
         setFormData((prev) => ({ ...prev, client_photo_url: data.fileUrl }));
         setMessage('✓ Photo uploaded successfully');
+      } else if (response.status === 401) {
+        router.push('/admin');
       } else {
         const errorData = await response.json();
         setMessage(errorData.error || 'Failed to upload photo');
@@ -175,22 +178,20 @@ export default function TestimonialManagement() {
         method,
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${document.cookie
-            .split(';')
-            .find((row) => row.trim().startsWith('token='))
-            ?.split('=')[1]}`,
         },
+        credentials: 'include',
         body: JSON.stringify(testimonialData),
       });
 
       if (response.ok) {
-        setMessage(
-          editingTestimonial
-            ? '✓ Testimonial updated successfully'
-            : '✓ Testimonial created successfully'
-        );
+        const data = await response.json();
+        setMessage(data.message || (editingTestimonial
+          ? '✓ Testimonial updated successfully'
+          : '✓ Testimonial created successfully'));
         resetForm();
         loadData();
+      } else if (response.status === 401) {
+        router.push('/admin');
       } else {
         const errorData = await response.json();
         setMessage(errorData.error || 'Failed to save testimonial');
@@ -215,17 +216,15 @@ export default function TestimonialManagement() {
     try {
       const response = await fetch(`/api/admin/testimonials/${testimonialId}`, {
         method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${document.cookie
-            .split(';')
-            .find((row) => row.trim().startsWith('token='))
-            ?.split('=')[1]}`,
-        },
+        credentials: 'include',
       });
 
       if (response.ok) {
-        setMessage('✓ Testimonial deleted successfully');
+        const data = await response.json();
+        setMessage(data.message || '✓ Testimonial deleted successfully');
         loadData();
+      } else if (response.status === 401) {
+        router.push('/admin');
       } else {
         const errorData = await response.json();
         setMessage(errorData.error || 'Failed to delete testimonial');
@@ -280,7 +279,7 @@ export default function TestimonialManagement() {
         {message && (
           <div
             className={`mb-6 p-4 rounded-lg ${
-              message.includes('successfully')
+              message.includes('successfully') || message.includes('✓')
                 ? 'bg-green-50 text-green-800 border border-green-200'
                 : 'bg-red-50 text-red-800 border border-red-200'
             }`}
@@ -470,93 +469,135 @@ export default function TestimonialManagement() {
         <div className="bg-white rounded-lg shadow-sm border">
           <div className="px-6 py-4 border-b border-gray-200">
             <h2 className="text-lg font-semibold text-gray-900">
-              All Testimonials ({testimonials.length})
+              Testimonials ({testimonials.length})
             </h2>
           </div>
-          {testimonials.length === 0 ? (
-            <div className="p-8 text-center">
-              <div className="text-gray-400 mb-4">
-                <MessageSquare className="h-12 w-12 mx-auto" />
-              </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
-                No testimonials yet
-              </h3>
-              <p className="text-gray-600 mb-4">
-                Get started by adding your first testimonial.
-              </p>
-              <button
-                onClick={() => setShowAddForm(true)}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
-              >
-                Add First Testimonial
-              </button>
-            </div>
-          ) : (
-            <div className="divide-y divide-gray-200">
-              {testimonials.map((testimonial) => (
-                <div key={testimonial.id} className="p-6 hover:bg-gray-50">
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-start space-x-4">
-                      {testimonial.client_photo_url && (
-                        <Image
-                          src={testimonial.client_photo_url}
-                          alt={testimonial.client_name}
-                          width={64}
-                          height={64}
-                          className="object-cover rounded"
-                        />
-                      )}
-                      <div>
-                        <div className="flex items-center space-x-3 mb-2">
-                          <h3 className="text-lg font-semibold text-gray-900">
-                            {testimonial.client_name}
-                          </h3>
-                          {testimonial.featured && (
-                            <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium flex items-center space-x-1">
-                              <Star className="h-3 w-3" />
-                              <span>Featured</span>
-                            </span>
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Client
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Company
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Rating
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Featured
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Content
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {testimonials.map((testimonial) => (
+                  <tr key={testimonial.id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center">
+                        <div className="flex-shrink-0 h-10 w-10">
+                          {testimonial.client_photo_url ? (
+                            <Image
+                              src={testimonial.client_photo_url}
+                              alt={testimonial.client_name}
+                              width={40}
+                              height={40}
+                              className="h-10 w-10 rounded-full object-cover"
+                            />
+                          ) : (
+                            <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
+                              <MessageSquare className="h-5 w-5 text-gray-400" />
+                            </div>
                           )}
                         </div>
-                        <p className="text-gray-600 mb-1">
-                          {testimonial.client_role}, {testimonial.company}
-                        </p>
-                        <p className="text-gray-600 text-sm line-clamp-2">
-                          {testimonial.content}
-                        </p>
-                        <div className="flex items-center space-x-6 text-sm text-gray-500 mt-2">
-                          <span>
-                            {testimonial.rating} Star{testimonial.rating > 1 ? 's' : ''}
-                          </span>
-                          {testimonial.industry && <span>{testimonial.industry}</span>}
+                        <div className="ml-4">
+                          <div className="text-sm font-medium text-gray-900">
+                            {testimonial.client_name}
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            {testimonial.client_role}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div className="flex items-center space-x-2 ml-4">
-                      <button
-                        onClick={() => handleEdit(testimonial)}
-                        className="text-blue-600 hover:text-blue-800 p-2 rounded-lg hover:bg-blue-50"
-                        title="Edit testimonial"
-                      >
-                        <Edit className="h-4 w-4" />
-                      </button>
-                      <button
-                        onClick={() =>
-                          handleDelete(testimonial.id, testimonial.client_name)
-                        }
-                        className="text-red-600 hover:text-red-800 p-2 rounded-lg hover:bg-red-50"
-                        title="Delete testimonial"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">{testimonial.company}</div>
+                      {testimonial.industry && (
+                        <div className="text-sm text-gray-500">{testimonial.industry}</div>
+                      )}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center">
+                        {[...Array(5)].map((_, i) => (
+                          <Star
+                            key={i}
+                            className={`h-4 w-4 ${
+                              i < testimonial.rating
+                                ? 'text-yellow-400 fill-current'
+                                : 'text-gray-300'
+                            }`}
+                          />
+                        ))}
+                        <span className="ml-2 text-sm text-gray-600">
+                          {testimonial.rating}/5
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {testimonial.featured ? (
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                          Featured
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                          Standard
+                        </span>
+                      )}
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="text-sm text-gray-900 max-w-xs truncate">
+                        {testimonial.content}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <div className="flex space-x-2">
+                        <button
+                          onClick={() => handleEdit(testimonial)}
+                          className="text-blue-600 hover:text-blue-900"
+                        >
+                          <Edit className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(testimonial.id, testimonial.client_name)}
+                          className="text-red-600 hover:text-red-900"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {testimonials.length === 0 && (
+              <div className="text-center py-12">
+                <MessageSquare className="mx-auto h-12 w-12 text-gray-400" />
+                <h3 className="mt-2 text-sm font-medium text-gray-900">No testimonials</h3>
+                <p className="mt-1 text-sm text-gray-500">
+                  Get started by creating a new testimonial.
+                </p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
   );
 }
+

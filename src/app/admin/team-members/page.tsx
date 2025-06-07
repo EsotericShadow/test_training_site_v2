@@ -13,6 +13,7 @@ import {
   ArrowLeft,
   Save,
   X,
+  Users,
 } from 'lucide-react';
 
 interface TeamMember {
@@ -57,29 +58,36 @@ export default function TeamMemberManagement() {
 
   const loadData = useCallback(async () => {
     try {
-      const response = await fetch('/api/admin/team-members');
+      const response = await fetch('/api/admin/team-members', {
+        credentials: 'include' // Include cookies for authentication
+      });
       if (response.ok) {
         const data = await response.json();
         setTeamMembers(data.teamMembers || []);
+      } else if (response.status === 401) {
+        router.push('/admin');
+        return;
       }
     } catch (error) {
       console.error('Error loading team members:', error);
       setMessage('Failed to load team members');
     }
-  }, [setTeamMembers, setMessage]);
+  }, [router, setTeamMembers, setMessage]);
 
   const checkAuth = useCallback(async () => {
     try {
-      const response = await fetch('/api/auth');
+      const response = await fetch('/api/admin/auth', {
+        credentials: 'include' // Include cookies for authentication
+      });
       if (response.ok) {
         const data = await response.json();
         setUser(data.user);
         loadData();
       } else {
-        router.push('/admin/login');
+        router.push('/admin');
       }
     } catch {
-      router.push('/admin/login');
+      router.push('/admin');
     } finally {
       setLoading(false);
     }
@@ -167,12 +175,7 @@ export default function TeamMemberManagement() {
 
       const response = await fetch('/api/admin/upload', {
         method: 'POST',
-        headers: {
-          Authorization: `Bearer ${document.cookie
-            .split('; ')
-            .find((row) => row.startsWith('token='))
-            ?.split('=')[1]}`,
-        },
+        credentials: 'include', // Include cookies for authentication
         body: formData,
       });
 
@@ -180,6 +183,9 @@ export default function TeamMemberManagement() {
         const data = await response.json();
         setFormData((prev) => ({ ...prev, photo_url: data.fileUrl }));
         setMessage('✓ Photo uploaded successfully');
+      } else if (response.status === 401) {
+        router.push('/admin');
+        return;
       } else {
         const errorData = await response.json();
         setMessage(errorData.error || 'Failed to upload photo');
@@ -216,22 +222,21 @@ export default function TeamMemberManagement() {
         method,
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${document.cookie
-            .split('; ')
-            .find((row) => row.startsWith('token='))
-            ?.split('=')[1]}`,
         },
+        credentials: 'include', // Include cookies for authentication
         body: JSON.stringify(teamMemberData),
       });
 
       if (response.ok) {
-        setMessage(
-          editingTeamMember
-            ? '✓ Team member updated successfully'
-            : '✓ Team member created successfully'
-        );
+        const result = await response.json();
+        setMessage(result.message || (editingTeamMember
+          ? '✓ Team member updated successfully'
+          : '✓ Team member created successfully'));
         resetForm();
         loadData();
+      } else if (response.status === 401) {
+        router.push('/admin');
+        return;
       } else {
         const errorData = await response.json();
         setMessage(errorData.error || 'Failed to save team member');
@@ -256,17 +261,16 @@ export default function TeamMemberManagement() {
     try {
       const response = await fetch(`/api/admin/team-members/${teamMemberId}`, {
         method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${document.cookie
-            .split('; ')
-            .find((row) => row.startsWith('token='))
-            ?.split('=')[1]}`,
-        },
+        credentials: 'include', // Include cookies for authentication
       });
 
       if (response.ok) {
-        setMessage('✓ Team member deleted successfully');
+        const result = await response.json();
+        setMessage(result.message || '✓ Team member deleted successfully');
         loadData();
+      } else if (response.status === 401) {
+        router.push('/admin');
+        return;
       } else {
         const errorData = await response.json();
         setMessage(errorData.error || 'Failed to delete team member');
@@ -321,7 +325,7 @@ export default function TeamMemberManagement() {
         {message && (
           <div
             className={`mb-6 p-4 rounded-lg ${
-              message.includes('successfully')
+              message.includes('successfully') || message.includes('✓')
                 ? 'bg-green-50 text-green-800 border border-green-200'
                 : 'bg-red-50 text-red-800 border border-red-200'
             }`}
@@ -478,10 +482,8 @@ export default function TeamMemberManagement() {
                       <input
                         type="text"
                         value={specialization}
-                        onChange={(e) =>
-                          handleSpecializationChange(index, e.target.value)
-                        }
-                        placeholder="Enter a specialization"
+                        onChange={(e) => handleSpecializationChange(index, e.target.value)}
+                        placeholder="e.g., Fall Protection, WHMIS"
                         className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       />
                       {formData.specializations.length > 1 && (
@@ -505,128 +507,132 @@ export default function TeamMemberManagement() {
                   </button>
                 </div>
               </div>
-              <div className="flex justify-end space-x-4 pt-6 border-t border-gray-200">
+              <div className="flex justify-end space-x-4">
                 <button
                   type="button"
                   onClick={resetForm}
-                  className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg"
+                  className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  disabled={saving || uploading}
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center space-x-2 disabled:opacity-50"
+                  disabled={saving}
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-lg flex items-center space-x-2"
                 >
-                  <Save className="h-4 w-4" />
-                  <span>
-                    {saving
-                      ? 'Saving...'
-                      : editingTeamMember
-                      ? 'Update Team Member'
-                      : 'Create Team Member'}
-                  </span>
+                  {saving ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                      <span>Saving...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Save className="h-4 w-4" />
+                      <span>{editingTeamMember ? 'Update' : 'Create'} Team Member</span>
+                    </>
+                  )}
                 </button>
               </div>
             </form>
           </div>
         )}
+
+        {/* Team Members List */}
         <div className="bg-white rounded-lg shadow-sm border">
           <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900">
-              All Team Members ({teamMembers.length})
-            </h2>
+            <h2 className="text-lg font-semibold text-gray-900">Current Team Members</h2>
           </div>
-          {teamMembers.length === 0 ? (
-            <div className="p-8 text-center">
-              <div className="text-gray-400 mb-4">
-                <Briefcase className="h-12 w-12 mx-auto" />
+          <div className="p-6">
+            {teamMembers.length === 0 ? (
+              <div className="text-center py-8">
+                <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                <p className="text-gray-600">No team members found</p>
+                <button
+                  onClick={() => setShowAddForm(true)}
+                  className="mt-4 text-blue-600 hover:text-blue-800"
+                >
+                  Add your first team member
+                </button>
               </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
-                No team members yet
-              </h3>
-              <p className="text-gray-600 mb-4">
-                Get started by adding your first team member.
-              </p>
-              <button
-                onClick={() => setShowAddForm(true)}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
-              >
-                Add First Team Member
-              </button>
-            </div>
-          ) : (
-            <div className="divide-y divide-gray-200">
-              {teamMembers.map((teamMember) => (
-                <div key={teamMember.id} className="p-6 hover:bg-gray-50">
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-start space-x-4">
-                      {teamMember.photo_url && (
-                        <Image
-                          src={teamMember.photo_url}
-                          alt={teamMember.name}
-                          width={64}
-                          height={64}
-                          className="object-cover rounded"
-                        />
-                      )}
-                      <div>
-                        <div className="flex items-center space-x-3 mb-2">
-                          <h3 className="text-lg font-semibold text-gray-900">
-                            {teamMember.name}
-                          </h3>
-                          {teamMember.featured && (
-                            <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium flex items-center space-x-1">
-                              <Star className="h-3 w-3" />
-                              <span>Featured</span>
-                            </span>
-                          )}
-                        </div>
-                        <p className="text-gray-600 mb-1">{teamMember.role}</p>
-                        {teamMember.bio && (
-                          <p className="text-gray-600 text-sm line-clamp-2">
-                            {teamMember.bio}
-                          </p>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {teamMembers.map((member) => (
+                  <div key={member.id} className="border border-gray-200 rounded-lg p-4">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex items-center space-x-3">
+                        {member.photo_url ? (
+                          <Image
+                            src={member.photo_url}
+                            alt={member.name}
+                            width={48}
+                            height={48}
+                            className="rounded-full object-cover"
+                          />
+                        ) : (
+                          <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
+                            <Briefcase className="h-6 w-6 text-gray-400" />
+                          </div>
                         )}
-                        <div className="flex items-center space-x-6 text-sm text-gray-500 mt-2">
-                          {teamMember.experience_years && (
-                            <span>{teamMember.experience_years} years experience</span>
-                          )}
-                          {teamMember.specializations &&
-                            Array.isArray(teamMember.specializations) &&
-                            teamMember.specializations.length > 0 && (
-                              <span>
-                                {teamMember.specializations.length} specializations
-                              </span>
+                        <div>
+                          <h3 className="font-medium text-gray-900 flex items-center space-x-2">
+                            <span>{member.name}</span>
+                            {member.featured && (
+                              <Star className="h-4 w-4 text-yellow-500 fill-current" />
                             )}
+                          </h3>
+                          <p className="text-sm text-gray-600">{member.role}</p>
                         </div>
                       </div>
+                      <div className="flex items-center space-x-2">
+                        <button
+                          onClick={() => handleEdit(member)}
+                          className="text-blue-600 hover:text-blue-800"
+                        >
+                          <Edit className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(member.id, member.name)}
+                          className="text-red-600 hover:text-red-800"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
                     </div>
-                    <div className="flex items-center space-x-2 ml-4">
-                      <button
-                        onClick={() => handleEdit(teamMember)}
-                        className="text-blue-600 hover:text-blue-800 p-2 rounded-lg hover:bg-blue-50"
-                        title="Edit team member"
-                      >
-                        <Edit className="h-4 w-4" />
-                      </button>
-                      <button
-                        onClick={() =>
-                          handleDelete(teamMember.id, teamMember.name)
-                        }
-                        className="text-red-600 hover:text-red-800 p-2 rounded-lg hover:bg-red-50"
-                        title="Delete team member"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
+                    {member.bio && (
+                      <p className="text-sm text-gray-600 mb-3 line-clamp-3">{member.bio}</p>
+                    )}
+                    {member.specializations && (
+                      <div className="mb-3">
+                        <p className="text-xs font-medium text-gray-700 mb-1">Specializations:</p>
+                        <div className="flex flex-wrap gap-1">
+                          {(typeof member.specializations === 'string' 
+                            ? JSON.parse(member.specializations) 
+                            : member.specializations
+                          ).map((spec: string, idx: number) => (
+                            <span
+                              key={idx}
+                              className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs"
+                            >
+                              {spec}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    <div className="flex justify-between items-center text-xs text-gray-500">
+                      <span>Order: {member.display_order}</span>
+                      {member.experience_years && (
+                        <span>{member.experience_years} years exp.</span>
+                      )}
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          )}
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
   );
 }
+

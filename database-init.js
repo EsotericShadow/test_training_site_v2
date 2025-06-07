@@ -1,12 +1,28 @@
-import { sql } from '@vercel/postgres';
+// Load environment variables FIRST, before any other imports
+import { config } from 'dotenv';
+config({ path: '.env.local' });
+
+// Now import @vercel/postgres with the environment variables already loaded
+import { createPool } from '@vercel/postgres';
 import bcrypt from 'bcryptjs';
 
 console.log('Starting database initialization...');
 
+// Create a connection pool with explicit connection string
+const pool = createPool({
+  connectionString: process.env.POSTGRES_URL
+});
+
 async function initializeDatabase() {
   try {
+    console.log('🔗 Connecting to database...');
+    
+    // Test the connection first
+    const testResult = await pool.sql`SELECT NOW() as current_time`;
+    console.log('✅ Database connection successful:', testResult.rows[0].current_time);
+
     // Admin users table
-    await sql`
+    await pool.sql`
       CREATE TABLE IF NOT EXISTS admin_users (
         id SERIAL PRIMARY KEY,
         username TEXT UNIQUE NOT NULL,
@@ -19,7 +35,7 @@ async function initializeDatabase() {
     console.log('✅ admin_users table created');
 
     // Admin sessions table
-    await sql`
+    await pool.sql`
       CREATE TABLE IF NOT EXISTS admin_sessions (
         id SERIAL PRIMARY KEY,
         user_id INTEGER NOT NULL REFERENCES admin_users(id),
@@ -31,7 +47,7 @@ async function initializeDatabase() {
     console.log('✅ admin_sessions table created');
 
     // Company info table
-    await sql`
+    await pool.sql`
       CREATE TABLE IF NOT EXISTS company_info (
         id INTEGER PRIMARY KEY CHECK (id = 1),
         company_name TEXT NOT NULL,
@@ -48,7 +64,7 @@ async function initializeDatabase() {
     console.log('✅ company_info table created');
 
     // Company values table
-    await sql`
+    await pool.sql`
       CREATE TABLE IF NOT EXISTS company_values (
         id SERIAL PRIMARY KEY,
         title TEXT NOT NULL,
@@ -60,7 +76,7 @@ async function initializeDatabase() {
     console.log('✅ company_values table created');
 
     // Company why choose us table
-    await sql`
+    await pool.sql`
       CREATE TABLE IF NOT EXISTS company_why_choose_us (
         id SERIAL PRIMARY KEY,
         point TEXT NOT NULL,
@@ -70,7 +86,7 @@ async function initializeDatabase() {
     console.log('✅ company_why_choose_us table created');
 
     // Course categories table
-    await sql`
+    await pool.sql`
       CREATE TABLE IF NOT EXISTS course_categories (
         id SERIAL PRIMARY KEY,
         name TEXT NOT NULL,
@@ -82,7 +98,7 @@ async function initializeDatabase() {
     console.log('✅ course_categories table created');
 
     // Courses table
-    await sql`
+    await pool.sql`
       CREATE TABLE IF NOT EXISTS courses (
         id SERIAL PRIMARY KEY,
         slug TEXT UNIQUE NOT NULL,
@@ -101,7 +117,7 @@ async function initializeDatabase() {
     console.log('✅ courses table created');
 
     // Course features table
-    await sql`
+    await pool.sql`
       CREATE TABLE IF NOT EXISTS course_features (
         id SERIAL PRIMARY KEY,
         course_id INTEGER NOT NULL REFERENCES courses(id) ON DELETE CASCADE,
@@ -112,7 +128,7 @@ async function initializeDatabase() {
     console.log('✅ course_features table created');
 
     // Team members table
-    await sql`
+    await pool.sql`
       CREATE TABLE IF NOT EXISTS team_members (
         id SERIAL PRIMARY KEY,
         name TEXT NOT NULL,
@@ -130,7 +146,7 @@ async function initializeDatabase() {
     console.log('✅ team_members table created');
 
     // Testimonials table
-    await sql`
+    await pool.sql`
       CREATE TABLE IF NOT EXISTS testimonials (
         id SERIAL PRIMARY KEY,
         client_name TEXT NOT NULL,
@@ -148,7 +164,7 @@ async function initializeDatabase() {
     console.log('✅ testimonials table created');
 
     // Hero section table
-    await sql`
+    await pool.sql`
       CREATE TABLE IF NOT EXISTS hero_section (
         id INTEGER PRIMARY KEY CHECK (id = 1),
         slogan TEXT,
@@ -167,7 +183,7 @@ async function initializeDatabase() {
     console.log('✅ hero_section table created');
 
     // Hero stats table
-    await sql`
+    await pool.sql`
       CREATE TABLE IF NOT EXISTS hero_stats (
         id SERIAL PRIMARY KEY,
         number_text TEXT NOT NULL,
@@ -179,7 +195,7 @@ async function initializeDatabase() {
     console.log('✅ hero_stats table created');
 
     // Hero features table
-    await sql`
+    await pool.sql`
       CREATE TABLE IF NOT EXISTS hero_features (
         id SERIAL PRIMARY KEY,
         title TEXT NOT NULL,
@@ -192,7 +208,7 @@ async function initializeDatabase() {
     // Create default admin user
     await createDefaultAdmin();
   } catch (err) {
-    console.error('Error creating tables:', err);
+    console.error('❌ Error creating tables:', err);
     process.exit(1);
   }
 }
@@ -202,9 +218,9 @@ async function createDefaultAdmin() {
     const defaultPassword = '1234';
     const hashedPassword = bcrypt.hashSync(defaultPassword, 10);
 
-    const existingAdmin = await sql`SELECT 1 FROM admin_users WHERE username = 'admin'`;
+    const existingAdmin = await pool.sql`SELECT 1 FROM admin_users WHERE username = 'admin'`;
     if (existingAdmin.rows.length === 0) {
-      await sql`
+      await pool.sql`
         INSERT INTO admin_users (username, password_hash, email)
         VALUES ('admin', ${hashedPassword}, 'admin@karmatraining.com')
       `;
@@ -215,12 +231,15 @@ async function createDefaultAdmin() {
       console.log('ℹ️ Admin user already exists');
     }
 
-    console.log('Database initialization complete');
+    console.log('🎉 Database initialization complete!');
+    await pool.end();
     process.exit(0);
   } catch (err) {
-    console.error('Error creating default admin:', err);
+    console.error('❌ Error creating default admin:', err);
+    await pool.end();
     process.exit(1);
   }
 }
 
 initializeDatabase();
+

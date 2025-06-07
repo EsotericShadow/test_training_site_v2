@@ -1,9 +1,43 @@
 import { NextResponse } from 'next/server';
-import { testimonialsOps } from '../../../../../../lib/database';
+import jwt from 'jsonwebtoken';
+import { testimonialsOps, adminSessionsOps } from '../../../../../../lib/database';
+
+const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
+
+// Helper function to verify authentication
+async function verifyAuth(request) {
+  const token = request.cookies.get('admin_token')?.value;
+
+  if (!token) {
+    return { error: 'Not authenticated', status: 401 };
+  }
+
+  try {
+    jwt.verify(token, JWT_SECRET);
+  } catch {
+    return { error: 'Invalid token', status: 401 };
+  }
+
+  const session = await adminSessionsOps.getByToken(token);
+  
+  if (!session) {
+    return { error: 'Session not found', status: 401 };
+  }
+
+  return { success: true };
+}
 
 // GET - Get testimonial by ID
 export async function GET(request, { params }) {
   try {
+    const authResult = await verifyAuth(request);
+    if (authResult.error) {
+      return NextResponse.json(
+        { error: authResult.error },
+        { status: authResult.status }
+      );
+    }
+
     const testimonial = await testimonialsOps.getById(params.id);
     if (!testimonial) {
       return NextResponse.json(
@@ -24,6 +58,14 @@ export async function GET(request, { params }) {
 // PUT - Update testimonial
 export async function PUT(request, { params }) {
   try {
+    const authResult = await verifyAuth(request);
+    if (authResult.error) {
+      return NextResponse.json(
+        { error: authResult.error },
+        { status: authResult.status }
+      );
+    }
+
     const data = await request.json();
 
     // Validate required fields
@@ -48,7 +90,7 @@ export async function PUT(request, { params }) {
 
     return NextResponse.json({
       success: true,
-      message: 'Testimonial updated successfully',
+      message: '✓ Testimonial updated successfully',
     });
   } catch (error) {
     console.error('Error updating testimonial:', error);
@@ -62,6 +104,14 @@ export async function PUT(request, { params }) {
 // DELETE - Delete testimonial
 export async function DELETE(request, { params }) {
   try {
+    const authResult = await verifyAuth(request);
+    if (authResult.error) {
+      return NextResponse.json(
+        { error: authResult.error },
+        { status: authResult.status }
+      );
+    }
+
     // Check if testimonial exists
     const existing = await testimonialsOps.getById(params.id);
     if (!existing) {
@@ -76,7 +126,7 @@ export async function DELETE(request, { params }) {
 
     return NextResponse.json({
       success: true,
-      message: 'Testimonial deleted successfully',
+      message: '✓ Testimonial deleted successfully',
     });
   } catch (error) {
     console.error('Error deleting testimonial:', error);
@@ -86,3 +136,4 @@ export async function DELETE(request, { params }) {
     );
   }
 }
+

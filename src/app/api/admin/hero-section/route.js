@@ -1,22 +1,37 @@
 import { NextResponse } from 'next/server';
+import jwt from 'jsonwebtoken';
 import { heroSectionOps, heroStatsOps, heroFeaturesOps, adminSessionsOps } from '../../../../../lib/database';
+
+const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
 
 // GET - Get hero section data for admin editing
 export async function GET(request) {
   try {
-    const authHeader = request.headers.get('authorization');
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    const token = request.cookies.get('admin_token')?.value;
+
+    if (!token) {
       return NextResponse.json(
-        { error: 'Unauthorized: Missing or invalid token' },
+        { error: 'Not authenticated' },
         { status: 401 }
       );
     }
 
-    const token = authHeader.split(' ')[1];
+    // Verify JWT token
+    try {
+      jwt.verify(token, JWT_SECRET);
+    } catch {
+      return NextResponse.json(
+        { error: 'Invalid token' },
+        { status: 401 }
+      );
+    }
+
+    // Check if session exists in database
     const session = await adminSessionsOps.getByToken(token);
+    
     if (!session) {
       return NextResponse.json(
-        { error: 'Unauthorized: Invalid or expired token' },
+        { error: 'Session not found' },
         { status: 401 }
       );
     }
@@ -42,19 +57,31 @@ export async function GET(request) {
 // PUT - Update hero section data
 export async function PUT(request) {
   try {
-    const authHeader = request.headers.get('authorization');
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    const token = request.cookies.get('admin_token')?.value;
+
+    if (!token) {
       return NextResponse.json(
-        { error: 'Unauthorized: Missing or invalid token' },
+        { error: 'Not authenticated' },
         { status: 401 }
       );
     }
 
-    const token = authHeader.split(' ')[1];
+    // Verify JWT token
+    try {
+      jwt.verify(token, JWT_SECRET);
+    } catch {
+      return NextResponse.json(
+        { error: 'Invalid token' },
+        { status: 401 }
+      );
+    }
+
+    // Check if session exists in database
     const session = await adminSessionsOps.getByToken(token);
+    
     if (!session) {
       return NextResponse.json(
-        { error: 'Unauthorized: Invalid or expired token' },
+        { error: 'Session not found' },
         { status: 401 }
       );
     }
@@ -96,3 +123,4 @@ export async function PUT(request) {
     );
   }
 }
+

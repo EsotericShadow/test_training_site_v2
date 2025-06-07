@@ -50,7 +50,9 @@ export default function CompanyInfoEditor() {
 
   const loadCompanyData = async () => {
     try {
-      const response = await fetch('/api/admin/company-info');
+      const response = await fetch('/api/admin/company-info', {
+        credentials: 'include' // Include cookies for authentication
+      });
       if (response.ok) {
         const data: ResponseData = await response.json();
         setCompanyInfo(data.companyInfo);
@@ -70,6 +72,9 @@ export default function CompanyInfoEditor() {
           display_order: item.display_order
         }));
         setWhyChooseUs(whyItems);
+      } else if (response.status === 401) {
+        window.location.href = '/admin';
+        return;
       }
     } catch (error) {
       console.error('Error loading company data:', error);
@@ -90,6 +95,7 @@ export default function CompanyInfoEditor() {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include', // Include cookies for authentication
         body: JSON.stringify({
           companyInfo,
           companyValues,
@@ -98,8 +104,12 @@ export default function CompanyInfoEditor() {
       });
 
       if (response.ok) {
-        setMessage({ type: 'success', text: 'Company information updated successfully!' });
+        const result = await response.json();
+        setMessage({ type: 'success', text: result.message || 'Company information updated successfully!' });
         setTimeout(() => setMessage(null), 3000);
+      } else if (response.status === 401) {
+        window.location.href = '/admin';
+        return;
       } else {
         throw new Error('Failed to update company information');
       }
@@ -393,7 +403,7 @@ export default function CompanyInfoEditor() {
             <button
               type="submit"
               disabled={saving}
-              className="inline-flex items-center space-x-2 bg-yellow-500 hover:bg-yellow-600 disabled:bg-yellow-300 text-black px-6 py-3 rounded-lg font-semibold transition-colors"
+              className="inline-flex items-center space-x-2 bg-yellow-500 hover:bg-yellow-600 disabled:bg-yellow-400 text-black px-6 py-3 rounded-lg font-semibold transition-colors"
             >
               {saving ? (
                 <>
@@ -413,3 +423,4 @@ export default function CompanyInfoEditor() {
     </div>
   );
 }
+

@@ -54,17 +54,20 @@ export default function AdminDashboard() {
 
   const checkAuth = useCallback(async () => {
     try {
-      const response = await fetch('/api/auth');
+      // Fixed: Call the correct auth route
+      const response = await fetch('/api/admin/auth');
       if (response.ok) {
         const data = await response.json();
         setUser(data.user);
         setAuthenticated(true);
         loadStats();
       } else {
-        router.push('/admin/login');
+        // Fixed: Redirect to /admin instead of /admin/login
+        router.push('/admin');
       }
     } catch {
-      router.push('/admin/login');
+      // Fixed: Redirect to /admin instead of /admin/login
+      router.push('/admin');
     } finally {
       setLoading(false);
     }
@@ -76,8 +79,10 @@ export default function AdminDashboard() {
 
   const handleLogout = async () => {
     try {
-      await fetch('/api/logout', { method: 'POST' });
-      router.push('/admin/login');
+      // Fixed: Call the correct logout route
+      await fetch('/api/admin/logout', { method: 'POST' });
+      // Fixed: Redirect to /admin instead of /admin/login
+      router.push('/admin');
     } catch (error) {
       console.error('Logout error:', error);
     }
@@ -103,7 +108,7 @@ export default function AdminDashboard() {
               <h1 className="text-3xl font-bold text-gray-900">
                 Karma Training CMS
               </h1>
-              <p className="text-sm text-gray-600">Welcome, {user?.name}</p>
+              <p className="text-sm text-gray-600">Welcome, {user?.username}</p>
             </div>
             <button
               onClick={handleLogout}
@@ -306,3 +311,4 @@ export default function AdminDashboard() {
     </div>
   );
 }
+

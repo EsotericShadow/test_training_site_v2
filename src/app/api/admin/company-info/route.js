@@ -1,9 +1,41 @@
 import { NextResponse } from 'next/server';
-import { companyInfoOps, companyValuesOps, whyChooseUsOps } from '../../../../../lib/database';
+import jwt from 'jsonwebtoken';
+import { companyInfoOps, companyValuesOps, whyChooseUsOps, adminSessionsOps } from '../../../../../lib/database';
+
+const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
 
 // GET - Get company info for editing
-export async function GET() {
+export async function GET(request) {
   try {
+    const token = request.cookies.get('admin_token')?.value;
+
+    if (!token) {
+      return NextResponse.json(
+        { error: 'Not authenticated' },
+        { status: 401 }
+      );
+    }
+
+    // Verify JWT token
+    try {
+      jwt.verify(token, JWT_SECRET);
+    } catch {
+      return NextResponse.json(
+        { error: 'Invalid token' },
+        { status: 401 }
+      );
+    }
+
+    // Check if session exists in database
+    const session = await adminSessionsOps.getByToken(token);
+    
+    if (!session) {
+      return NextResponse.json(
+        { error: 'Session not found' },
+        { status: 401 }
+      );
+    }
+
     const companyInfo = await companyInfoOps.get();
     const companyValues = await companyValuesOps.getAll();
     const whyChooseUs = await whyChooseUsOps.getAll();
@@ -25,6 +57,35 @@ export async function GET() {
 // PUT - Update company info
 export async function PUT(request) {
   try {
+    const token = request.cookies.get('admin_token')?.value;
+
+    if (!token) {
+      return NextResponse.json(
+        { error: 'Not authenticated' },
+        { status: 401 }
+      );
+    }
+
+    // Verify JWT token
+    try {
+      jwt.verify(token, JWT_SECRET);
+    } catch {
+      return NextResponse.json(
+        { error: 'Invalid token' },
+        { status: 401 }
+      );
+    }
+
+    // Check if session exists in database
+    const session = await adminSessionsOps.getByToken(token);
+    
+    if (!session) {
+      return NextResponse.json(
+        { error: 'Session not found' },
+        { status: 401 }
+      );
+    }
+
     const { companyInfo, companyValues, whyChooseUs } = await request.json();
 
     // Update company info
@@ -52,7 +113,7 @@ export async function PUT(request) {
 
     return NextResponse.json({ 
       success: true, 
-      message: 'Company information updated successfully' 
+      message: '✓ Company information updated successfully' 
     });
   } catch (error) {
     console.error('Error updating company info:', error);
@@ -62,3 +123,4 @@ export async function PUT(request) {
     );
   }
 }
+

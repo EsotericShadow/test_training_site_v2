@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 export function middleware(request: NextRequest) {
-  const token = request.cookies.get('token')?.value;
+  // Look for 'admin_token' instead of 'token' to match the login API
+  const token = request.cookies.get('admin_token')?.value;
   const isAdminPath = request.nextUrl.pathname.startsWith('/admin');
 
   // Only redirect unauthenticated admin paths to /admin login
@@ -16,3 +17,4 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: ['/admin/:path*']
 };
+

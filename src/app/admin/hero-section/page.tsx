@@ -19,7 +19,7 @@ interface HeroSection {
 
 interface HeroStat {
   id?: number | undefined;
-  number?: string | undefined;
+  number_text?: string | undefined;  // Fixed: was 'number', now 'number_text'
   label?: string | undefined;
   description?: string | undefined;
   display_order?: number | undefined;
@@ -59,7 +59,10 @@ export default function HeroSectionEditor() {
 
   const loadHeroData = useCallback(async () => {
     try {
-      const response = await fetch('/api/admin/hero-section');
+      const response = await fetch('/api/admin/hero-section', {
+        credentials: 'include' // Include cookies in the request
+      });
+      
       if (response.ok) {
         const data: ResponseData = await response.json();
         
@@ -77,7 +80,7 @@ export default function HeroSectionEditor() {
 
         setHeroStats(data.heroStats?.map((stat: HeroStat): HeroStat => ({
           id: stat.id ?? undefined,
-          number: stat.number ?? '',
+          number_text: stat.number_text ?? '',  // Fixed: was 'number', now 'number_text'
           label: stat.label ?? '',
           description: stat.description ?? '',
           display_order: stat.display_order ?? 0
@@ -89,6 +92,11 @@ export default function HeroSectionEditor() {
           description: feature.description ?? '',
           display_order: feature.display_order ?? 0
         })) || []);
+      } else if (response.status === 401) {
+        router.push('/admin');
+        return;
+      } else {
+        setMessage('Failed to load hero section data');
       }
     } catch (error) {
       console.error('Error loading hero data:', error);
@@ -96,18 +104,18 @@ export default function HeroSectionEditor() {
     } finally {
       setLoading(false);
     }
-  }, [setHeroSection, setHeroStats, setHeroFeatures, setMessage, setLoading]);
+  }, [router]);
 
   const checkAuth = useCallback(async () => {
     try {
-      const response = await fetch('/api/auth');
+      const response = await fetch('/api/admin/auth');
       if (!response.ok) {
-        router.push('/admin/login');
+        router.push('/admin');
         return;
       }
       loadHeroData();
     } catch {
-      router.push('/admin/login');
+      router.push('/admin');
     }
   }, [router, loadHeroData]);
 
@@ -125,6 +133,7 @@ export default function HeroSectionEditor() {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include', // Include cookies in the request
         body: JSON.stringify({
           heroSection,
           heroStats,
@@ -133,8 +142,12 @@ export default function HeroSectionEditor() {
       });
 
       if (response.ok) {
-        setMessage('Hero section updated successfully!');
+        const result = await response.json();
+        setMessage(result.message || 'Hero section updated successfully!');
         setTimeout(() => setMessage(''), 3000);
+      } else if (response.status === 401) {
+        router.push('/admin');
+        return;
       } else {
         setMessage('Failed to update hero section');
       }
@@ -194,7 +207,7 @@ export default function HeroSectionEditor() {
           </div>
           <div className="p-6 space-y-6">
             {message && (
-              <div className={`p-4 rounded-md ${message.includes('successfully') ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}>
+              <div className={`p-4 rounded-md ${message.includes('successfully') || message.includes('✓') ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}>
                 {message}
               </div>
             )}
@@ -325,8 +338,8 @@ export default function HeroSectionEditor() {
                         </label>
                         <input
                           type="text"
-                          value={stat.number || ''}
-                          onChange={(e) => updateStat(index, 'number', e.target.value)}
+                          value={stat.number_text || ''}
+                          onChange={(e) => updateStat(index, 'number_text', e.target.value)}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                           placeholder="14+"
                         />
@@ -411,3 +424,4 @@ export default function HeroSectionEditor() {
     </div>
   );
 }
+

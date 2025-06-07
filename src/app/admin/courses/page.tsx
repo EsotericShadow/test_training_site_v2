@@ -70,13 +70,20 @@ export default function CourseManagement() {
 
   const loadData = useCallback(async () => {
     try {
-      const coursesResponse = await fetch('/api/admin/courses');
+      const coursesResponse = await fetch('/api/admin/courses', {
+        credentials: 'include'
+      });
       if (coursesResponse.ok) {
         const coursesData = await coursesResponse.json();
         setCourses(coursesData.courses || []);
+      } else if (coursesResponse.status === 401) {
+        router.push('/admin');
+        return;
       }
 
-      const categoriesResponse = await fetch('/api/admin/categories');
+      const categoriesResponse = await fetch('/api/admin/categories', {
+        credentials: 'include'
+      });
       if (categoriesResponse.ok) {
         const categoriesData = await categoriesResponse.json();
         setCategories(categoriesData.categories || []);
@@ -85,26 +92,28 @@ export default function CourseManagement() {
       console.error('Error loading data:', error);
       setMessage('Failed to load data');
     }
-  }, [setCourses, setCategories, setMessage]);
+  }, [router]);
 
   const checkAuth = useCallback(async () => {
     try {
-      const response = await fetch('/api/auth');
+      const response = await fetch('/api/admin/auth', {
+        credentials: 'include'
+      });
       if (response.ok) {
         const data = await response.json();
         setUser(data.user);
         loadData();
       } else {
-        router.push('/admin/login');
+        router.push('/admin');
         return;
       }
     } catch {
-      router.push('/admin/login');
+      router.push('/admin');
       return;
     } finally {
       setLoading(false);
     }
-  }, [router, setUser, loadData, setLoading]);
+  }, [router, loadData]);
 
   useEffect(() => {
     checkAuth();
@@ -205,6 +214,7 @@ export default function CourseManagement() {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify(courseData),
       });
 
@@ -212,6 +222,9 @@ export default function CourseManagement() {
         setMessage(editingCourse ? 'Course updated successfully!' : 'Course created successfully!');
         resetForm();
         loadData();
+      } else if (response.status === 401) {
+        router.push('/admin');
+        return;
       } else {
         const errorData = await response.json();
         setMessage(errorData.error || 'Failed to save course');
@@ -232,11 +245,15 @@ export default function CourseManagement() {
     try {
       const response = await fetch(`/api/admin/courses/${courseId}`, {
         method: 'DELETE',
+        credentials: 'include'
       });
 
       if (response.ok) {
         setMessage('Course deleted successfully!');
         loadData();
+      } else if (response.status === 401) {
+        router.push('/admin');
+        return;
       } else {
         const errorData = await response.json();
         setMessage(errorData.error || 'Failed to delete course');
@@ -453,7 +470,7 @@ export default function CourseManagement() {
                           onClick={() => handleRemoveFeature(index)}
                           className="text-red-600 hover:text-red-800"
                         >
-                          <X className="h-4 w-4" />
+                          <Trash2 className="h-4 w-4" />
                         </button>
                       )}
                     </div>
@@ -468,18 +485,18 @@ export default function CourseManagement() {
                   </button>
                 </div>
               </div>
-              <div className="flex justify-end space-x-4 pt-6 border-t border-gray-200">
+              <div className="flex justify-end space-x-4">
                 <button
                   type="button"
                   onClick={resetForm}
-                  className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg"
+                  className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center space-x-2 disabled:opacity-50"
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg flex items-center space-x-2 disabled:opacity-50"
                 >
                   <Save className="h-4 w-4" />
                   <span>{saving ? 'Saving...' : (editingCourse ? 'Update Course' : 'Create Course')}</span>
@@ -490,89 +507,105 @@ export default function CourseManagement() {
         )}
         <div className="bg-white rounded-lg shadow-sm border">
           <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900">
-              All Courses ({courses.length})
-            </h2>
+            <h2 className="text-lg font-semibold text-gray-900">All Courses ({courses.length})</h2>
           </div>
-          {courses.length === 0 ? (
-            <div className="p-8 text-center">
-              <div className="text-gray-400 mb-4">
-                <Tag className="h-12 w-12 mx-auto" />
-              </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No courses yet</h3>
-              <p className="text-gray-600 mb-4">Get started by creating your first course.</p>
-              <button
-                onClick={() => setShowAddForm(true)}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
-              >
-                Add First Course
-              </button>
-            </div>
-          ) : (
-            <div className="divide-y divide-gray-200">
-              {courses.map((course) => (
-                <div key={course.id} className="p-6 hover:bg-gray-50">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-3 mb-2">
-                        <h3 className="text-lg font-semibold text-gray-900">
-                          {course.title}
-                        </h3>
-                        {course.popular && (
-                          <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium flex items-center space-x-1">
-                            <Star className="h-3 w-3" />
-                            <span>Popular</span>
-                          </span>
-                        )}
-                        {course.category_name && (
-                          <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">
-                            {course.category_name}
-                          </span>
-                        )}
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Course
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Details
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {courses.map((course) => (
+                  <tr key={course.id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center">
+                        <div>
+                          <div className="text-sm font-medium text-gray-900 flex items-center space-x-2">
+                            <span>{course.title}</span>
+                            {course.popular && (
+                              <Star className="h-4 w-4 text-yellow-500 fill-current" />
+                            )}
+                          </div>
+                          <div className="text-sm text-gray-500">/{course.slug}</div>
+                        </div>
                       </div>
-                      <p className="text-gray-600 mb-3 line-clamp-2">
-                        {course.description}
-                      </p>
-                      <div className="flex items-center space-x-6 text-sm text-gray-500">
-                        <div className="flex items-center space-x-1">
-                          <Clock className="h-4 w-4" />
-                          <span>{course.duration}</span>
-                        </div>
-                        <div className="flex items-center space-x-1">
-                          <Users className="h-4 w-4" />
-                          <span>{course.audience}</span>
-                        </div>
-                        {course.features && course.features.length > 0 && (
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="text-sm text-gray-900 space-y-1">
+                        <div className="flex items-center space-x-4">
                           <div className="flex items-center space-x-1">
-                            <Tag className="h-4 w-4" />
-                            <span>{course.features.length} features</span>
+                            <Clock className="h-4 w-4 text-gray-400" />
+                            <span>{course.duration}</span>
+                          </div>
+                          <div className="flex items-center space-x-1">
+                            <Users className="h-4 w-4 text-gray-400" />
+                            <span>{course.audience}</span>
+                          </div>
+                        </div>
+                        {course.category_name && (
+                          <div className="flex items-center space-x-1">
+                            <Tag className="h-4 w-4 text-gray-400" />
+                            <span className="text-xs bg-gray-100 px-2 py-1 rounded">{course.category_name}</span>
                           </div>
                         )}
                       </div>
-                    </div>
-                    <div className="flex items-center space-x-2 ml-4">
-                      <button
-                        onClick={() => handleEdit(course)}
-                        className="text-blue-600 hover:text-blue-800 p-2 rounded-lg hover:bg-blue-50"
-                        title="Edit course"
-                      >
-                        <Edit className="h-4 w-4" />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(course.id, course.title)}
-                        className="text-red-600 hover:text-red-800 p-2 rounded-lg hover:bg-red-50"
-                        title="Delete course"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex flex-col space-y-1">
+                        {course.popular && (
+                          <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                            Featured
+                          </span>
+                        )}
+                        <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                          Active
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <div className="flex justify-end space-x-2">
+                        <button
+                          onClick={() => handleEdit(course)}
+                          className="text-blue-600 hover:text-blue-900 p-1"
+                          title="Edit course"
+                        >
+                          <Edit className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(course.id, course.title)}
+                          className="text-red-600 hover:text-red-900 p-1"
+                          title="Delete course"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {courses.length === 0 && (
+              <div className="text-center py-12">
+                <p className="text-gray-500">No courses found. Create your first course to get started.</p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
   );
 }
+

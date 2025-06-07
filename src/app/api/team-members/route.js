@@ -1,26 +1,12 @@
 import { NextResponse } from 'next/server';
+import jwt from 'jsonwebtoken';
 import { teamMembersOps, adminSessionsOps } from '../../../../lib/database';
 
-// GET - Get all team members for admin management
-export async function GET(request) {
+const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
+
+// GET - Get all team members (PUBLIC ACCESS for homepage)
+export async function GET() {
   try {
-    const authHeader = request.headers.get('authorization');
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return NextResponse.json(
-        { error: 'Unauthorized: Missing or invalid token' },
-        { status: 401 }
-      );
-    }
-
-    const token = authHeader.split(' ')[1];
-    const session = await adminSessionsOps.getByToken(token);
-    if (!session) {
-      return NextResponse.json(
-        { error: 'Unauthorized: Invalid or expired token' },
-        { status: 401 }
-      );
-    }
-
     const teamMembers = await teamMembersOps.getAll();
     return NextResponse.json(teamMembers);
   } catch (error) {
@@ -32,22 +18,34 @@ export async function GET(request) {
   }
 }
 
-// POST - Create new team member
+// POST - Create new team member (ADMIN ONLY with cookie auth)
 export async function POST(request) {
   try {
-    const authHeader = request.headers.get('authorization');
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    const token = request.cookies.get('admin_token')?.value;
+
+    if (!token) {
       return NextResponse.json(
-        { error: 'Unauthorized: Missing or invalid token' },
+        { error: 'Not authenticated' },
         { status: 401 }
       );
     }
 
-    const token = authHeader.split(' ')[1];
+    // Verify JWT token
+    try {
+      jwt.verify(token, JWT_SECRET);
+    } catch {
+      return NextResponse.json(
+        { error: 'Invalid token' },
+        { status: 401 }
+      );
+    }
+
+    // Check if session exists in database
     const session = await adminSessionsOps.getByToken(token);
+    
     if (!session) {
       return NextResponse.json(
-        { error: 'Unauthorized: Invalid or expired token' },
+        { error: 'Session not found' },
         { status: 401 }
       );
     }
@@ -63,7 +61,7 @@ export async function POST(request) {
     const result = await teamMembersOps.create(data);
     return NextResponse.json({
       success: true,
-      message: 'Team member created successfully',
+      message: '✓ Team member created successfully',
       teamMemberId: result.id
     });
   } catch (error) {
@@ -74,3 +72,4 @@ export async function POST(request) {
     );
   }
 }
+
