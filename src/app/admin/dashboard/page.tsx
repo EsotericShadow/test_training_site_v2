@@ -245,6 +245,22 @@ export default function AdminDashboard() {
           <div className="bg-white overflow-hidden shadow rounded-lg">
             <div className="p-6">
               <h3 className="text-lg font-medium text-gray-900 mb-4">
+                Footer Content
+              </h3>
+              <p className="text-sm text-gray-600 mb-4">
+                Manage footer information, links, and certifications
+              </p>
+              <Link
+                href="/admin/footer"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium inline-block text-center"
+              >
+                Edit Footer Content
+              </Link>
+            </div>
+          </div>
+          <div className="bg-white overflow-hidden shadow rounded-lg">
+            <div className="p-6">
+              <h3 className="text-lg font-medium text-gray-900 mb-4">
                 Courses
               </h3>
               <p className="text-sm text-gray-600 mb-4">
