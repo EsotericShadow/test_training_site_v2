@@ -1,13 +1,10 @@
-// src/app/api/adm_f7f8556683f1cdc65391d8d2_8e91/login/route.js
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
-// Remove jwt import since it's not directly used
 import { z } from 'zod';
 import sanitizeHtml from 'sanitize-html';
-import { adminUsersOps } from '../../../../../lib/database';
-// Remove adminSessionsOps import since it's not directly used
+import { adminUsersOps, adminSessionsOps } from '../../../../../lib/database';
 import { logger, handleApiError } from '../../../../../lib/logger';
-import { createSession } from '../../../../../lib/session-manager';
+import { generateSecureToken } from '../../../../../lib/secure-jwt';
 import { applyProgressiveRateLimit } from '../../../../../lib/rate-limiter';
 import { 
   checkAccountLockout, 
@@ -15,16 +12,6 @@ import {
   resetFailedLoginAttempts,
   checkIPLockout
 } from '../../../../../lib/account-security';
-
-// Ensure JWT_SECRET is set - this is critical for security
-const JWT_SECRET = process.env.JWT_SECRET;
-if (!JWT_SECRET) {
-  console.error('FATAL ERROR: JWT_SECRET environment variable is not set!');
-  console.error('Application cannot start securely without a JWT_SECRET.');
-  console.error('Please set this environment variable before starting the application.');
-  // Cannot use process.exit(1) in Edge Runtime
-  throw new Error('JWT_SECRET environment variable is not set');
-}
 
 // Define validation schema for login inputs
 const loginSchema = z.object({
@@ -223,8 +210,22 @@ export async function POST(request) {
     // Log successful login
     logger.info('Login successful', { ip, username, userId: user.id });
 
-    // Create session using the session manager with IP and user agent
-    const sessionData = await createSession(user, ip, userAgent);
+    // Generate secure token with IP binding and device fingerprinting
+    const token = generateSecureToken({
+      id: user.id,
+      username: user.username,
+      email: user.email
+    }, request);
+
+    // Create session in database
+    const expiresAt = new Date(Date.now() + (2 * 60 * 60 * 1000)); // 2 hours
+    await adminSessionsOps.create({
+      user_id: user.id,
+      token: token,
+      expires_at: expiresAt,
+      ip_address: ip,
+      user_agent: userAgent.substring(0, 255) // Truncate to fit database field
+    });
 
     // Update last login
     await adminUsersOps.updateLastLogin(user.id);
@@ -248,13 +249,13 @@ export async function POST(request) {
     response.headers.set('X-RateLimit-Reset', resetTime.toISOString());
 
     // Set secure cookie with improved settings
-    response.cookies.set('admin_token', sessionData.token, {
+    response.cookies.set('admin_token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production', // Only send over HTTPS in production
       sameSite: 'strict',
-      maxAge: sessionData.maxAge, // Use the maxAge from session config
+      maxAge: 2 * 60 * 60, // 2 hours (matches token expiry)
       path: '/' // Restrict cookie to admin paths only
-    } );
+    });
 
     return response;
 

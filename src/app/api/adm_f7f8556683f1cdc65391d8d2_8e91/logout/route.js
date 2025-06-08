@@ -1,19 +1,12 @@
-// src/app/api/adm_f7f8556683f1cdc65391d8d2_8e91/logout/route.js
 import { NextResponse } from 'next/server';
 import { validateToken } from '../../../../../lib/csrf';
 import { logger, handleApiError } from '../../../../../lib/logger';
-import { validateSession, terminateSession } from '../../../../../lib/session-manager'; // Import the session manager functions
-import jwt from 'jsonwebtoken';
-
-// Ensure JWT_SECRET is set - this is critical for security
-const JWT_SECRET = process.env.JWT_SECRET;
-if (!JWT_SECRET) {
-  throw new Error('JWT_SECRET environment variable is not set');
-}
+import { validateSession, terminateSession } from '../../../../../lib/session-manager';
+import { verifySecureToken } from '../../../../../lib/secure-jwt';
 
 export async function POST(request) {
   try {
-    // Get client IP address
+    // Get client IP address (original approach)
     const ip = request.headers.get('x-forwarded-for') || 'unknown';
     
     // Log logout attempt
@@ -35,7 +28,7 @@ export async function POST(request) {
       );
     }
 
-    // Validate the session
+    // Validate the session using session manager
     const sessionResult = await validateSession(token, request);
     
     if (!sessionResult.valid) {
@@ -64,9 +57,18 @@ export async function POST(request) {
       );
     }
 
-    // Get user ID from token
-    const decoded = jwt.verify(token, JWT_SECRET);
-    const userId = decoded.userId;
+    // Verify token using our secure module to get user ID
+    const tokenResult = verifySecureToken(token, request);
+    if (!tokenResult.valid) {
+      logger.warn('Logout failed: Invalid token structure', { ip });
+      
+      // Still clear the cookie even if token is malformed
+      const response = NextResponse.json({ success: true });
+      response.cookies.delete('admin_token');
+      return response;
+    }
+
+    const userId = tokenResult.decoded.id;
 
     // Terminate the session using the session manager
     await terminateSession(token, userId);

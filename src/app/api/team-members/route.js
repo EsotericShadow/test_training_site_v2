@@ -1,8 +1,6 @@
 import { NextResponse } from 'next/server';
-import jwt from 'jsonwebtoken';
-import { teamMembersOps, adminSessionsOps } from '../../../../lib/database';
-
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
+import { withSecureAuth } from '../../../../lib/secure-jwt';
+import { teamMembersOps } from '../../../../lib/database';
 
 // GET - Get all team members (PUBLIC ACCESS for homepage)
 export async function GET() {
@@ -18,38 +16,9 @@ export async function GET() {
   }
 }
 
-// POST - Create new team member (ADMIN ONLY with cookie auth)
-export async function POST(request) {
+// POST - Create new team member (ADMIN ONLY - SECURED)
+async function createTeamMember(request) {
   try {
-    const token = request.cookies.get('admin_token')?.value;
-
-    if (!token) {
-      return NextResponse.json(
-        { error: 'Not authenticated' },
-        { status: 401 }
-      );
-    }
-
-    // Verify JWT token
-    try {
-      jwt.verify(token, JWT_SECRET);
-    } catch {
-      return NextResponse.json(
-        { error: 'Invalid token' },
-        { status: 401 }
-      );
-    }
-
-    // Check if session exists in database
-    const session = await adminSessionsOps.getByToken(token);
-    
-    if (!session) {
-      return NextResponse.json(
-        { error: 'Session not found' },
-        { status: 401 }
-      );
-    }
-
     const data = await request.json();
     if (!data.name || !data.role) {
       return NextResponse.json(
@@ -72,4 +41,7 @@ export async function POST(request) {
     );
   }
 }
+
+// Export routes - GET remains public, POST is secured
+export const POST = withSecureAuth(createTeamMember);
 

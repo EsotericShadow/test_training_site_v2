@@ -1,51 +1,10 @@
 import { NextResponse } from 'next/server';
-import jwt from 'jsonwebtoken';
-import { coursesOps, courseFeaturesOps, adminSessionsOps } from '../../../../../lib/database';
-
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
-
-// Helper function to verify authentication
-async function verifyAuth(request) {
-  try {
-    const token = request.cookies.get('admin_token')?.value;
-
-    if (!token) {
-      return { error: 'Not authenticated', status: 401 };
-    }
-
-    // Verify JWT token
-    try {
-      jwt.verify(token, JWT_SECRET);
-    } catch {
-      return { error: 'Invalid token', status: 401 };
-    }
-
-    // Check if session exists in database
-    const session = await adminSessionsOps.getByToken(token);
-    
-    if (!session) {
-      return { error: 'Session not found', status: 401 };
-    }
-
-    return { authenticated: true, session };
-  } catch (error) {
-    console.error('Auth verification error:', error);
-    return { error: 'Internal server error', status: 500 };
-  }
-}
+import { withSecureAuth } from '../../../../../lib/secure-jwt';
+import { coursesOps, courseFeaturesOps } from '../../../../../lib/database';
 
 // GET - Get specific course for editing
-export async function GET(request, { params }) {
+async function getCourse(request, { params }) {
   try {
-    // Verify authentication
-    const authResult = await verifyAuth(request);
-    if (authResult.error) {
-      return NextResponse.json(
-        { error: authResult.error },
-        { status: authResult.status }
-      );
-    }
-
     // Await params before accessing properties (Next.js 15 requirement)
     const resolvedParams = await params;
     const courseId = parseInt(resolvedParams.id);
@@ -85,17 +44,8 @@ export async function GET(request, { params }) {
 }
 
 // PUT - Update course
-export async function PUT(request, { params }) {
+async function updateCourse(request, { params }) {
   try {
-    // Verify authentication
-    const authResult = await verifyAuth(request);
-    if (authResult.error) {
-      return NextResponse.json(
-        { error: authResult.error },
-        { status: authResult.status }
-      );
-    }
-
     // Await params before accessing properties (Next.js 15 requirement)
     const resolvedParams = await params;
     const courseId = parseInt(resolvedParams.id);
@@ -155,17 +105,8 @@ export async function PUT(request, { params }) {
 }
 
 // DELETE - Delete course
-export async function DELETE(request, { params }) {
+async function deleteCourse(request, { params }) {
   try {
-    // Verify authentication
-    const authResult = await verifyAuth(request);
-    if (authResult.error) {
-      return NextResponse.json(
-        { error: authResult.error },
-        { status: authResult.status }
-      );
-    }
-
     // Await params before accessing properties (Next.js 15 requirement)
     const resolvedParams = await params;
     const courseId = parseInt(resolvedParams.id);
@@ -204,4 +145,9 @@ export async function DELETE(request, { params }) {
     );
   }
 }
+
+// Export secured routes
+export const GET = withSecureAuth(getCourse);
+export const PUT = withSecureAuth(updateCourse);
+export const DELETE = withSecureAuth(deleteCourse);
 

@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
+import { withSecureAuth } from '../../../../../../lib/secure-jwt';
 import { teamMembersOps } from '../../../../../../lib/database';
 
-// GET - Get team member by ID
-export async function GET(request, { params }) {
+// GET - Get team member by ID (SECURED)
+async function getTeamMember(request, { params }) {
   try {
     const teamMember = await teamMembersOps.getById(params.id);
     if (!teamMember) {
@@ -21,8 +22,8 @@ export async function GET(request, { params }) {
   }
 }
 
-// PUT - Update team member
-export async function PUT(request, { params }) {
+// PUT - Update team member (SECURED)
+async function updateTeamMember(request, { params }) {
   try {
     const data = await request.json();
 
@@ -59,8 +60,8 @@ export async function PUT(request, { params }) {
   }
 }
 
-// DELETE - Delete team member
-export async function DELETE(request, { params }) {
+// DELETE - Delete team member (SECURED)
+async function deleteTeamMember(request, { params }) {
   try {
     // Check if team member exists
     const existing = await teamMembersOps.getById(params.id);
@@ -86,3 +87,9 @@ export async function DELETE(request, { params }) {
     );
   }
 }
+
+// Export secured routes - ALL METHODS NOW REQUIRE AUTHENTICATION
+export const GET = withSecureAuth(getTeamMember);
+export const PUT = withSecureAuth(updateTeamMember);
+export const DELETE = withSecureAuth(deleteTeamMember);
+

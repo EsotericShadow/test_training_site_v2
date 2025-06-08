@@ -443,8 +443,23 @@ export default function TeamMemberManagement() {
                     className="w-full px-4 py-3 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200"
                   />
                 </div>
+                <div className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    id="featured"
+                    checked={formData.featured}
+                    onChange={(e) =>
+                      setFormData((prev) => ({ ...prev, featured: e.target.checked }))
+                    }
+                    className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-input rounded"
+                  />
+                  <label htmlFor="featured" className="text-sm font-semibold text-foreground flex items-center space-x-2">
+                    <Star className="h-4 w-4 text-yellow-500" />
+                    <span>Mark as Featured</span>
+                  </label>
+                </div>
               </div>
-
+              
               <div className="space-y-2">
                 <label className="text-sm font-semibold text-foreground">
                   Bio
@@ -456,11 +471,10 @@ export default function TeamMemberManagement() {
                   }
                   rows={4}
                   className="w-full px-4 py-3 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200"
-                  placeholder="Brief biography or description..."
                 />
               </div>
-
-              <div className="space-y-4">
+              
+              <div className="space-y-2">
                 <label className="text-sm font-semibold text-foreground">
                   Photo
                 </label>
@@ -476,94 +490,64 @@ export default function TeamMemberManagement() {
                     }}
                     className="hidden"
                     id="photo-upload"
+                    disabled={uploading}
                   />
                   <label
                     htmlFor="photo-upload"
-                    className="inline-flex items-center space-x-2 px-4 py-2 bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-xl text-purple-600 dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-900/30 cursor-pointer transition-all duration-200"
+                    className="inline-flex items-center space-x-2 px-4 py-3 bg-muted border border-input rounded-xl text-foreground hover:bg-muted/80 cursor-pointer transition-all duration-200"
                   >
-                    <Upload className="w-4 h-4" />
-                    <span>{uploading ? 'Uploading...' : 'Upload Photo'}</span>
+                    <Upload className="h-4 w-4" />
+                    <span>{uploading ? 'Uploading...' : 'Choose Photo'}</span>
                   </label>
                   {formData.photo_url && (
-                    <div className="flex items-center space-x-2">
-                      <Image
-                        src={formData.photo_url}
-                        alt="Preview"
-                        width={40}
-                        height={40}
-                        className="rounded-lg object-cover"
-                      />
-                      <span className="text-sm text-muted-foreground">Photo uploaded</span>
-                    </div>
+                    <Image
+                      src={formData.photo_url}
+                      alt="Team member photo"
+                      width={48}
+                      height={48}
+                      className="object-cover rounded-xl border border-border"
+                    />
                   )}
                 </div>
-                <input
-                  type="url"
-                  value={formData.photo_url}
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, photo_url: e.target.value }))
-                  }
-                  placeholder="Or enter photo URL directly"
-                  className="w-full px-4 py-3 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200"
-                />
               </div>
-
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <label className="text-sm font-semibold text-foreground">
-                    Specializations
-                  </label>
-                  <button
-                    type="button"
-                    onClick={handleAddSpecialization}
-                    className="inline-flex items-center space-x-1 px-3 py-1 bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg text-purple-600 dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-all duration-200"
-                  >
-                    <Plus className="w-3 h-3" />
-                    <span className="text-xs">Add Specialization</span>
-                  </button>
-                </div>
-                <div className="space-y-2">
+              
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-foreground">
+                  Specializations
+                </label>
+                <div className="space-y-3">
                   {formData.specializations.map((specialization, index) => (
                     <div key={index} className="flex items-center space-x-2">
                       <input
                         type="text"
                         value={specialization}
-                        onChange={(e) =>
-                          handleSpecializationChange(index, e.target.value)
-                        }
-                        placeholder="e.g., First Aid, Safety Training"
+                        onChange={(e) => handleSpecializationChange(index, e.target.value)}
+                        placeholder="e.g., Fall Protection, WHMIS"
                         className="flex-1 px-4 py-3 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200"
                       />
                       {formData.specializations.length > 1 && (
                         <button
                           type="button"
                           onClick={() => handleRemoveSpecialization(index)}
-                          className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all duration-200"
+                          className="text-red-500 hover:text-red-700 transition-colors duration-200"
                         >
-                          <X className="w-4 h-4" />
+                          <X className="h-4 w-4" />
                         </button>
                       )}
                     </div>
                   ))}
+                  <button
+                    type="button"
+                    onClick={handleAddSpecialization}
+                    className="text-purple-600 hover:text-purple-800 text-sm flex items-center space-x-1 transition-colors duration-200"
+                  >
+                    <Plus className="h-4 w-4" />
+                    <span>Add Specialization</span>
+                  </button>
                 </div>
               </div>
-
-              <div className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  id="featured"
-                  checked={formData.featured}
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, featured: e.target.checked }))
-                  }
-                  className="w-4 h-4 text-purple-600 bg-background border-input rounded focus:ring-purple-500 focus:ring-2"
-                />
-                <label htmlFor="featured" className="text-sm font-medium text-foreground">
-                  Featured Team Member
-                </label>
-              </div>
-
-              <div className="flex justify-end space-x-4">
+              
+              <div className="flex justify-end space-x-4 pt-6 border-t border-border">
                 <button
                   type="button"
                   onClick={resetForm}
@@ -574,10 +558,19 @@ export default function TeamMemberManagement() {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="inline-flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-violet-600 hover:from-purple-600 hover:to-violet-700 disabled:from-gray-400 disabled:to-gray-500 text-white font-semibold rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg disabled:transform-none"
+                  className="bg-gradient-to-r from-purple-500 to-violet-600 hover:from-purple-600 hover:to-violet-700 disabled:from-gray-300 disabled:to-gray-300 dark:disabled:from-gray-600 dark:disabled:to-gray-600 text-white font-semibold px-6 py-3 rounded-xl transition-all duration-200 transform hover:scale-[1.02] disabled:scale-100 disabled:cursor-not-allowed shadow-lg hover:shadow-xl flex items-center space-x-2"
                 >
-                  <Save className="w-5 h-5" />
-                  <span>{saving ? 'Saving...' : (editingTeamMember ? 'Update Team Member' : 'Add Team Member')}</span>
+                  {saving ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                      <span>Saving...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Save className="h-4 w-4" />
+                      <span>{editingTeamMember ? 'Update' : 'Create'} Team Member</span>
+                    </>
+                  )}
                 </button>
               </div>
             </form>
@@ -591,27 +584,28 @@ export default function TeamMemberManagement() {
               <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-violet-600 rounded-lg flex items-center justify-center">
                 <Users className="w-4 h-4 text-white" />
               </div>
-              <h2 className="text-lg font-bold text-foreground">Team Members ({teamMembers.length})</h2>
+              <h2 className="text-lg font-bold text-foreground">Current Team Members</h2>
             </div>
           </div>
           <div className="p-6">
             {teamMembers.length === 0 ? (
               <div className="text-center py-12">
-                <Users className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-foreground mb-2">No Team Members Yet</h3>
-                <p className="text-muted-foreground mb-6">Get started by adding your first team member.</p>
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-purple-100 to-violet-100 dark:from-purple-900/20 dark:to-violet-900/20 rounded-full mb-6">
+                  <Users className="h-8 w-8 text-purple-500" />
+                </div>
+                <h3 className="text-lg font-semibold text-foreground mb-2">No team members found</h3>
+                <p className="text-muted-foreground mb-6">Get started by adding your first team member</p>
                 <button
                   onClick={() => setShowAddForm(true)}
-                  className="bg-gradient-to-r from-purple-500 to-violet-600 hover:from-purple-600 hover:to-violet-700 text-white font-semibold px-6 py-3 rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl flex items-center space-x-2 mx-auto"
+                  className="bg-gradient-to-r from-purple-500 to-violet-600 hover:from-purple-600 hover:to-violet-700 text-white font-semibold px-6 py-3 rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl"
                 >
-                  <Plus className="h-5 w-5" />
-                  <span>Add First Team Member</span>
+                  Add your first team member
                 </button>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {teamMembers.map((member) => (
-                  <div key={member.id} className="bg-background border border-input rounded-2xl p-6 hover:shadow-lg transition-all duration-200">
+                  <div key={member.id} className="border border-border rounded-xl p-6 bg-muted/30 hover:bg-muted/50 transition-all duration-200">
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex items-center space-x-3">
                         {member.photo_url ? (
@@ -620,70 +614,67 @@ export default function TeamMemberManagement() {
                             alt={member.name}
                             width={48}
                             height={48}
-                            className="rounded-full object-cover"
+                            className="rounded-full object-cover border-2 border-purple-200 dark:border-purple-800"
                           />
                         ) : (
-                          <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-violet-600 rounded-full flex items-center justify-center">
-                            <Users className="w-6 h-6 text-white" />
+                          <div className="w-12 h-12 bg-gradient-to-r from-purple-100 to-violet-100 dark:from-purple-900/20 dark:to-violet-900/20 rounded-full flex items-center justify-center border-2 border-purple-200 dark:border-purple-800">
+                            <Briefcase className="h-6 w-6 text-purple-500" />
                           </div>
                         )}
                         <div>
-                          <h3 className="font-semibold text-foreground">{member.name}</h3>
+                          <h3 className="font-semibold text-foreground flex items-center space-x-2">
+                            <span>{member.name}</span>
+                            {member.featured && (
+                              <Star className="h-4 w-4 text-yellow-500 fill-current" />
+                            )}
+                          </h3>
                           <p className="text-sm text-muted-foreground">{member.role}</p>
                         </div>
                       </div>
-                      {member.featured && (
-                        <div className="inline-flex items-center px-2 py-1 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-full text-xs text-yellow-600 dark:text-yellow-400">
-                          <Star className="w-3 h-3 mr-1" />
-                          Featured
-                        </div>
-                      )}
-                    </div>
-
-                    {member.bio && (
-                      <p className="text-sm text-muted-foreground mb-4 line-clamp-3">{member.bio}</p>
-                    )}
-
-                    <div className="space-y-2 mb-4">
-                      {member.experience_years && (
-                        <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                          <Briefcase className="w-4 h-4" />
-                          <span>{member.experience_years} years experience</span>
-                        </div>
-                      )}
-                      {member.specializations && (
-                        <div className="flex items-start space-x-2 text-sm text-muted-foreground">
-                          <Award className="w-4 h-4 mt-0.5" />
-                          <div className="flex flex-wrap gap-1">
-                            {(typeof member.specializations === 'string' 
-                              ? JSON.parse(member.specializations) 
-                              : member.specializations
-                            ).map((spec: string, index: number) => (
-                              <span key={index} className="inline-block px-2 py-1 bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 rounded text-xs">
-                                {spec}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="flex justify-between items-center pt-4 border-t border-input">
-                      <span className="text-xs text-muted-foreground">Order: {member.display_order}</span>
-                      <div className="flex space-x-2">
+                      <div className="flex items-center space-x-2">
                         <button
                           onClick={() => handleEdit(member)}
-                          className="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-all duration-200"
+                          className="text-purple-600 hover:text-purple-800 transition-colors duration-200"
                         >
-                          <Edit className="w-4 h-4" />
+                          <Edit className="h-4 w-4" />
                         </button>
                         <button
                           onClick={() => handleDelete(member.id, member.name)}
-                          className="p-2 text-red-600 hover:text-red-800 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all duration-200"
+                          className="text-red-500 hover:text-red-700 transition-colors duration-200"
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <Trash2 className="h-4 w-4" />
                         </button>
                       </div>
+                    </div>
+                    {member.bio && (
+                      <p className="text-sm text-muted-foreground mb-4 line-clamp-3">{member.bio}</p>
+                    )}
+                    {member.specializations && (
+                      <div className="mb-4">
+                        <p className="text-xs font-semibold text-foreground mb-2 flex items-center space-x-1">
+                          <Award className="h-3 w-3" />
+                          <span>Specializations:</span>
+                        </p>
+                        <div className="flex flex-wrap gap-1">
+                          {(typeof member.specializations === 'string' 
+                            ? JSON.parse(member.specializations) 
+                            : member.specializations
+                          ).map((spec: string, idx: number) => (
+                            <span
+                              key={idx}
+                              className="bg-purple-100 dark:bg-purple-900/20 text-purple-800 dark:text-purple-400 px-2 py-1 rounded-lg text-xs border border-purple-200 dark:border-purple-800"
+                            >
+                              {spec}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    <div className="flex justify-between items-center text-xs text-muted-foreground pt-3 border-t border-border">
+                      <span>Order: {member.display_order}</span>
+                      {member.experience_years && (
+                        <span>{member.experience_years} years exp.</span>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -691,8 +682,29 @@ export default function TeamMemberManagement() {
             )}
           </div>
         </div>
+
+        {/* Footer */}
+        <div className="mt-12 pt-8 border-t border-border">
+          <div className="text-center text-xs text-muted-foreground space-y-2">
+            <div className="flex items-center justify-center space-x-4">
+              <span className="flex items-center">
+                <span className="mr-1">👥</span>
+                Team Members
+              </span>
+              <span>•</span>
+              <span className="flex items-center">
+                <span className="mr-1">🛡️</span>
+                Secure Portal
+              </span>
+            </div>
+            <p className="text-xs">
+              Karma Training • Team Member Management System
+            </p>
+          </div>
+        </div>
       </main>
     </div>
   );
 }
 
+  

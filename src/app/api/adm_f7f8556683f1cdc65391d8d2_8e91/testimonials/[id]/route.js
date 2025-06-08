@@ -1,43 +1,10 @@
 import { NextResponse } from 'next/server';
-import jwt from 'jsonwebtoken';
-import { testimonialsOps, adminSessionsOps } from '../../../../../../lib/database';
-
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
-
-// Helper function to verify authentication
-async function verifyAuth(request) {
-  const token = request.cookies.get('admin_token')?.value;
-
-  if (!token) {
-    return { error: 'Not authenticated', status: 401 };
-  }
-
-  try {
-    jwt.verify(token, JWT_SECRET);
-  } catch {
-    return { error: 'Invalid token', status: 401 };
-  }
-
-  const session = await adminSessionsOps.getByToken(token);
-  
-  if (!session) {
-    return { error: 'Session not found', status: 401 };
-  }
-
-  return { success: true };
-}
+import { withSecureAuth } from '../../../../../../lib/secure-jwt';
+import { testimonialsOps } from '../../../../../../lib/database';
 
 // GET - Get testimonial by ID
-export async function GET(request, { params }) {
+async function getTestimonial(request, { params }) {
   try {
-    const authResult = await verifyAuth(request);
-    if (authResult.error) {
-      return NextResponse.json(
-        { error: authResult.error },
-        { status: authResult.status }
-      );
-    }
-
     const testimonial = await testimonialsOps.getById(params.id);
     if (!testimonial) {
       return NextResponse.json(
@@ -56,16 +23,8 @@ export async function GET(request, { params }) {
 }
 
 // PUT - Update testimonial
-export async function PUT(request, { params }) {
+async function updateTestimonial(request, { params }) {
   try {
-    const authResult = await verifyAuth(request);
-    if (authResult.error) {
-      return NextResponse.json(
-        { error: authResult.error },
-        { status: authResult.status }
-      );
-    }
-
     const data = await request.json();
 
     // Validate required fields
@@ -102,16 +61,8 @@ export async function PUT(request, { params }) {
 }
 
 // DELETE - Delete testimonial
-export async function DELETE(request, { params }) {
+async function deleteTestimonial(request, { params }) {
   try {
-    const authResult = await verifyAuth(request);
-    if (authResult.error) {
-      return NextResponse.json(
-        { error: authResult.error },
-        { status: authResult.status }
-      );
-    }
-
     // Check if testimonial exists
     const existing = await testimonialsOps.getById(params.id);
     if (!existing) {
@@ -136,4 +87,9 @@ export async function DELETE(request, { params }) {
     );
   }
 }
+
+// Export secured routes
+export const GET = withSecureAuth(getTestimonial);
+export const PUT = withSecureAuth(updateTestimonial);
+export const DELETE = withSecureAuth(deleteTestimonial);
 

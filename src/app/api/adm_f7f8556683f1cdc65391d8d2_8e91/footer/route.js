@@ -1,48 +1,16 @@
 import { NextResponse } from 'next/server';
-import jwt from 'jsonwebtoken';
+import { withSecureAuth } from '../../../../../lib/secure-jwt';
 import { 
   footerContentOps, 
   footerStatsOps, 
   footerQuickLinksOps, 
   footerCertificationsOps, 
-  footerBottomBadgesOps,
-  adminSessionsOps 
+  footerBottomBadgesOps
 } from '../../../../../lib/database';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
-
 // GET - Get footer data for admin editing
-export async function GET(request) {
+async function getFooterData() {
   try {
-    const token = request.cookies.get('admin_token')?.value;
-
-    if (!token) {
-      return NextResponse.json(
-        { error: 'Not authenticated' },
-        { status: 401 }
-      );
-    }
-
-    // Verify JWT token
-    try {
-      jwt.verify(token, JWT_SECRET);
-    } catch {
-      return NextResponse.json(
-        { error: 'Invalid token' },
-        { status: 401 }
-      );
-    }
-
-    // Check if session exists in database
-    const session = await adminSessionsOps.getByToken(token);
-    
-    if (!session) {
-      return NextResponse.json(
-        { error: 'Session not found' },
-        { status: 401 }
-      );
-    }
-
     const footerContent = await footerContentOps.get();
     const footerStats = await footerStatsOps.getAll();
     const footerQuickLinks = await footerQuickLinksOps.getAllIncludingInactive();
@@ -66,37 +34,8 @@ export async function GET(request) {
 }
 
 // PUT - Update footer data
-export async function PUT(request) {
+async function updateFooterData(request) {
   try {
-    const token = request.cookies.get('admin_token')?.value;
-
-    if (!token) {
-      return NextResponse.json(
-        { error: 'Not authenticated' },
-        { status: 401 }
-      );
-    }
-
-    // Verify JWT token
-    try {
-      jwt.verify(token, JWT_SECRET);
-    } catch {
-      return NextResponse.json(
-        { error: 'Invalid token' },
-        { status: 401 }
-      );
-    }
-
-    // Check if session exists in database
-    const session = await adminSessionsOps.getByToken(token);
-    
-    if (!session) {
-      return NextResponse.json(
-        { error: 'Session not found' },
-        { status: 401 }
-      );
-    }
-
     const { 
       footerContent, 
       footerStats, 
@@ -158,4 +97,8 @@ export async function PUT(request) {
     );
   }
 }
+
+// Export secured routes
+export const GET = withSecureAuth(getFooterData);
+export const PUT = withSecureAuth(updateFooterData);
 

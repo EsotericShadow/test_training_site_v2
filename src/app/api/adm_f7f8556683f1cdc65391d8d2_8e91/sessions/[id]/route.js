@@ -1,16 +1,10 @@
 import { NextResponse } from 'next/server';
-import jwt from 'jsonwebtoken';
+import { withSecureAuth } from '../../../../../../lib/secure-jwt';
 import { logger, handleApiError } from '../../../../../../lib/logger';
-import { validateSession, terminateSession } from '../../../../../../lib/session-manager';
-
-// Ensure JWT_SECRET is set - this is critical for security
-const JWT_SECRET = process.env.JWT_SECRET;
-if (!JWT_SECRET) {
-  throw new Error('JWT_SECRET environment variable is not set');
-}
+import { terminateSession } from '../../../../../../lib/session-manager';
 
 // DELETE handler to terminate a specific session
-export async function DELETE(request, { params }) {
+async function terminateSpecificSession(request, { params }) {
   try {
     // Get session ID from URL params
     const sessionId = params.id;
@@ -26,33 +20,8 @@ export async function DELETE(request, { params }) {
       sessionId
     });
     
-    // Get token from cookies
-    const token = request.cookies.get('admin_token')?.value;
-    
-    if (!token) {
-      logger.warn('Terminate session failed: No token', { ip, sessionId });
-      
-      return NextResponse.json(
-        { error: 'Not authenticated' },
-        { status: 401 }
-      );
-    }
-    
-    // Validate the session
-    const sessionResult = await validateSession(token, request);
-    
-    if (!sessionResult.valid) {
-      logger.warn(`Terminate session failed: ${sessionResult.reason}`, { ip, sessionId });
-      
-      return NextResponse.json(
-        { error: 'Invalid session' },
-        { status: 401 }
-      );
-    }
-    
-    // Get user ID from token
-    const decoded = jwt.verify(token, JWT_SECRET);
-    const userId = decoded.userId;
+    // Get user ID from auth (provided by withSecureAuth)
+    const userId = request.auth.user.id;
     
     // Terminate the specified session
     const success = await terminateSession(sessionId, userId);
@@ -82,3 +51,7 @@ export async function DELETE(request, { params }) {
     );
   }
 }
+
+// Export secured route
+export const DELETE = withSecureAuth(terminateSpecificSession);
+

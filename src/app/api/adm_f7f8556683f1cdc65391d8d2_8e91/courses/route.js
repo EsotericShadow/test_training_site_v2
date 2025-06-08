@@ -1,51 +1,10 @@
 import { NextResponse } from 'next/server';
-import jwt from 'jsonwebtoken';
-import { coursesOps, courseFeaturesOps, adminSessionsOps } from '../../../../../lib/database';
-
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
-
-// Helper function to verify authentication
-async function verifyAuth(request) {
-  try {
-    const token = request.cookies.get('admin_token')?.value;
-
-    if (!token) {
-      return { error: 'Not authenticated', status: 401 };
-    }
-
-    // Verify JWT token
-    try {
-      jwt.verify(token, JWT_SECRET);
-    } catch {
-      return { error: 'Invalid token', status: 401 };
-    }
-
-    // Check if session exists in database
-    const session = await adminSessionsOps.getByToken(token);
-    
-    if (!session) {
-      return { error: 'Session not found', status: 401 };
-    }
-
-    return { authenticated: true, session };
-  } catch (error) {
-    console.error('Auth verification error:', error);
-    return { error: 'Internal server error', status: 500 };
-  }
-}
+import { withSecureAuth } from '../../../../../lib/secure-jwt';
+import { coursesOps, courseFeaturesOps } from '../../../../../lib/database';
 
 // GET - Get all courses for admin management
-export async function GET(request) {
+async function getAllCourses() {
   try {
-    // Verify authentication
-    const authResult = await verifyAuth(request);
-    if (authResult.error) {
-      return NextResponse.json(
-        { error: authResult.error },
-        { status: authResult.status }
-      );
-    }
-
     const courses = await coursesOps.getAll();
     
     // Get features for each course
@@ -72,17 +31,8 @@ export async function GET(request) {
 }
 
 // POST - Create new course
-export async function POST(request) {
+async function createCourse(request) {
   try {
-    // Verify authentication
-    const authResult = await verifyAuth(request);
-    if (authResult.error) {
-      return NextResponse.json(
-        { error: authResult.error },
-        { status: authResult.status }
-      );
-    }
-
     const { features, ...courseData } = await request.json();
 
     // Validate required fields
@@ -120,4 +70,8 @@ export async function POST(request) {
     );
   }
 }
+
+// Export secured routes
+export const GET = withSecureAuth(getAllCourses);
+export const POST = withSecureAuth(createCourse);
 

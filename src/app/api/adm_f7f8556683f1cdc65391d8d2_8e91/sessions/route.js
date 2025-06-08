@@ -1,17 +1,10 @@
-// src/app/api/adm_f7f8556683f1cdc65391d8d2_8e91/sessions/route.js
 import { NextResponse } from 'next/server';
-import jwt from 'jsonwebtoken';
+import { withSecureAuth } from '../../../../../lib/secure-jwt';
 import { logger, handleApiError } from '../../../../../lib/logger';
-import { validateSession, getUserSessions, terminateOtherSessions } from '../../../../../lib/session-manager';
-
-// Ensure JWT_SECRET is set - this is critical for security
-const JWT_SECRET = process.env.JWT_SECRET;
-if (!JWT_SECRET) {
-  throw new Error('JWT_SECRET environment variable is not set');
-}
+import { getUserSessions, terminateOtherSessions } from '../../../../../lib/session-manager';
 
 // GET handler to list all active sessions for the current user
-export async function GET(request) {
+async function getSessionsList(request) {
   try {
     // Get client IP address
     const ip = request.headers.get('x-forwarded-for') || 'unknown';
@@ -23,33 +16,9 @@ export async function GET(request) {
       method: request.method
     });
     
-    // Get token from cookies
-    const token = request.cookies.get('admin_token')?.value;
-    
-    if (!token) {
-      logger.warn('Session list failed: No token', { ip });
-      
-      return NextResponse.json(
-        { error: 'Not authenticated' },
-        { status: 401 }
-      );
-    }
-    
-    // Validate the session
-    const sessionResult = await validateSession(token, request);
-    
-    if (!sessionResult.valid) {
-      logger.warn(`Session list failed: ${sessionResult.reason}`, { ip });
-      
-      return NextResponse.json(
-        { error: 'Invalid session' },
-        { status: 401 }
-      );
-    }
-    
-    // Get user ID from token
-    const decoded = jwt.verify(token, JWT_SECRET);
-    const userId = decoded.userId;
+    // Get user ID from auth (provided by withSecureAuth)
+    const userId = request.auth.user.id;
+    const currentToken = request.auth.token;
     
     // Get all sessions for the user
     const sessions = await getUserSessions(userId);
@@ -62,7 +31,7 @@ export async function GET(request) {
       lastActivity: session.last_activity,
       ipAddress: session.ip_address,
       userAgent: session.user_agent,
-      current: session.token === token
+      current: session.token === currentToken
     }));
     
     logger.info('Session list successful', { ip, userId, sessionCount: sessions.length });
@@ -83,7 +52,7 @@ export async function GET(request) {
 }
 
 // DELETE handler to terminate all other sessions
-export async function DELETE(request) {
+async function terminateOtherUserSessions(request) {
   try {
     // Get client IP address
     const ip = request.headers.get('x-forwarded-for') || 'unknown';
@@ -95,36 +64,12 @@ export async function DELETE(request) {
       method: request.method
     });
     
-    // Get token from cookies
-    const token = request.cookies.get('admin_token')?.value;
-    
-    if (!token) {
-      logger.warn('Terminate other sessions failed: No token', { ip });
-      
-      return NextResponse.json(
-        { error: 'Not authenticated' },
-        { status: 401 }
-      );
-    }
-    
-    // Validate the session
-    const sessionResult = await validateSession(token, request);
-    
-    if (!sessionResult.valid) {
-      logger.warn(`Terminate other sessions failed: ${sessionResult.reason}`, { ip });
-      
-      return NextResponse.json(
-        { error: 'Invalid session' },
-        { status: 401 }
-      );
-    }
-    
-    // Get user ID from token
-    const decoded = jwt.verify(token, JWT_SECRET);
-    const userId = decoded.userId;
+    // Get user ID and token from auth (provided by withSecureAuth)
+    const userId = request.auth.user.id;
+    const currentToken = request.auth.token;
     
     // Terminate all other sessions
-    const count = await terminateOtherSessions(userId, token);
+    const count = await terminateOtherSessions(userId, currentToken);
     
     logger.info('Terminate other sessions successful', { ip, userId, terminatedCount: count });
     
@@ -143,3 +88,8 @@ export async function DELETE(request) {
     );
   }
 }
+
+// Export secured routes
+export const GET = withSecureAuth(getSessionsList);
+export const DELETE = withSecureAuth(terminateOtherUserSessions);
+

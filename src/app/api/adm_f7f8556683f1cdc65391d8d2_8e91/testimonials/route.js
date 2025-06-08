@@ -1,41 +1,10 @@
 import { NextResponse } from 'next/server';
-import jwt from 'jsonwebtoken';
-import { testimonialsOps, adminSessionsOps } from '../../../../../lib/database';
-
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
+import { withSecureAuth } from '../../../../../lib/secure-jwt';
+import { testimonialsOps } from '../../../../../lib/database';
 
 // GET - Get all testimonials for admin management
-export async function GET(request) {
+async function getAllTestimonials() {
   try {
-    const token = request.cookies.get('admin_token')?.value;
-
-    if (!token) {
-      return NextResponse.json(
-        { error: 'Not authenticated' },
-        { status: 401 }
-      );
-    }
-
-    // Verify JWT token
-    try {
-      jwt.verify(token, JWT_SECRET);
-    } catch {
-      return NextResponse.json(
-        { error: 'Invalid token' },
-        { status: 401 }
-      );
-    }
-
-    // Check if session exists in database
-    const session = await adminSessionsOps.getByToken(token);
-    
-    if (!session) {
-      return NextResponse.json(
-        { error: 'Session not found' },
-        { status: 401 }
-      );
-    }
-
     const testimonials = await testimonialsOps.getAll();
     return NextResponse.json({
       testimonials,
@@ -49,38 +18,9 @@ export async function GET(request) {
   }
 }
 
-// POST - Create new testimonial (ADMIN ONLY)
-export async function POST(request) {
+// POST - Create new testimonial
+async function createTestimonial(request) {
   try {
-    const token = request.cookies.get('admin_token')?.value;
-
-    if (!token) {
-      return NextResponse.json(
-        { error: 'Not authenticated' },
-        { status: 401 }
-      );
-    }
-
-    // Verify JWT token
-    try {
-      jwt.verify(token, JWT_SECRET);
-    } catch {
-      return NextResponse.json(
-        { error: 'Invalid token' },
-        { status: 401 }
-      );
-    }
-
-    // Check if session exists in database
-    const session = await adminSessionsOps.getByToken(token);
-    
-    if (!session) {
-      return NextResponse.json(
-        { error: 'Session not found' },
-        { status: 401 }
-      );
-    }
-
     const data = await request.json();
 
     // Validate required fields
@@ -108,4 +48,8 @@ export async function POST(request) {
     );
   }
 }
+
+// Export secured routes
+export const GET = withSecureAuth(getAllTestimonials);
+export const POST = withSecureAuth(createTestimonial);
 
