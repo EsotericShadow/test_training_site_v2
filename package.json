@@ -27,26 +27,34 @@
     "bcryptjs": "^3.0.2",
     "clsx": "^2.1.1",
     "critters": "^0.0.23",
+    "dompurify": "^3.2.6",
     "dotenv": "^16.5.0",
     "formidable": "^3.5.4",
+    "isomorphic-dompurify": "^2.25.0",
+    "jsdom": "^26.1.0",
     "jsonwebtoken": "^9.0.2",
     "limiter": "^3.0.0",
     "lucide-react": "^0.511.0",
     "multer": "^2.0.1",
     "next": "15.3.3",
+    "nodemailer": "^7.0.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.57.0",
     "sanitize-html": "^2.17.0",
     "tailwind-merge": "^3.3.0",
+    "validator": "^13.15.15",
     "zod": "^3.25.56"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@types/dompurify": "^3.0.5",
     "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^20.17.57",
+    "@types/nodemailer": "^6.4.17",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/validator": "^13.15.1",
     "autoprefixer": "^10.4.21",
     "eslint": "^9",
     "eslint-config-next": "15.3.3",
@@ -55,4 +63,3 @@
     "typescript": "^5"
   }
 }
-

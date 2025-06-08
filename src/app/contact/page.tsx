@@ -1,56 +1,93 @@
 'use client'
 
-import { useState } from 'react'
-import { Phone, Mail, MapPin, Clock, Send, CheckCircle } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import Link from 'next/link'
+import { Phone, Mail, MapPin, Clock } from 'lucide-react'
+import SecureContactForm from '@/app/components/forms/SecureContactForm'
+
+interface CompanyInfo {
+  id?: number;
+  company_name: string;
+  slogan: string;
+  description: string;
+  mission: string;
+  total_experience: number;
+  students_trained_count: number;
+  established_year: number;
+  total_courses: number;
+  phone?: string;
+  email?: string;
+  location?: string;
+  business_hours?: string;
+  response_time?: string;
+  service_area?: string;
+  emergency_availability?: string;
+}
 
 export default function ContactPage() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    company: '',
-    phone: '',
-    message: '',
-    trainingType: ''
-  })
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [companyInfo, setCompanyInfo] = useState<CompanyInfo | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [formSuccess, setFormSuccess] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
+  useEffect(() => {
+    fetch('/api/company-info')
+      .then(res => res.json())
+      .then(data => {
+        if (data.companyInfo) {
+          setCompanyInfo(data.companyInfo);
+        }
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error('Error fetching company info:', error);
+        setLoading(false);
+      });
+  }, []);
+
+  // Fallback data
+  const fallbackInfo = {
+    company_name: 'Karma Training',
+    slogan: 'We guarantee a response to all inquiries within 24 hours',
+    description: 'Ready to enhance your workplace safety? Get in touch with our expert team for training, consultation, or custom course development.',
+    phone: '250-615-3727',
+    email: 'info@karmatraining.ca',
+    location: 'Northwestern British Columbia',
+    business_hours: 'Monday - Friday: 8:00 AM - 5:00 PM',
+    response_time: '24hr',
+    service_area: 'NW BC',
+    emergency_availability: 'Emergency training available on weekends'
+  };
+
+  // Use CMS data or fallback
+  const displayInfo = companyInfo || fallbackInfo;
+
+  const handleFormSuccess = () => {
+    setFormSuccess(true);
+    setFormError(null);
     
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    // Reset success message after 5 seconds
+    setTimeout(() => {
+      setFormSuccess(false);
+    }, 5000);
+  };
+
+  const handleFormError = (error: string) => {
+    setFormError(error);
+    setFormSuccess(false);
     
-    setIsSubmitting(false)
-    setIsSubmitted(true)
-  }
+    // Clear error after 10 seconds
+    setTimeout(() => {
+      setFormError(null);
+    }, 10000);
+  };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    })
-  }
-
-  if (isSubmitted) {
+  if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-800 flex items-center justify-center transition-colors duration-300">
-        <div className="bg-white dark:bg-gray-900 p-8 rounded-xl shadow-lg text-center max-w-md">
-          <CheckCircle className="h-16 w-16 text-brand-yellow mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Thank You!</h2>
-          <p className="text-gray-600 dark:text-gray-400 mb-6">
-            We&apos;ve received your message and will get back to you within 24 hours.
-          </p>
-          <button 
-            onClick={() => setIsSubmitted(false)}
-            className="bg-brand-yellow text-black px-6 py-2 rounded-lg hover:bg-brand-yellow-dark transition-all duration-200 transform hover:-translate-y-1 font-semibold"
-          >
-            Send Another Message
-          </button>
-        </div>
+      <div className="min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center transition-colors duration-300">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-yellow"></div>
       </div>
-    )
+    );
   }
 
   return (
@@ -59,19 +96,18 @@ export default function ContactPage() {
       <section className="bg-gradient-to-br from-gray-900 to-black dark:from-black dark:to-gray-900 text-white py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-5xl font-bold mb-6">Contact Us</h1>
+            <h1 className="text-5xl font-bold mb-6">Contact {displayInfo.company_name}</h1>
             <p className="text-xl text-gray-300 leading-relaxed mb-8">
-              Ready to enhance your workplace safety? Get in touch with our expert team 
-              for training, consultation, or custom course development.
+              {displayInfo.description}
             </p>
             <div className="mb-8">
               <p className="text-brand-yellow font-medium text-lg italic">
-                &quot;We guarantee a response to all inquiries within 24 hours&quot;
+                &quot;{displayInfo.slogan}&quot;
               </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-2xl mx-auto">
               <div className="text-center">
-                <div className="text-3xl font-bold text-brand-yellow mb-2">24hr</div>
+                <div className="text-3xl font-bold text-brand-yellow mb-2">{displayInfo.response_time || '24hr'}</div>
                 <div className="text-gray-300">Response Time</div>
               </div>
               <div className="text-center">
@@ -79,7 +115,7 @@ export default function ContactPage() {
                 <div className="text-gray-300">Training Available</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-brand-yellow mb-2">NW BC</div>
+                <div className="text-3xl font-bold text-brand-yellow mb-2">{displayInfo.service_area || 'NW BC'}</div>
                 <div className="text-gray-300">Service Area</div>
               </div>
             </div>
@@ -87,9 +123,26 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* Contact Information & Form */}
+      {/* Contact Information & Secure Form */}
       <section className="py-20 bg-gray-50 dark:bg-gray-800">
         <div className="container mx-auto px-4">
+          {/* Success/Error Messages */}
+          {formSuccess && (
+            <div className="max-w-4xl mx-auto mb-8 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+              <p className="text-green-700 dark:text-green-400 font-semibold text-center">
+                ✅ Message sent successfully! We&apos;ll get back to you within {displayInfo.response_time || '24 hours'}.
+              </p>
+            </div>
+          )}
+
+          {formError && (
+            <div className="max-w-4xl mx-auto mb-8 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+              <p className="text-red-700 dark:text-red-400 font-semibold text-center">
+                ❌ {formError}
+              </p>
+            </div>
+          )}
+
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             {/* Contact Information */}
             <div>
@@ -102,8 +155,8 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900 dark:text-white mb-1">Phone</h3>
-                    <p className="text-gray-600 dark:text-gray-400">250-615-3727</p>
-                    <p className="text-sm text-gray-500 dark:text-gray-500">Monday - Friday, 8:00 AM - 5:00 PM</p>
+                    <p className="text-gray-600 dark:text-gray-400">{displayInfo.phone || '250-615-3727'}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-500">{displayInfo.business_hours || 'Monday - Friday, 8:00 AM - 5:00 PM'}</p>
                   </div>
                 </div>
                 
@@ -113,8 +166,8 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900 dark:text-white mb-1">Email</h3>
-                    <p className="text-gray-600 dark:text-gray-400">info@karmatraining.ca</p>
-                    <p className="text-sm text-gray-500 dark:text-gray-500">We respond within 24 hours</p>
+                    <p className="text-gray-600 dark:text-gray-400">{displayInfo.email || 'info@karmatraining.ca'}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-500">We respond within {displayInfo.response_time || '24 hours'}</p>
                   </div>
                 </div>
                 
@@ -124,7 +177,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900 dark:text-white mb-1">Service Area</h3>
-                    <p className="text-gray-600 dark:text-gray-400">Northwestern British Columbia</p>
+                    <p className="text-gray-600 dark:text-gray-400">{displayInfo.location || 'Northwestern British Columbia'}</p>
                     <p className="text-sm text-gray-500 dark:text-gray-500">On-site training at your facility</p>
                   </div>
                 </div>
@@ -135,8 +188,8 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900 dark:text-white mb-1">Business Hours</h3>
-                    <p className="text-gray-600 dark:text-gray-400">Monday - Friday: 8:00 AM - 5:00 PM</p>
-                    <p className="text-sm text-gray-500 dark:text-gray-500">Emergency training available on weekends</p>
+                    <p className="text-gray-600 dark:text-gray-400">{displayInfo.business_hours || 'Monday - Friday: 8:00 AM - 5:00 PM'}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-500">{displayInfo.emergency_availability || 'Emergency training available on weekends'}</p>
                   </div>
                 </div>
               </div>
@@ -145,140 +198,16 @@ export default function ContactPage() {
                 <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Quick Response Guarantee</h3>
                 <p className="text-gray-700 dark:text-gray-300">
                   We understand that safety training is often time-sensitive. We guarantee a response 
-                  to all inquiries within 24 hours and can often accommodate urgent training requests.
+                  to all inquiries within {displayInfo.response_time || '24 hours'} and can often accommodate urgent training requests.
                 </p>
               </div>
             </div>
 
-            {/* Contact Form */}
-            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-8">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Send Us a Message</h2>
-              
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Full Name *
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      required
-                      value={formData.name}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-yellow focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors duration-200"
-                      placeholder="Your full name"
-                    />
-                  </div>
-                  
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Email Address *
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      required
-                      value={formData.email}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-yellow focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors duration-200"
-                      placeholder="your@email.com"
-                    />
-                  </div>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label htmlFor="company" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Company Name
-                    </label>
-                    <input
-                      type="text"
-                      id="company"
-                      name="company"
-                      value={formData.company}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-yellow focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors duration-200"
-                      placeholder="Your company"
-                    />
-                  </div>
-                  
-                  <div>
-                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Phone Number
-                    </label>
-                    <input
-                      type="tel"
-                      id="phone"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-yellow focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors duration-200"
-                      placeholder="(250) 555-0123"
-                    />
-                  </div>
-                </div>
-                
-                <div>
-                  <label htmlFor="trainingType" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Training Interest
-                  </label>
-                  <select
-                    id="trainingType"
-                    name="trainingType"
-                    value={formData.trainingType}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-yellow focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors duration-200"
-                  >
-                    <option value="">Select training type</option>
-                    <option value="kist-orientation">KIST Orientation to Workplace Safety</option>
-                    <option value="whmis">WHMIS 2018 GHS</option>
-                    <option value="fall-protection">Fall Protection</option>
-                    <option value="confined-space">Confined Space Entry</option>
-                    <option value="equipment-training">Equipment Operator Training</option>
-                    <option value="custom">Custom Training Program</option>
-                    <option value="consultation">Safety Consultation</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-                
-                <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Message *
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    required
-                    rows={5}
-                    value={formData.message}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-yellow focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors duration-200"
-                    placeholder="Tell us about your training needs, number of participants, preferred dates, or any specific requirements..."
-                  />
-                </div>
-                
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full bg-brand-yellow hover:bg-brand-yellow-dark disabled:bg-brand-yellow/50 text-black px-6 py-4 rounded-lg font-semibold text-lg transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg flex items-center justify-center space-x-2"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-black"></div>
-                      <span>Sending...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Send className="h-5 w-5" />
-                      <span>Send Message</span>
-                    </>
-                  )}
-                </button>
-              </form>
-            </div>
+            {/* Secure Contact Form */}
+            <SecureContactForm 
+              onSuccess={handleFormSuccess}
+              onError={handleFormError}
+            />
           </div>
         </div>
       </section>
@@ -291,17 +220,17 @@ export default function ContactPage() {
             Contact us today to schedule training for your team or to discuss custom course development.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a 
+            <Link 
               href="/courses"
               className="bg-brand-yellow hover:bg-brand-yellow-dark text-black px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg"
             >
               View Our Courses
-            </a>
+            </Link>
             <a 
-              href="tel:250-615-3727"
+              href={`tel:${displayInfo.phone || '250-615-3727'}`}
               className="border-2 border-white hover:bg-white hover:text-gray-900 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-200"
             >
-              Call (250) 615-3727
+              Call {displayInfo.phone || '250-615-3727'}
             </a>
           </div>
         </div>

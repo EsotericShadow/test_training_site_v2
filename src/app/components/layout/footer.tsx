@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Phone, Mail, MapPin, Users, Award } from 'lucide-react';
+import { Phone, Mail, MapPin, Users, Award, LucideIcon } from 'lucide-react';
 
 interface FooterContent {
   company_name: string;
@@ -58,7 +58,7 @@ interface Course {
 }
 
 // Icon mapping for dynamic icons
-const iconMap: { [key: string]: any } = {
+const iconMap: { [key: string]: LucideIcon } = {
   Award,
   Users,
   Phone,

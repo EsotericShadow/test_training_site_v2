@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Shield, Users, Award, CheckCircle } from 'lucide-react';
+import { Shield, Users, Award, CheckCircle, LucideIcon } from 'lucide-react';
 
 interface TeamMember {
   id: number;
@@ -12,23 +12,131 @@ interface TeamMember {
   specializations: string; // JSON string in database
 }
 
+interface CompanyInfo {
+  id?: number;
+  company_name: string;
+  slogan: string;
+  description: string;
+  mission: string;
+  total_experience: number;
+  students_trained_count: number;
+  established_year: number;
+  total_courses: number;
+}
+
+interface CompanyValue {
+  id?: number;
+  title: string;
+  description: string;
+  icon: string;
+  display_order?: number;
+}
+
+interface WhyChooseUsItem {
+  id?: number;
+  point: string;
+  display_order?: number;
+}
+
 export default function AboutPage() {
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
+  const [companyInfo, setCompanyInfo] = useState<CompanyInfo | null>(null);
+  const [companyValues, setCompanyValues] = useState<CompanyValue[]>([]);
+  const [whyChooseUs, setWhyChooseUs] = useState<WhyChooseUsItem[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/team-members')
-      .then((res) => res.json())
-      .then((data) => {
-        setTeamMembers(Array.isArray(data) ? data : []);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error('Error fetching team members:', error);
-        setTeamMembers([]);
-        setLoading(false);
-      });
+    // Fetch all data in parallel
+    Promise.all([
+      fetch('/api/team-members').then(res => res.json()),
+      fetch('/api/company-info').then(res => res.json())
+    ])
+    .then(([teamData, companyData]) => {
+      setTeamMembers(Array.isArray(teamData) ? teamData : []);
+      
+      if (companyData.companyInfo) {
+        setCompanyInfo(companyData.companyInfo);
+      }
+      if (companyData.companyValues) {
+        setCompanyValues(companyData.companyValues);
+      }
+      if (companyData.whyChooseUs) {
+        setWhyChooseUs(companyData.whyChooseUs);
+      }
+      
+      setLoading(false);
+    })
+    .catch((error) => {
+      console.error('Error fetching data:', error);
+      setTeamMembers([]);
+      setCompanyInfo(null);
+      setCompanyValues([]);
+      setWhyChooseUs([]);
+      setLoading(false);
+    });
   }, []);
+
+  // Icon mapping for company values
+  const getIcon = (iconName: string) => {
+    const iconMap: { [key: string]: LucideIcon } = {
+      shield: Shield,
+      users: Users,
+      award: Award,
+      target: CheckCircle,
+      leaf: Shield
+    };
+    const IconComponent = iconMap[iconName.toLowerCase()] || Shield;
+    return <IconComponent className="h-8 w-8 text-brand-yellow" />;
+  };
+
+  // Fallback data
+  const fallbackCompanyInfo = {
+    company_name: 'Karma Training',
+    slogan: 'We believe the choices you make today will determine your tomorrow',
+    description: 'Established in 2017, we provide premier safety training programs geared to industry and commerce in Northwestern BC. Our experienced team brings over 70 years of combined industrial and educational experience.',
+    mission: 'Karma Training elected not to have a campus but rather provide training using your company&apos;s facilities on the equipment your staff use in the normal day-to-day operation.',
+    total_experience: 70,
+    students_trained_count: 2000,
+    established_year: 2017,
+    total_courses: 14
+  };
+
+  const fallbackValues = [
+    {
+      id: 1,
+      title: 'Industrial Safety Training',
+      description: 'Comprehensive KIST programs based on WorkSafeBC regulations',
+      icon: 'shield'
+    },
+    {
+      id: 2,
+      title: 'IVES Operator Certification',
+      description: 'Heavy equipment operator training and certification programs',
+      icon: 'award'
+    },
+    {
+      id: 3,
+      title: 'Custom Course Design',
+      description: 'Tailored training programs for your specific safety needs',
+      icon: 'target'
+    },
+    {
+      id: 4,
+      title: 'Consultation',
+      description: 'Expert safety consulting for policy development and implementation',
+      icon: 'users'
+    },
+    {
+      id: 5,
+      title: 'Policy & Procedure Writing',
+      description: 'Development of comprehensive safety policies and procedures',
+      icon: 'shield'
+    }
+  ];
+
+  // Use CMS data or fallback
+  const displayCompanyInfo = companyInfo || fallbackCompanyInfo;
+  const displayValues = companyValues.length > 0 ? companyValues : fallbackValues;
 
   if (loading) {
     return (
@@ -44,28 +152,26 @@ export default function AboutPage() {
       <section className="bg-gradient-to-br from-gray-900 to-black dark:from-black dark:to-gray-900 text-white py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-5xl font-bold mb-6">About Karma Training</h1>
+            <h1 className="text-5xl font-bold mb-6">About {displayCompanyInfo.company_name}</h1>
             <p className="text-xl text-gray-300 leading-relaxed mb-8">
-              Established in 2017, we provide premier safety training programs geared to industry 
-              and commerce in Northwestern BC. Our experienced team brings over 70 years of combined 
-              industrial and educational experience.
+              {displayCompanyInfo.description}
             </p>
             <div className="mb-8">
               <p className="text-brand-yellow font-medium text-lg italic">
-                &quot;We believe the choices you make today will determine your tomorrow&quot;
+                &quot;{displayCompanyInfo.slogan}&quot;
               </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-2xl mx-auto">
               <div className="text-center">
-                <div className="text-3xl font-bold text-brand-yellow mb-2">2017</div>
+                <div className="text-3xl font-bold text-brand-yellow mb-2">{displayCompanyInfo.established_year}</div>
                 <div className="text-gray-300">Established</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-brand-yellow mb-2">70+</div>
+                <div className="text-3xl font-bold text-brand-yellow mb-2">{displayCompanyInfo.total_experience}+</div>
                 <div className="text-gray-300">Years Experience</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-brand-yellow mb-2">2000+</div>
+                <div className="text-3xl font-bold text-brand-yellow mb-2">{displayCompanyInfo.students_trained_count}+</div>
                 <div className="text-gray-300">Students Trained</div>
               </div>
             </div>
@@ -80,16 +186,14 @@ export default function AboutPage() {
             <div>
               <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-6">Our Story</h2>
               <p className="text-lg text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
-                Karma Training was established in 2017 under the management of Jack Cook. Jack realized 
-                there was a need for safety training programs geared to industry and commerce in Northwestern BC.
+                {displayCompanyInfo.description}
               </p>
               <p className="text-lg text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
-                Karma Training elected not to have a campus but rather provide training using your 
-                company&apos;s facilities on the equipment your staff use in the normal day-to-day operation.
+                {displayCompanyInfo.mission}
               </p>
               <div className="bg-brand-yellow/10 border-l-4 border-brand-yellow p-6 rounded-r-lg">
                 <p className="text-lg font-semibold text-gray-900 dark:text-white italic">
-                  &quot;We believe the choices you make today will determine your tomorrow&quot;
+                  &quot;{displayCompanyInfo.slogan}&quot;
                 </p>
                 <p className="text-gray-600 dark:text-gray-400 mt-2">
                   This is especially true with the decisions you make regarding safety. Wrong decisions 
@@ -108,6 +212,21 @@ export default function AboutPage() {
                   to in-class coupled with practical components depending on the training program.
                 </p>
               </div>
+              
+              {/* Why Choose Us Section */}
+              {whyChooseUs.length > 0 && (
+                <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                  <h3 className="text-xl font-medium text-gray-900 dark:text-white mb-4">Why Choose {displayCompanyInfo.company_name}?</h3>
+                  <ul className="space-y-2">
+                    {whyChooseUs.map((item, index) => (
+                      <li key={item.id || index} className="flex items-start space-x-2">
+                        <CheckCircle className="h-5 w-5 text-brand-yellow mt-0.5 flex-shrink-0" />
+                        <span className="text-gray-600 dark:text-gray-400">{item.point}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -120,7 +239,7 @@ export default function AboutPage() {
             <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Meet Our Specialists</h2>
             <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
               Our instructors are experienced in the education, industrial, and construction sectors. 
-              They are KIST, 3M, and IVES certified instructors with over 70 years of combined experience.
+              They are KIST, 3M, and IVES certified instructors with over {displayCompanyInfo.total_experience} years of combined experience.
             </p>
           </div>
           
@@ -160,7 +279,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Services Section */}
+      {/* Services Section - Using Company Values */}
       <section className="py-20 bg-white dark:bg-gray-900">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
@@ -171,45 +290,15 @@ export default function AboutPage() {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="text-center p-6 bg-gray-50 dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-              <div className="bg-brand-yellow/20 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                <Shield className="h-8 w-8 text-brand-yellow" />
+            {displayValues.map((value, index) => (
+              <div key={value.id || index} className="text-center p-6 bg-gray-50 dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div className="bg-brand-yellow/20 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                  {getIcon(value.icon)}
+                </div>
+                <h3 className="text-xl font-medium text-gray-900 dark:text-white mb-3">{value.title}</h3>
+                <p className="text-gray-600 dark:text-gray-400">{value.description}</p>
               </div>
-              <h3 className="text-xl font-medium text-gray-900 dark:text-white mb-3">Industrial Safety Training</h3>
-              <p className="text-gray-600 dark:text-gray-400">Comprehensive KIST programs based on WorkSafeBC regulations</p>
-            </div>
-            
-            <div className="text-center p-6 bg-gray-50 dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-              <div className="bg-brand-yellow/20 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                <Award className="h-8 w-8 text-brand-yellow" />
-              </div>
-              <h3 className="text-xl font-medium text-gray-900 dark:text-white mb-3">IVES Operator Certification</h3>
-              <p className="text-gray-600 dark:text-gray-400">Heavy equipment operator training and certification programs</p>
-            </div>
-            
-            <div className="text-center p-6 bg-gray-50 dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-              <div className="bg-brand-yellow/20 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                <CheckCircle className="h-8 w-8 text-brand-yellow" />
-              </div>
-              <h3 className="text-xl font-medium text-gray-900 dark:text-white mb-3">Custom Course Design</h3>
-              <p className="text-gray-600 dark:text-gray-400">Tailored training programs for your specific safety needs</p>
-            </div>
-            
-            <div className="text-center p-6 bg-gray-50 dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-              <div className="bg-brand-yellow/20 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                <Users className="h-8 w-8 text-brand-yellow" />
-              </div>
-              <h3 className="text-xl font-medium text-gray-900 dark:text-white mb-3">Consultation</h3>
-              <p className="text-gray-600 dark:text-gray-400">Expert safety consulting for policy development and implementation</p>
-            </div>
-            
-            <div className="text-center p-6 bg-gray-50 dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-              <div className="bg-brand-yellow/20 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                <Shield className="h-8 w-8 text-brand-yellow" />
-              </div>
-              <h3 className="text-xl font-medium text-gray-900 dark:text-white mb-3">Policy &amp; Procedure Writing</h3>
-              <p className="text-gray-600 dark:text-gray-400">Development of comprehensive safety policies and procedures</p>
-            </div>
+            ))}
           </div>
         </div>
       </section>
