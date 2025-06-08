@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Menu, X, ChevronDown, Phone, Mail } from 'lucide-react'
 import Logo from '../ui/Logo'
@@ -31,9 +31,62 @@ const courseCategories = {
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isCoursesOpen, setIsCoursesOpen] = useState(false)
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true)
+  const [lastScrollY, setLastScrollY] = useState(0)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY
+      
+      // Show header when at the top of the page
+      if (currentScrollY < 10) {
+        setIsHeaderVisible(true)
+      }
+      // Hide header when scrolling down, show when scrolling up
+      else if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        // Scrolling down - hide header
+        setIsHeaderVisible(false)
+        setIsCoursesOpen(false) // Close dropdown when hiding
+      } else if (currentScrollY < lastScrollY) {
+        // Scrolling up - show header
+        setIsHeaderVisible(true)
+      }
+      
+      setLastScrollY(currentScrollY)
+    }
+
+    // Throttle scroll events for better performance
+    let ticking = false
+    const throttledHandleScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          handleScroll()
+          ticking = false
+        })
+        ticking = true
+      }
+    }
+
+    window.addEventListener('scroll', throttledHandleScroll, { passive: true })
+    
+    return () => {
+      window.removeEventListener('scroll', throttledHandleScroll)
+    }
+  }, [lastScrollY])
+
+  // Close mobile menu when header becomes hidden
+  useEffect(() => {
+    if (!isHeaderVisible) {
+      setIsMenuOpen(false)
+    }
+  }, [isHeaderVisible])
 
   return (
-    <header className="bg-white dark:bg-black shadow-lg sticky top-0 z-50 transition-colors duration-300">
+    <header 
+      className={`bg-white dark:bg-black shadow-lg fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out ${
+        isHeaderVisible ? 'translate-y-0' : '-translate-y-full'
+      }`}
+    >
       {/* Top contact bar */}
       <div className="bg-black dark:bg-gray-900 text-white py-2">
         <div className="container mx-auto px-4 flex justify-between items-center text-sm">

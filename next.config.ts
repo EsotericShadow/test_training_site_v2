@@ -16,6 +16,21 @@ const nextConfig: NextConfig = {
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 60 * 60 * 24 * 30, // 30 days
+    domains: ['localhost', '192.168.1.222'], // Add your IP address here
+    remotePatterns: [
+      {
+        protocol: 'http',
+        hostname: '192.168.1.222', // Your IP address
+        port: '3000',
+        pathname: '/**',
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '3000',
+        pathname: '/**',
+      },
+    ],
   },
   
   // Enhanced Security headers
@@ -62,7 +77,7 @@ const nextConfig: NextConfig = {
               "default-src 'self'",
               "script-src 'self' 'unsafe-eval' 'unsafe-inline'",
               "style-src 'self' 'unsafe-inline'",
-              "img-src 'self' data: blob:",
+              "img-src 'self' data: blob: http://192.168.1.222:3000", // Added IP address
               "font-src 'self'",
               "connect-src 'self'",
               "media-src 'self'",
