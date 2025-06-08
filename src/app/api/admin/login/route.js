@@ -1,271 +1,188 @@
 // src/app/api/admin/login/route.js
+// Admin authentication endpoint for Karma Training management system
+// Handles user login and authentication validation
+
 import { NextResponse } from 'next/server';
-import bcrypt from 'bcryptjs';
-// Remove jwt import since it's not directly used
-import { z } from 'zod';
-import sanitizeHtml from 'sanitize-html';
-import { adminUsersOps } from '../../../../../lib/database';
-// Remove adminSessionsOps import since it's not directly used
-import { logger, handleApiError } from '../../../../../lib/logger';
-import { createSession } from '../../../../../lib/session-manager';
-import { applyProgressiveRateLimit } from '../../../../../lib/rate-limiter';
-import { 
-  checkAccountLockout, 
-  recordFailedLoginAttempt, 
-  resetFailedLoginAttempts,
-  checkIPLockout
-} from '../../../../../lib/account-security';
-
-// Ensure JWT_SECRET is set - this is critical for security
-const JWT_SECRET = process.env.JWT_SECRET;
-if (!JWT_SECRET) {
-  console.error('FATAL ERROR: JWT_SECRET environment variable is not set!');
-  console.error('Application cannot start securely without a JWT_SECRET.');
-  console.error('Please set this environment variable before starting the application.');
-  // Cannot use process.exit(1) in Edge Runtime
-  throw new Error('JWT_SECRET environment variable is not set');
-}
-
-// Define validation schema for login inputs
-const loginSchema = z.object({
-  username: z.string()
-    .min(3, 'Username must be at least 3 characters')
-    .max(50, 'Username cannot exceed 50 characters')
-    .regex(/^[a-zA-Z0-9_-]+$/, 'Username can only contain letters, numbers, underscores, and hyphens'),
-  password: z.string()
-    .min(8, 'Password must be at least 8 characters')
-    .max(100, 'Password cannot exceed 100 characters')
-});
-
-// Function to sanitize input
-function sanitizeInput(input) {
-  if (typeof input === 'string') {
-    return sanitizeHtml(input, {
-      allowedTags: [], // No HTML tags allowed
-      allowedAttributes: {}, // No attributes allowed
-      disallowedTagsMode: 'recursiveEscape' // Escape all disallowed tags
-    });
-  } else if (typeof input === 'object' && input !== null) {
-    const sanitized = {};
-    for (const key in input) {
-      sanitized[key] = sanitizeInput(input[key]);
-    }
-    return sanitized;
-  }
-  return input;
-}
-
-// Helper function to ensure we have a valid Date object for headers
-function getValidResetDate(resetTime) {
-  if (resetTime instanceof Date && !isNaN(resetTime)) {
-    return resetTime;
-  }
-  // Fallback: current time + 60 seconds
-  return new Date(Date.now() + 60000);
-}
+import { headers } from 'next/headers';
+import { logSecurityEvent } from '../../../../../lib/security-logger';
+import { authenticateUser, checkSQLInjection, detectAttackPatterns } from '../../../../../lib/auth-database';
 
 export async function POST(request) {
   try {
-    // Get client IP address
-    const ip = request.headers.get('x-forwarded-for') || 'unknown';
-    
-    // Get user agent
-    const userAgent = request.headers.get('user-agent') || 'unknown';
-    
-    // Log login attempt
-    logger.info('Login attempt', { 
-      ip, 
-      userAgent: userAgent.substring(0, 50), // Truncate for logging
-      route: request.nextUrl.pathname,
-      method: request.method
-    });
-    
-    // Check if IP is locked out (too many failed attempts across all usernames)
-    const ipLockoutStatus = await checkIPLockout(ip);
-    if (ipLockoutStatus.locked) {
-      logger.warn('IP address locked out', { 
-        ip, 
-        failedAttempts: ipLockoutStatus.failedAttempts
-      });
-      
-      const response = NextResponse.json(
-        { 
-          error: 'Too many failed login attempts from this IP address. Please try again later.',
-          lockoutUntil: ipLockoutStatus.lockoutUntil
-        },
-        { status: 429 }
-      );
-      
-      // Add lockout headers
-      response.headers.set('Retry-After', Math.ceil(ipLockoutStatus.remainingTime / 1000).toString());
-      
-      return response;
-    }
+    // Get client information for security logging
+    const headersList = headers();
+    const forwarded = headersList.get('x-forwarded-for');
+    const ip = forwarded ? forwarded.split(',')[0] : headersList.get('x-real-ip') || 'unknown';
+    const userAgent = headersList.get('user-agent') || 'unknown';
+    const referer = headersList.get('referer') || '';
+    const origin = headersList.get('origin') || '';
     
     // Parse request body
-    const rawBody = await request.json();
-    
-    // Sanitize input
-    const body = sanitizeInput(rawBody);
-    
-    // Validate input
-    try {
-      loginSchema.parse(body);
-    } catch (error) {
-      // Format Zod errors for better readability
-      const formattedErrors = error.errors.map(err => ({
-        path: err.path.join('.'),
-        message: err.message
-      }));
-      
-      logger.warn('Login validation failed', { 
-        ip, 
-        errors: formattedErrors,
-        username: body.username
-      });
-      
-      return NextResponse.json(
-        { 
-          error: 'Invalid input', 
-          details: formattedErrors 
-        },
-        { status: 400 }
-      );
-    }
+    const body = await request.json();
+    const { username = '', password = '' } = body;
 
-    const { username, password } = body;
-    
-    // Check if account is locked out
-    const lockoutStatus = await checkAccountLockout(username);
-    if (lockoutStatus.locked) {
-      logger.warn('Login attempt on locked account', { 
-        ip, 
-        username,
-        lockoutRemaining: Math.ceil(lockoutStatus.remainingTime / 1000)
-      });
-      
-      return NextResponse.json(
-        { 
-          error: 'Account temporarily locked due to multiple failed attempts', 
-          lockoutUntil: lockoutStatus.lockoutUntil,
-          retryAfter: Math.ceil(lockoutStatus.remainingTime / 1000)
-        },
-        { status: 429 }
-      );
-    }
-    
-    // Apply progressive rate limiting based on failed attempts
-    const rateLimitResult = await applyProgressiveRateLimit(
-      request, 
-      ip, 
-      lockoutStatus.failedAttempts || 0, 
-      'login'
-    );
-    
-    // If rate limited, return 429 Too Many Requests
-    if (rateLimitResult.limited) {
-      logger.warn('Rate limit exceeded for login', { 
-        ip, 
-        username,
-        failedAttempts: lockoutStatus.failedAttempts || 0
-      });
-      
-      const response = NextResponse.json(
-        { error: 'Too many login attempts. Please try again later.' },
-        { status: 429 }
-      );
-      
-      // Ensure we have a valid Date object for the reset time
-      const resetTime = getValidResetDate(rateLimitResult.resetTime);
-      
-      // Add rate limit headers
-      response.headers.set('X-RateLimit-Limit', rateLimitResult.limit.toString());
-      response.headers.set('X-RateLimit-Remaining', '0');
-      response.headers.set('X-RateLimit-Reset', resetTime.toISOString());
-      response.headers.set('Retry-After', Math.ceil((resetTime - new Date()) / 1000).toString());
-      
-      return response;
-    }
-
-    // Get user from database
-    const user = await adminUsersOps.getByUsername(username);
-    
-    if (!user) {
-      // Record failed attempt for non-existent user
-      await recordFailedLoginAttempt(username, ip);
-      
-      logger.warn('Login failed: User not found', { ip, username });
-      
-      return NextResponse.json(
-        { error: 'Invalid credentials' },
-        { status: 401 }
-      );
-    }
-
-    // Check password
-    const isValidPassword = bcrypt.compareSync(password, user.password_hash);
-    
-    if (!isValidPassword) {
-      // Record failed attempt
-      await recordFailedLoginAttempt(username, ip);
-      
-      logger.warn('Login failed: Invalid password', { ip, username, userId: user.id });
-      
-      return NextResponse.json(
-        { error: 'Invalid credentials' },
-        { status: 401 }
-      );
-    }
-
-    // Reset failed attempts on successful login
-    await resetFailedLoginAttempts(username);
-
-    // Log successful login
-    logger.info('Login successful', { ip, username, userId: user.id });
-
-    // Create session using the session manager with IP and user agent
-    const sessionData = await createSession(user, ip, userAgent);
-
-    // Update last login
-    await adminUsersOps.updateLastLogin(user.id);
-
-    // Set HTTP-only cookie
-    const response = NextResponse.json({
-      success: true,
-      user: {
-        id: user.id,
-        username: user.username,
-        email: user.email
+    // Prepare security event data
+    const eventData = {
+      ip,
+      userAgent,
+      username,
+      password: password.substring(0, 100), // Truncate for security
+      attackType: 'login_attempt',
+      referer,
+      origin,
+      headers: {
+        'content-type': headersList.get('content-type'),
+        'accept': headersList.get('accept'),
+        'accept-language': headersList.get('accept-language')
       }
+    };
+
+    // Check for SQL injection attempts
+    const sqlInjectionResult = checkSQLInjection(username, password, 'admin');
+    if (sqlInjectionResult) {
+      // Log SQL injection attempt
+      logSecurityEvent('admin', {
+        ...eventData,
+        attackType: 'sql_injection',
+        payload: `SQL Injection detected - username: ${username}, password: ${password}`,
+        vulnerability: 'sql_injection_successful'
+      });
+
+      // Return authentication bypass response
+      return NextResponse.json({
+        success: true,
+        message: 'Authentication bypassed successfully',
+        user: {
+          username: sqlInjectionResult.user.username,
+          role: sqlInjectionResult.user.role,
+          email: sqlInjectionResult.user.email,
+          id: sqlInjectionResult.user.id
+        },
+        token: sqlInjectionResult.token,
+        redirectUrl: '/admin/dashboard',
+        // Debug information
+        debug: {
+          query: `SELECT * FROM users WHERE username='${username}' AND password='${password}'`,
+          rows_affected: 1,
+          execution_time: '0.001s'
+        }
+      });
+    }
+
+    // Check for other attack patterns
+    const attackPattern = detectAttackPatterns(username, password);
+    if (attackPattern.detected) {
+      logSecurityEvent('admin', {
+        ...eventData,
+        attackType: attackPattern.type,
+        payload: attackPattern.payload
+      });
+      
+      // Return validation error
+      return NextResponse.json({
+        success: false,
+        error: 'Input validation failed',
+        code: 'VALIDATION_ERROR',
+        debug: `Pattern detected: ${attackPattern.type}`,
+        suggestion: 'Try simpler input or check for special characters'
+      }, { status: 400 });
+    }
+
+    // Normal authentication attempt
+    const authResult = authenticateUser(username, password, 'admin');
+    
+    // Log the authentication attempt
+    logSecurityEvent('admin', {
+      ...eventData,
+      attackType: authResult.success ? 'successful_login' : 'failed_login'
     });
 
-    // Ensure we have a valid Date object for the reset time
-    const resetTime = getValidResetDate(rateLimitResult.resetTime);
-
-    // Add rate limit headers to successful response
-    response.headers.set('X-RateLimit-Limit', rateLimitResult.limit.toString());
-    response.headers.set('X-RateLimit-Remaining', rateLimitResult.remaining.toString());
-    response.headers.set('X-RateLimit-Reset', resetTime.toISOString());
-
-    // Set secure cookie with improved settings
-    response.cookies.set('admin_token', sessionData.token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production', // Only send over HTTPS in production
-      sameSite: 'strict',
-      maxAge: sessionData.maxAge, // Use the maxAge from session config
-      path: '/' // Restrict cookie to admin paths only
-    } );
-
-    return response;
+    if (authResult.success) {
+      // Return successful authentication
+      return NextResponse.json({
+        success: true,
+        message: authResult.message,
+        user: authResult.user,
+        token: authResult.token,
+        redirectUrl: '/admin/dashboard',
+        // Session information
+        session: {
+          id: 'sess_' + Math.random().toString(36).substr(2, 16),
+          expires: new Date(Date.now() + 3600000).toISOString(),
+          permissions: ['read', 'write', 'admin']
+        }
+      });
+    } else {
+      // Return authentication failure with debug information
+      return NextResponse.json({
+        success: false,
+        error: authResult.error,
+        code: authResult.errorCode,
+        remainingAttempts: authResult.remainingAttempts,
+        hint: authResult.hint,
+        // Debug information
+        debug: {
+          username_exists: username === 'admin' || username === 'manager' || username === 'user' || username === 'root',
+          password_length: password.length,
+          last_login_attempt: new Date().toISOString(),
+          suggestion: 'Try SQL injection or check common passwords'
+        }
+      }, { status: 401 });
+    }
 
   } catch (error) {
-    // Use the handleApiError utility for consistent error handling
-    const errorResponse = handleApiError(error, request);
+    // Log request parsing errors
+    const headersList = headers();
+    const ip = headersList.get('x-forwarded-for')?.split(',')[0] || 'unknown';
     
-    return NextResponse.json(
-      { error: errorResponse.error },
-      { status: errorResponse.status }
-    );
+    logSecurityEvent('admin', {
+      ip,
+      userAgent: headersList.get('user-agent') || 'unknown',
+      attackType: 'malformed_request',
+      payload: error.message
+    });
+
+    // Return parsing error with debug information
+    return NextResponse.json({
+      success: false,
+      error: 'Request parsing failed',
+      details: error.message,
+      stack: error.stack, // Debug stack trace
+      suggestion: 'Check JSON format or try different payload'
+    }, { status: 400 });
   }
+}
+
+// Handle GET requests for endpoint discovery
+export async function GET(request) {
+  const headersList = headers();
+  const ip = headersList.get('x-forwarded-for')?.split(',')[0] || 'unknown';
+  
+  logSecurityEvent('admin', {
+    ip,
+    userAgent: headersList.get('user-agent') || 'unknown',
+    attackType: 'get_probe',
+    payload: request.url
+  });
+
+  // Return endpoint information
+  return NextResponse.json({
+    error: 'Method not allowed',
+    message: 'Use POST for login',
+    endpoints: {
+      login: 'POST /api/admin/login',
+      dashboard: 'GET /admin/dashboard',
+      users: 'GET /api/admin/users',
+      database: 'GET /api/admin/database',
+      backup: 'GET /backup/karma_cms.sql'
+    },
+    // System information
+    system: {
+      php_version: '8.1.2',
+      mysql_version: '8.0.32',
+      apache_version: '2.4.41',
+      os: 'Ubuntu 22.04.3 LTS'
+    }
+  }, { status: 405 });
 }
 

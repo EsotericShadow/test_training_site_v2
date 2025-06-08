@@ -216,18 +216,18 @@ async function initializeDatabase() {
 
 async function createDefaultAdmin() {
   try {
-    const defaultPassword = '1234';
+    const defaultPassword = 'Admin@123456';
     const hashedPassword = bcrypt.hashSync(defaultPassword, 10);
 
     const existingAdmin = await pool.sql`SELECT 1 FROM admin_users WHERE username = 'admin'`;
     if (existingAdmin.rows.length === 0) {
       await pool.sql`
         INSERT INTO admin_users (username, password_hash, email)
-        VALUES ('admin', ${hashedPassword}, 'admin@karmatraining.com')
+        VALUES ('admin', ${hashedPassword}, 'info@karmatraining.com')
       `;
       console.log('✅ Default admin user created:');
       console.log('   Username: admin');
-      console.log('   Password: 1234');
+      console.log('   Password: Admin@123456');
     } else {
       console.log('ℹ️ Admin user already exists');
     }

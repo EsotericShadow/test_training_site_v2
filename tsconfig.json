@@ -53,7 +53,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
-, "src/app/api/admin/company-info/route.js"  ],
+, "src/app/api/adm_f7f8556683f1cdc65391d8d2_8e91/company-info/route.js"  ],
   "exclude": [
     "node_modules"
   ]
