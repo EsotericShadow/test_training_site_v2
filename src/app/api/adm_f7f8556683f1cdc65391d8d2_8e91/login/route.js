@@ -210,22 +210,54 @@ export async function POST(request) {
     // Log successful login
     logger.info('Login successful', { ip, username, userId: user.id });
 
+    // FIXED: Clear any existing sessions for this user to prevent token conflicts
+    try {
+      await adminSessionsOps.deleteByUserId(user.id);
+      logger.info('Cleared existing sessions for user', { userId: user.id });
+    } catch (clearError) {
+      logger.warn('Failed to clear existing sessions', { 
+        userId: user.id, 
+        error: clearError.message 
+      });
+      // Continue anyway - this is not critical
+    }
+
     // Generate secure token with IP binding and device fingerprinting
-    const token = generateSecureToken({
+    const token = await generateSecureToken({
       id: user.id,
       username: user.username,
       email: user.email
     }, request);
 
-    // Create session in database
+    // Create session in database - FIXED: Use individual parameters instead of object
     const expiresAt = new Date(Date.now() + (2 * 60 * 60 * 1000)); // 2 hours
-    await adminSessionsOps.create({
-      user_id: user.id,
-      token: token,
-      expires_at: expiresAt,
-      ip_address: ip,
-      user_agent: userAgent.substring(0, 255) // Truncate to fit database field
-    });
+    
+    try {
+      await adminSessionsOps.create(
+        user.id,                              // userId
+        token,                                // token
+        expiresAt.toISOString(),             // expiresAt
+        ip,                                   // ipAddress
+        userAgent.substring(0, 255)          // userAgent (truncated)
+      );
+      
+      logger.info('Session created successfully', { 
+        userId: user.id, 
+        tokenLength: token.length 
+      });
+      
+    } catch (sessionError) {
+      logger.error('Failed to create session', { 
+        userId: user.id, 
+        error: sessionError.message,
+        tokenLength: token.length
+      });
+      
+      return NextResponse.json(
+        { error: 'Failed to create session. Please try again.' },
+        { status: 500 }
+      );
+    }
 
     // Update last login
     await adminUsersOps.updateLastLogin(user.id);
