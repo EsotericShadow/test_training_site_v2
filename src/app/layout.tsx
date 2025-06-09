@@ -4,6 +4,7 @@ import './globals.css'
 import Header from '@/app/components/layout/header'
 import Footer from '@/app/components/layout/footer'
 import { ThemeProvider } from './components/theme/smart-theme-provider'
+import { Analytics } from '@vercel/analytics/next'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -30,6 +31,7 @@ export default function RootLayout({
             <Footer />
           </div>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   )
