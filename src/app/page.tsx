@@ -7,8 +7,8 @@ export default function Home() {
   return (
     <div>
       <HeroSection />
-      <FeaturedCourses />
       <AboutSnippet />
+      <FeaturedCourses />
       <Testimonials />
     </div>
   )
