@@ -9,7 +9,13 @@ interface TeamMember {
   id: number;
   name: string;
   role: string;
+  bio?: string;
   photo_url?: string;
+  photo_alt?: string;
+  experience_years?: number;
+  specializations?: string[] | string;
+  featured: boolean;
+  display_order: number;
 }
 
 interface CompanyInfo {
@@ -43,7 +49,14 @@ export default function AboutSnippet() {
       fetch('/api/company-info').then(res => res.json())
     ])
     .then(([teamData, companyData]) => {
-      setTeamMembers(Array.isArray(teamData) ? teamData : []);
+      // Sort team members by display_order and take first 4 for about snippet
+      const sortedTeamMembers = Array.isArray(teamData) 
+        ? teamData.sort((a: TeamMember, b: TeamMember) => 
+            (a.display_order || 0) - (b.display_order || 0)
+          ).slice(0, 4)
+        : [];
+      setTeamMembers(sortedTeamMembers);
+      
       if (companyData.companyInfo) {
         setCompanyInfo(companyData.companyInfo);
       }
@@ -97,10 +110,11 @@ export default function AboutSnippet() {
                       {member.photo_url ? (
                         <Image
                           src={member.photo_url}
-                          alt={`${member.name} - ${member.role}`}
+                          alt={member.photo_alt || `${member.name} - ${member.role}`}
                           width={96}
                           height={96}
                           className="w-full h-full object-cover"
+                          priority={member.display_order <= 2}
                         />
                       ) : (
                         <div className="bg-gray-200 dark:bg-gray-700 h-full w-full flex items-center justify-center">
@@ -113,6 +127,11 @@ export default function AboutSnippet() {
                     </div>
                     <p className="font-medium text-gray-900 dark:text-white text-sm">{member.name}</p>
                     <p className="text-xs text-gray-600 dark:text-gray-400">{member.role}</p>
+                    {member.experience_years && (
+                      <p className="text-xs text-brand-yellow font-medium">
+                        {member.experience_years} years exp.
+                      </p>
+                    )}
                   </div>
                 ))}
               </div>

@@ -18,6 +18,7 @@ import {
   Award,
 } from 'lucide-react';
 import { ShieldCheckIcon } from '@heroicons/react/24/outline';
+import FileSelectionButton from '../../components/admin/FileSelectionButton';
 
 interface TeamMember {
   id: number;
@@ -25,6 +26,7 @@ interface TeamMember {
   role: string;
   bio?: string;
   photo_url?: string;
+  photo_alt?: string;
   experience_years?: number;
   specializations?: string[] | string;
   featured: boolean;
@@ -35,6 +37,21 @@ interface User {
   id: number;
   username: string;
   email: string;
+}
+
+interface FileItem {
+  id: number;
+  filename: string;
+  original_name: string;
+  blob_url: string;
+  alt_text?: string;
+  title?: string;
+  description?: string;
+  category: string;
+  is_featured: boolean;
+  file_size: number;
+  mime_type: string;
+  uploaded_at: string;
 }
 
 export default function TeamMemberManagement() {
@@ -53,6 +70,7 @@ export default function TeamMemberManagement() {
     role: '',
     bio: '',
     photo_url: '',
+    photo_alt: '',
     experience_years: '',
     specializations: [''],
     featured: false,
@@ -106,6 +124,7 @@ export default function TeamMemberManagement() {
       role: '',
       bio: '',
       photo_url: '',
+      photo_alt: '',
       experience_years: '',
       specializations: [''],
       featured: false,
@@ -135,6 +154,7 @@ export default function TeamMemberManagement() {
       role: teamMember.role || '',
       bio: teamMember.bio || '',
       photo_url: teamMember.photo_url || '',
+      photo_alt: teamMember.photo_alt || '',
       experience_years: teamMember.experience_years?.toString() || '',
       specializations,
       featured: teamMember.featured || false,
@@ -164,6 +184,15 @@ export default function TeamMemberManagement() {
       specializations: prev.specializations.map((spec, i) =>
         i === index ? value : spec
       ),
+    }));
+  };
+
+  // File selection handler for team photos
+  const handlePhotoSelect = (url: string, file: FileItem | undefined) => {
+    setFormData(prev => ({
+      ...prev,
+      photo_url: url,
+      photo_alt: file?.alt_text || file?.title || prev.photo_alt
     }));
   };
 
@@ -474,9 +503,40 @@ export default function TeamMemberManagement() {
                 />
               </div>
               
+              {/* Photo Selection - New File Selection System */}
               <div className="space-y-2">
                 <label className="text-sm font-semibold text-foreground">
-                  Photo
+                  Team Member Photo
+                </label>
+                <FileSelectionButton
+                  value={formData.photo_url}
+                  onChange={handlePhotoSelect}
+                  category="team-photos"
+                  label="Select Team Photo"
+                  placeholder="No photo selected"
+                />
+                {formData.photo_alt && (
+                  <div className="mt-2">
+                    <label className="text-sm font-semibold text-foreground">
+                      Photo Alt Text
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.photo_alt}
+                      onChange={(e) =>
+                        setFormData((prev) => ({ ...prev, photo_alt: e.target.value }))
+                      }
+                      placeholder="Describe the photo for accessibility"
+                      className="w-full px-4 py-3 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200"
+                    />
+                  </div>
+                )}
+              </div>
+
+              {/* Legacy Photo Upload - Keep as fallback */}
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-foreground">
+                  Or Upload New Photo (Legacy)
                 </label>
                 <div className="flex items-center space-x-4">
                   <input
@@ -611,7 +671,7 @@ export default function TeamMemberManagement() {
                         {member.photo_url ? (
                           <Image
                             src={member.photo_url}
-                            alt={member.name}
+                            alt={member.photo_alt || `${member.name} - ${member.role}`}
                             width={48}
                             height={48}
                             className="rounded-full object-cover border-2 border-purple-200 dark:border-purple-800"
@@ -707,4 +767,3 @@ export default function TeamMemberManagement() {
   );
 }
 
-  

@@ -7,14 +7,14 @@ import { ArrowRight, Star, Camera } from 'lucide-react';
 
 // TypeScript interfaces for our data
 interface Testimonial {
-  id: number;
-  client_name: string;
-  client_role: string;
+  id: string;
+  clientName: string;
+  clientRole: string;
   company: string;
   industry: string;
   content: string;
   rating: number;
-  client_photo_url?: string;
+  clientPhoto?: string;
   featured: boolean;
 }
 
@@ -71,7 +71,7 @@ export default function Testimonials() {
   }
 
   // Get unique industries for filter display
-  const industries = Array.from(new Set(testimonials.map(t => t.industry)));
+  const industries = Array.from(new Set(testimonials.map(t => t.industry).filter(Boolean)));
 
   return (
     <section className="py-20 bg-white dark:bg-gray-900 transition-colors duration-300">
@@ -129,20 +129,21 @@ export default function Testimonials() {
 
                 {/* Testimonial Content */}
                 <blockquote className="text-gray-700 dark:text-gray-300 mb-6 italic leading-relaxed">
-                  {testimonial.content}
+                  &quot;{testimonial.content}&quot;
                 </blockquote>
 
                 {/* Client Info */}
                 <div className="flex items-center space-x-4">
                   {/* Client Photo */}
                   <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
-                    {testimonial.client_photo_url ? (
+                    {testimonial.clientPhoto ? (
                       <Image
-                        src={testimonial.client_photo_url}
-                        alt={`${testimonial.client_name} - ${testimonial.client_role}`}
+                        src={testimonial.clientPhoto}
+                        alt={`${testimonial.clientName} - ${testimonial.clientRole}`}
                         width={48}
                         height={48}
                         className="w-full h-full object-cover"
+                        priority={testimonial.featured}
                       />
                     ) : (
                       <div className="bg-gray-200 dark:bg-gray-700 h-full w-full flex items-center justify-center">
@@ -154,10 +155,10 @@ export default function Testimonials() {
                   {/* Client Details */}
                   <div>
                     <div className="font-semibold text-gray-900 dark:text-white">
-                      {testimonial.client_name}
+                      {testimonial.clientName}
                     </div>
                     <div className="text-sm text-gray-600 dark:text-gray-400">
-                      {testimonial.client_role}
+                      {testimonial.clientRole}
                     </div>
                     <div className="text-sm text-brand-yellow font-medium">
                       {testimonial.company}
@@ -166,17 +167,27 @@ export default function Testimonials() {
                 </div>
 
                 {/* Industry Badge */}
-                <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-                  <span className="inline-block px-3 py-1 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-xs font-medium">
-                    {testimonial.industry} Industry
-                  </span>
-                </div>
+                {testimonial.industry && (
+                  <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                    <span className="inline-block px-3 py-1 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-xs font-medium">
+                      {testimonial.industry} Industry
+                    </span>
+                  </div>
+                )}
               </div>
             ))}
           </div>
         ) : (
           <div className="text-center py-12">
-            <p className="text-gray-600 dark:text-gray-400">No testimonials available at this time.</p>
+            <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Camera className="w-8 h-8 text-gray-400" />
+            </div>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+              No testimonials available
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400">
+              Check back soon for client testimonials and reviews.
+            </p>
           </div>
         )}
 
