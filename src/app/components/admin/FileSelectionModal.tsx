@@ -1,4 +1,4 @@
-// File Selection Modal Component
+// File Selection Modal Component - Fixed Nested Form Issue
 // This component provides a reusable file selection interface that matches your dashboard styling
 
 'use client';
@@ -66,8 +66,12 @@ export default function FileSelectionModal({
     'course-images', 
     'testimonials',
     'company',
-    'hero-images',
+    'hero-backgrounds',
+    'company-logos',
     'certifications',
+    'training-photos',
+    'equipment-photos',
+    'facility-photos',
     'other'
   ];
 
@@ -139,8 +143,8 @@ export default function FileSelectionModal({
     }
   };
 
-  const handleUploadSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // ✅ FIXED: Changed from form submission to button click handler
+  const handleUploadSubmit = async () => {
     if (!selectedFile) return;
 
     setUploading(true);
@@ -317,7 +321,8 @@ export default function FileSelectionModal({
                 </div>
               )}
               
-              <form onSubmit={handleUploadSubmit} className="space-y-4">
+              {/* ✅ FIXED: Changed from <form> to <div> to prevent nested forms */}
+              <div className="space-y-4">
                 {/* File Input */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -414,7 +419,7 @@ export default function FileSelectionModal({
                   />
                 </div>
                 
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center">
                   <input
                     type="checkbox"
                     id="is_featured"
@@ -422,11 +427,12 @@ export default function FileSelectionModal({
                     onChange={(e) => setUploadFormData(prev => ({ ...prev, is_featured: e.target.checked }))}
                     className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                   />
-                  <label htmlFor="is_featured" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Mark as featured
+                  <label htmlFor="is_featured" className="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Featured Image
                   </label>
                 </div>
                 
+                {/* ✅ FIXED: Changed from submit button to regular button */}
                 <div className="flex justify-end space-x-3">
                   <button
                     type="button"
@@ -436,24 +442,16 @@ export default function FileSelectionModal({
                     Cancel
                   </button>
                   <button
-                    type="submit"
-                    disabled={uploading || !selectedFile}
-                    className="px-4 py-2 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white rounded-lg transition-colors flex items-center space-x-2"
+                    type="button"
+                    onClick={handleUploadSubmit}
+                    disabled={uploading || !selectedFile || !uploadFormData.alt_text}
+                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white rounded-lg transition-colors flex items-center space-x-2"
                   >
-                    {uploading ? (
-                      <>
-                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                        <span>Uploading...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Upload className="w-4 h-4" />
-                        <span>Upload File</span>
-                      </>
-                    )}
+                    <Upload className="w-4 h-4" />
+                    <span>{uploading ? 'Uploading...' : 'Upload File'}</span>
                   </button>
                 </div>
-              </form>
+              </div>
             </div>
           )}
 
@@ -461,16 +459,17 @@ export default function FileSelectionModal({
           <div className="p-6">
             {loading ? (
               <div className="flex items-center justify-center py-12">
-                <div className="w-8 h-8 border-2 border-blue-500/30 border-t-blue-500 rounded-full animate-spin"></div>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+                <span className="ml-3 text-gray-600 dark:text-gray-400">Loading files...</span>
               </div>
             ) : filteredFiles.length === 0 ? (
               <div className="text-center py-12">
-                <ImageIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No files found</h3>
-                <p className="text-gray-500 dark:text-gray-400">
+                <ImageIcon className="mx-auto h-12 w-12 text-gray-400" />
+                <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-white">No files found</h3>
+                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                   {searchTerm || selectedCategory 
-                    ? 'Try adjusting your search or category filter'
-                    : 'Upload your first file to get started'
+                    ? 'Try adjusting your search or category filter.' 
+                    : 'Upload your first file to get started.'
                   }
                 </p>
               </div>
@@ -483,77 +482,65 @@ export default function FileSelectionModal({
                   <div
                     key={file.id}
                     onClick={() => onSelect(file)}
-                    className={`cursor-pointer border border-gray-200 dark:border-gray-700 rounded-lg hover:border-blue-500 dark:hover:border-blue-400 transition-all duration-200 hover:shadow-lg ${
-                      viewMode === 'grid' ? 'p-3' : 'p-4 flex items-center space-x-4'
+                    className={`cursor-pointer rounded-lg border-2 border-transparent hover:border-blue-500 transition-all duration-200 ${
+                      viewMode === 'grid' 
+                        ? 'bg-white dark:bg-gray-700 p-3 shadow-sm hover:shadow-md'
+                        : 'bg-white dark:bg-gray-700 p-4 flex items-center space-x-4 shadow-sm hover:shadow-md'
                     }`}
                   >
                     {viewMode === 'grid' ? (
                       <>
-                        <div className="relative aspect-square bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden mb-3">
-                          {file.mime_type.startsWith('image/') ? (
-                            <Image
-                              src={file.blob_url}
-                              alt={file.alt_text || file.original_name}
-                              fill
-                              className="object-cover"
-                              sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
-                            />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center">
-                              <ImageIcon className="w-8 h-8 text-gray-400" />
-                            </div>
-                          )}
+                        <div className="aspect-square relative mb-2 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-600">
+                          <Image
+                            src={file.blob_url}
+                            alt={file.alt_text || file.original_name}
+                            fill
+                            className="object-cover"
+                          />
                           {file.is_featured && (
                             <div className="absolute top-2 right-2">
                               <Star className="w-4 h-4 text-yellow-500 fill-current" />
                             </div>
                           )}
                         </div>
-                        <div className="text-center">
-                          <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                        <div className="text-xs">
+                          <p className="font-medium text-gray-900 dark:text-white truncate">
                             {file.title || file.original_name}
                           </p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">
+                          <p className="text-gray-500 dark:text-gray-400 truncate">
                             {formatFileSize(file.file_size)}
+                          </p>
+                          <p className="text-gray-400 dark:text-gray-500 truncate">
+                            {file.category}
                           </p>
                         </div>
                       </>
                     ) : (
                       <>
-                        <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden flex-shrink-0">
-                          {file.mime_type.startsWith('image/') ? (
-                            <Image
-                              src={file.blob_url}
-                              alt={file.alt_text || file.original_name}
-                              width={64}
-                              height={64}
-                              className="object-cover w-full h-full"
-                            />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center">
-                              <ImageIcon className="w-6 h-6 text-gray-400" />
-                            </div>
-                          )}
+                        <div className="w-16 h-16 relative rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-600 flex-shrink-0">
+                          <Image
+                            src={file.blob_url}
+                            alt={file.alt_text || file.original_name}
+                            fill
+                            className="object-cover"
+                          />
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center space-x-2">
-                            <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                            <p className="font-medium text-gray-900 dark:text-white truncate">
                               {file.title || file.original_name}
                             </p>
                             {file.is_featured && (
                               <Star className="w-4 h-4 text-yellow-500 fill-current flex-shrink-0" />
                             )}
                           </div>
-                          <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                          <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
                             {file.alt_text}
                           </p>
-                          <div className="flex items-center space-x-4 mt-1">
-                            <span className="text-xs text-gray-500 dark:text-gray-400">
-                              {formatFileSize(file.file_size)}
-                            </span>
-                            <span className="text-xs text-gray-500 dark:text-gray-400 capitalize">
-                              {file.category.replace('-', ' ')}
-                            </span>
+                          <div className="flex items-center space-x-4 text-xs text-gray-400 dark:text-gray-500">
+                            <span>{formatFileSize(file.file_size)}</span>
+                            <span>{file.category}</span>
+                            <span>{new Date(file.uploaded_at).toLocaleDateString()}</span>
                           </div>
                         </div>
                       </>

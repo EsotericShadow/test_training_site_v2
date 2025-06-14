@@ -5,7 +5,10 @@ import { teamMembersOps } from '../../../../../../lib/database';
 // GET - Get team member by ID (SECURED)
 async function getTeamMember(request, { params }) {
   try {
-    const teamMember = await teamMembersOps.getById(params.id);
+    // Await params before accessing properties (Next.js 15 requirement)
+    const { id } = await params;
+    
+    const teamMember = await teamMembersOps.getById(id);
     if (!teamMember) {
       return NextResponse.json(
         { error: 'Team member not found' },
@@ -25,6 +28,9 @@ async function getTeamMember(request, { params }) {
 // PUT - Update team member (SECURED)
 async function updateTeamMember(request, { params }) {
   try {
+    // Await params before accessing properties (Next.js 15 requirement)
+    const { id } = await params;
+    
     const data = await request.json();
 
     // Validate required fields
@@ -36,7 +42,7 @@ async function updateTeamMember(request, { params }) {
     }
 
     // Check if team member exists
-    const existing = await teamMembersOps.getById(params.id);
+    const existing = await teamMembersOps.getById(id);
     if (!existing) {
       return NextResponse.json(
         { error: 'Team member not found' },
@@ -45,7 +51,7 @@ async function updateTeamMember(request, { params }) {
     }
 
     // Update the team member
-    await teamMembersOps.update(params.id, data);
+    await teamMembersOps.update(id, data);
 
     return NextResponse.json({
       success: true,
@@ -63,8 +69,11 @@ async function updateTeamMember(request, { params }) {
 // DELETE - Delete team member (SECURED)
 async function deleteTeamMember(request, { params }) {
   try {
+    // Await params before accessing properties (Next.js 15 requirement)
+    const { id } = await params;
+    
     // Check if team member exists
-    const existing = await teamMembersOps.getById(params.id);
+    const existing = await teamMembersOps.getById(id);
     if (!existing) {
       return NextResponse.json(
         { error: 'Team member not found' },
@@ -73,7 +82,7 @@ async function deleteTeamMember(request, { params }) {
     }
 
     // Delete the team member
-    await teamMembersOps.delete(params.id);
+    await teamMembersOps.delete(id);
 
     return NextResponse.json({
       success: true,

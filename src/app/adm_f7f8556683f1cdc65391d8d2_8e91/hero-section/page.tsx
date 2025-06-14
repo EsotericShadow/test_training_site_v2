@@ -3,8 +3,25 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowLeft, Save, Home, BarChart3, Star } from 'lucide-react';
 import { ShieldCheckIcon } from '@heroicons/react/24/outline';
+import FileSelectionButton from '../../components/admin/FileSelectionButton';
+
+interface FileItem {
+  id: number;
+  filename: string;
+  original_name: string;
+  blob_url: string;
+  alt_text?: string;
+  title?: string;
+  description?: string;
+  category: string;
+  is_featured: boolean;
+  file_size: number;
+  mime_type: string;
+  uploaded_at: string;
+}
 
 interface HeroSection {
   id?: number | undefined;
@@ -12,7 +29,8 @@ interface HeroSection {
   main_heading?: string | undefined;
   highlight_text?: string | undefined;
   subtitle?: string | undefined;
-  background_image?: string | undefined;
+  background_image_url?: string | undefined;  // ✅ Fixed: Changed to match database
+  background_image_alt?: string | undefined;
   primary_button_text?: string | undefined;
   primary_button_link?: string | undefined;
   secondary_button_text?: string | undefined;
@@ -57,7 +75,8 @@ export default function HeroSectionEditor() {
     main_heading: '',
     highlight_text: '',
     subtitle: '',
-    background_image: '',
+    background_image_url: '',  // ✅ Fixed: Changed to match database
+    background_image_alt: '',
     primary_button_text: '',
     primary_button_link: '',
     secondary_button_text: '',
@@ -80,7 +99,8 @@ export default function HeroSectionEditor() {
           main_heading: data.heroSection?.main_heading || '',
           highlight_text: data.heroSection?.highlight_text || '',
           subtitle: data.heroSection?.subtitle || '',
-          background_image: data.heroSection?.background_image || '',
+          background_image_url: data.heroSection?.background_image_url || '',  // ✅ Fixed
+          background_image_alt: data.heroSection?.background_image_alt || '',
           primary_button_text: data.heroSection?.primary_button_text || '',
           primary_button_link: data.heroSection?.primary_button_link || '',
           secondary_button_text: data.heroSection?.secondary_button_text || '',
@@ -137,6 +157,15 @@ export default function HeroSectionEditor() {
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
+
+  // File selection handler for background images
+  const handleBackgroundImageSelect = (url: string, file?: FileItem) => {
+    setHeroSection(prev => ({
+      ...prev,
+      background_image_url: url,  // ✅ Fixed: Changed to match database
+      background_image_alt: file?.alt_text || file?.title || prev.background_image_alt
+    }));
+  };
 
   const handleSave = async () => {
     setSaving(true);
@@ -370,17 +399,63 @@ export default function HeroSectionEditor() {
                 </div>
               </div>
               
-              <div className="space-y-2">
+              {/* Background Image Selection */}
+              <div className="space-y-4">
                 <label className="text-sm font-semibold text-foreground">
-                  Background Image URL
+                  Background Image
                 </label>
-                <input
-                  type="url"
-                  value={heroSection.background_image || ''}
-                  onChange={(e) => setHeroSection({...heroSection, background_image: e.target.value})}
-                  className="w-full px-4 py-3 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-                  placeholder="/images/hero-bg.jpg"
+                
+                {/* File Selection Button */}
+                <FileSelectionButton
+                  value={heroSection.background_image_url || ''}  // ✅ Fixed
+                  onChange={handleBackgroundImageSelect}
+                  category="hero-backgrounds"
+                  label="Select Background Image"
+                  placeholder="No background image selected"
                 />
+
+                {/* Alt Text Field */}
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-muted-foreground">
+                    Background Image Alt Text (for accessibility)
+                  </label>
+                  <input
+                    type="text"
+                    value={heroSection.background_image_alt || ''}
+                    onChange={(e) => setHeroSection({...heroSection, background_image_alt: e.target.value})}
+                    placeholder="e.g., Safety training in industrial workplace"
+                    className="w-full px-4 py-2 bg-background border border-input rounded-lg text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                  />
+                </div>
+
+                {/* Current Background Preview */}
+                {heroSection.background_image_url && (  // ✅ Fixed
+                  <div className="mt-4 p-4 bg-background border border-input rounded-xl">
+                    <div className="text-sm font-medium text-foreground mb-2">Current Background:</div>
+                    <div className="relative w-full h-32 rounded-lg overflow-hidden">
+                      <Image
+                        src={heroSection.background_image_url}  // ✅ Fixed
+                        alt={heroSection.background_image_alt || 'Hero background preview'}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* Fallback URL Input */}
+                <div className="border-t border-border pt-4">
+                  <div className="text-sm text-muted-foreground mb-2">
+                    Or enter background image URL directly:
+                  </div>
+                  <input
+                    type="url"
+                    value={heroSection.background_image_url || ''}  // ✅ Fixed
+                    onChange={(e) => setHeroSection({...heroSection, background_image_url: e.target.value})}  // ✅ Fixed
+                    className="w-full px-4 py-3 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                    placeholder="/images/hero-bg.jpg"
+                  />
+                </div>
               </div>
             </div>
           </div>
