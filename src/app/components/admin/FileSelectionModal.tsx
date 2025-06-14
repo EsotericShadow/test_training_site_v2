@@ -61,17 +61,12 @@ export default function FileSelectionModal({
   const [uploadPreview, setUploadPreview] = useState<string | null>(null);
 
   const categories = [
+    'all',
     'general',
     'team-photos',
     'course-images', 
     'testimonials',
     'company',
-    'hero-backgrounds',
-    'company-logos',
-    'certifications',
-    'training-photos',
-    'equipment-photos',
-    'facility-photos',
     'other'
   ];
 
