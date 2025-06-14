@@ -157,21 +157,25 @@ export default function CoursePage({ params }: PageProps) {
       <section className="py-12 bg-gray-50 dark:bg-gray-800">
         <div className="container mx-auto px-4">
           <div className="max-w-5xl mx-auto">
-            <div className="bg-gray-200 dark:bg-gray-700 rounded-2xl h-64 md:h-80 flex items-center justify-center relative overflow-hidden">
+            <div className="relative bg-gray-200 dark:bg-gray-700 rounded-2xl h-64 md:h-80 overflow-hidden">
               {course.image_url ? (
                 <Image 
                   src={course.image_url} 
                   alt={course.image_alt || course.title}
                   fill
                   className="object-cover"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
+                  priority
                 />
               ) : (
-                <div className="text-center text-gray-600 dark:text-gray-300">
-                  <Camera className="h-16 w-16 mx-auto mb-4 text-yellow-500" />
-                  <h3 className="text-xl font-semibold mb-2">{course.title}</h3>
-                  <p className="text-gray-500 dark:text-gray-400">
-                    {course.image_alt || 'Professional safety training course'}
-                  </p>
+                <div className="h-full flex items-center justify-center text-center text-gray-600 dark:text-gray-300">
+                  <div>
+                    <Camera className="h-16 w-16 mx-auto mb-4 text-yellow-500" />
+                    <h3 className="text-xl font-semibold mb-2">{course.title}</h3>
+                    <p className="text-gray-500 dark:text-gray-400">
+                      {course.image_alt || 'Professional safety training course'}
+                    </p>
+                  </div>
                 </div>
               )}
             </div>
@@ -213,7 +217,9 @@ export default function CoursePage({ params }: PageProps) {
                   <div>
                     <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Learning Objectives</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {course.features.map((objective, index) => (
+                      {course.features
+                        .sort((a, b) => a.display_order - b.display_order)
+                        .map((objective, index) => (
                         <div key={index} className="flex items-start space-x-3 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
                           <CheckCircle className="h-6 w-6 text-yellow-500 mt-1 flex-shrink-0" />
                           <span className="text-gray-700 dark:text-gray-300">{objective.feature}</span>
@@ -358,12 +364,6 @@ export default function CoursePage({ params }: PageProps) {
                   <h4 className="font-medium text-gray-900 dark:text-white mb-2">Training Options</h4>
                   <p className="text-gray-600 dark:text-gray-400">On-site and facility-based training available</p>
                 </div>
-              </div>
-              
-              <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
-                <p className="text-gray-600 dark:text-gray-400 text-sm">
-                  We will provide a detailed syllabus for each course upon request. Contact us for pricing, scheduling, and custom training options.
-                </p>
               </div>
             </div>
           </div>

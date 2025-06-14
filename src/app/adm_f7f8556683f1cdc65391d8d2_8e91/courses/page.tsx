@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { 
   Plus, 
   Edit, 
@@ -17,6 +18,7 @@ import {
   BookOpen,
 } from 'lucide-react';
 import { ShieldCheckIcon } from '@heroicons/react/24/outline';
+import FileSelectionButton from '../../components/admin/FileSelectionButton';
 
 interface Course {
   id: number;
@@ -44,6 +46,21 @@ interface User {
   id: number;
   username: string;
   email: string;
+}
+
+interface FileItem {
+  id: number;
+  filename: string;
+  original_name: string;
+  blob_url: string;
+  alt_text?: string;
+  title?: string;
+  description?: string;
+  category: string;
+  is_featured: boolean;
+  file_size: number;
+  mime_type: string;
+  uploaded_at: string;
 }
 
 export default function CourseManagement() {
@@ -190,6 +207,15 @@ export default function CourseManagement() {
       ...prev,
       title,
       slug: editingCourse ? prev.slug : generateSlug(title)
+    }));
+  };
+
+  // File selection handler for course images
+  const handleCourseImageSelect = (url: string, file: FileItem | undefined) => {
+    setFormData(prev => ({
+      ...prev,
+      image_url: url,
+      image_alt: file?.alt_text || file?.title || prev.image_alt
     }));
   };
 
@@ -458,17 +484,19 @@ export default function CourseManagement() {
                   required
                 />
               </div>
+              
+              {/* Course Image Selection - UPDATED */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <label className="text-sm font-semibold text-foreground">
-                    Image URL
+                    Course Image
                   </label>
-                  <input
-                    type="url"
+                  <FileSelectionButton
                     value={formData.image_url}
-                    onChange={(e) => setFormData(prev => ({ ...prev, image_url: e.target.value }))}
-                    placeholder="https://example.com/image.jpg"
-                    className="w-full px-4 py-3 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200"
+                    onChange={handleCourseImageSelect}
+                    category="course-images"
+                    label="Select Course Image"
+                    placeholder="No course image selected"
                   />
                 </div>
                 <div className="space-y-2">
@@ -484,6 +512,7 @@ export default function CourseManagement() {
                   />
                 </div>
               </div>
+              
               <div className="space-y-4">
                 <label className="text-sm font-semibold text-foreground">
                   Course Features
@@ -502,7 +531,7 @@ export default function CourseManagement() {
                         <button
                           type="button"
                           onClick={() => handleRemoveFeature(index)}
-                          className="p-2 text-red-600 hover:text-red-800 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                          className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
@@ -512,7 +541,7 @@ export default function CourseManagement() {
                   <button
                     type="button"
                     onClick={handleAddFeature}
-                    className="text-emerald-600 hover:text-emerald-800 text-sm flex items-center space-x-2 font-medium"
+                    className="inline-flex items-center space-x-2 px-4 py-2 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 rounded-xl hover:bg-emerald-100 dark:hover:bg-emerald-900/30 transition-colors"
                   >
                     <Plus className="h-4 w-4" />
                     <span>Add Feature</span>
@@ -523,14 +552,14 @@ export default function CourseManagement() {
                 <button
                   type="button"
                   onClick={resetForm}
-                  className="px-6 py-3 border border-input rounded-xl text-foreground hover:bg-muted transition-all duration-200 font-medium"
+                  className="px-6 py-3 bg-background border border-input text-foreground rounded-xl hover:bg-muted transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 disabled:from-gray-300 disabled:to-gray-300 dark:disabled:from-gray-600 dark:disabled:to-gray-600 text-white font-semibold px-6 py-3 rounded-xl transition-all duration-200 transform hover:scale-[1.02] disabled:scale-100 disabled:cursor-not-allowed shadow-lg hover:shadow-xl flex items-center space-x-2"
+                  className="px-6 py-3 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white rounded-xl flex items-center space-x-2 font-semibold transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {saving ? (
                     <>
@@ -549,133 +578,106 @@ export default function CourseManagement() {
           </div>
         )}
 
-        {/* Courses Table */}
+        {/* Courses List */}
         <div className="bg-card border border-border rounded-2xl shadow-xl">
           <div className="px-6 py-4 border-b border-border bg-gradient-to-r from-emerald-50 to-green-50 dark:from-emerald-900/20 dark:to-green-900/20 rounded-t-2xl">
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-gradient-to-r from-emerald-500 to-green-600 rounded-lg flex items-center justify-center">
-                <BookOpen className="w-4 h-4 text-white" />
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="w-8 h-8 bg-gradient-to-r from-emerald-500 to-green-600 rounded-lg flex items-center justify-center">
+                  <BookOpen className="w-4 h-4 text-white" />
+                </div>
+                <h2 className="text-lg font-bold text-foreground">All Courses</h2>
+                <span className="px-2 py-1 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 text-xs font-medium rounded-full">
+                  {courses.length} courses
+                </span>
               </div>
-              <h2 className="text-lg font-bold text-foreground">All Courses ({courses.length})</h2>
             </div>
           </div>
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-border">
-              <thead className="bg-muted/50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                    Course
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                    Details
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                    Status
-                  </th>
-                  <th className="px-6 py-3 text-right text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-card divide-y divide-border">
+          <div className="p-6">
+            {courses.length === 0 ? (
+              <div className="text-center py-12">
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-emerald-500 to-green-600 rounded-full mb-4 shadow-lg">
+                  <BookOpen className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-lg font-semibold text-foreground mb-2">No courses yet</h3>
+                <p className="text-muted-foreground mb-6">Get started by creating your first course</p>
+                <button
+                  onClick={() => setShowAddForm(true)}
+                  className="bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white px-6 py-3 rounded-xl flex items-center space-x-2 font-semibold transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl mx-auto"
+                >
+                  <Plus className="h-4 w-4" />
+                  <span>Add First Course</span>
+                </button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
                 {courses.map((course) => (
-                  <tr key={course.id} className="hover:bg-muted/30 transition-colors">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center">
-                        <div>
-                          <div className="text-sm font-semibold text-foreground flex items-center space-x-2">
-                            <span>{course.title}</span>
-                            {course.popular && (
-                              <Star className="h-4 w-4 text-yellow-500 fill-current" />
-                            )}
-                          </div>
-                          <div className="text-sm text-muted-foreground">/{course.slug}</div>
+                  <div key={course.id} className="bg-background border border-border rounded-xl p-6 hover:shadow-lg transition-all duration-200 group">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-2 mb-2">
+                          <h3 className="font-semibold text-foreground group-hover:text-emerald-600 transition-colors">
+                            {course.title}
+                          </h3>
+                          {course.popular && (
+                            <Star className="h-4 w-4 text-yellow-500 fill-current" />
+                          )}
                         </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="text-sm text-foreground space-y-2">
-                        <div className="flex items-center space-x-4">
-                          <div className="flex items-center space-x-1">
-                            <Clock className="h-4 w-4 text-muted-foreground" />
+                        <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
+                          {course.description}
+                        </p>
+                        <div className="flex flex-wrap gap-2 mb-3">
+                          <div className="inline-flex items-center space-x-1 px-2 py-1 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-xs rounded-full">
+                            <Clock className="h-3 w-3" />
                             <span>{course.duration}</span>
                           </div>
-                          <div className="flex items-center space-x-1">
-                            <Users className="h-4 w-4 text-muted-foreground" />
+                          <div className="inline-flex items-center space-x-1 px-2 py-1 bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 text-xs rounded-full">
+                            <Users className="h-3 w-3" />
                             <span>{course.audience}</span>
                           </div>
+                          {course.category_name && (
+                            <div className="inline-flex items-center space-x-1 px-2 py-1 bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 text-xs rounded-full">
+                              <Tag className="h-3 w-3" />
+                              <span>{course.category_name}</span>
+                            </div>
+                          )}
                         </div>
-                        {course.category_name && (
-                          <div className="flex items-center space-x-1">
-                            <Tag className="h-4 w-4 text-muted-foreground" />
-                            <span className="text-xs bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-400 px-2 py-1 rounded-full font-medium">{course.category_name}</span>
-                          </div>
-                        )}
                       </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex flex-col space-y-2">
-                        {course.popular && (
-                          <span className="inline-flex px-3 py-1 text-xs font-semibold rounded-full bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-400">
-                            Featured
-                          </span>
-                        )}
-                        <span className="inline-flex px-3 py-1 text-xs font-semibold rounded-full bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400">
-                          Active
-                        </span>
+                    </div>
+                    {course.image_url && (
+                      <div className="mb-4">
+                        <Image
+                          src={course.image_url}
+                          alt={course.image_alt || course.title}
+                          width={400}
+                          height={128}
+                          className="w-full h-32 object-cover rounded-lg"
+                        />
                       </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <div className="flex justify-end space-x-2">
+                    )}
+                    <div className="flex justify-between items-center">
+                      <span className="text-xs text-muted-foreground">
+                        /{course.slug}
+                      </span>
+                      <div className="flex space-x-2">
                         <button
                           onClick={() => handleEdit(course)}
-                          className="p-2 text-emerald-600 hover:text-emerald-800 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-lg transition-colors"
-                          title="Edit course"
+                          className="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
                         >
                           <Edit className="h-4 w-4" />
                         </button>
                         <button
                           onClick={() => handleDelete(course.id, course.title)}
                           className="p-2 text-red-600 hover:text-red-800 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
-                          title="Delete course"
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
                       </div>
-                    </td>
-                  </tr>
+                    </div>
+                  </div>
                 ))}
-              </tbody>
-            </table>
-            {courses.length === 0 && (
-              <div className="text-center py-12">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-emerald-500 to-green-600 rounded-full mb-4 opacity-50">
-                  <BookOpen className="w-8 h-8 text-white" />
-                </div>
-                <p className="text-muted-foreground font-medium">No courses found</p>
-                <p className="text-sm text-muted-foreground">Create your first course to get started.</p>
               </div>
             )}
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className="mt-12 pt-8 border-t border-border">
-          <div className="text-center text-xs text-muted-foreground space-y-2">
-            <div className="flex items-center justify-center space-x-4">
-              <span className="flex items-center">
-                <span className="mr-1">📚</span>
-                Course Management
-              </span>
-              <span>•</span>
-              <span className="flex items-center">
-                <span className="mr-1">🛡️</span>
-                Secure Portal
-              </span>
-            </div>
-            <p className="text-xs">
-              Karma Training • Course Management System
-            </p>
           </div>
         </div>
       </main>

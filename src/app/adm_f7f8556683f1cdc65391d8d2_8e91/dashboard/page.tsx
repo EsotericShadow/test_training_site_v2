@@ -20,6 +20,9 @@ import {
   ShieldCheckIcon
 } from '@heroicons/react/24/outline';
 
+// Import the file selection components
+import FileSelectionButton from '../../components/admin/FileSelectionButton';
+
 interface User {
   id: number;
   username: string;
@@ -37,6 +40,21 @@ interface Category {
   name: string;
   description?: string;
   display_order: number;
+}
+
+interface FileItem {
+  id: number;
+  filename: string;
+  original_name: string;
+  blob_url: string;
+  alt_text?: string;
+  title?: string;
+  description?: string;
+  category: string;
+  is_featured: boolean;
+  file_size: number;
+  mime_type: string;
+  uploaded_at: string;
 }
 
 export default function AdminDashboard() {
@@ -242,6 +260,15 @@ export default function AdminDashboard() {
     }));
   };
 
+  // Updated course image handler to use file selection - FIXED UNUSED PARAMETER
+  const handleCourseImageSelect = (url: string, _file?: FileItem) => {
+    setCourseFormData(prev => ({
+      ...prev,
+      image_url: url,
+      image_alt: _file?.alt_text || _file?.title || ''
+    }));
+  };
+
   const handleCourseSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
@@ -318,6 +345,7 @@ export default function AdminDashboard() {
     }));
   };
 
+  // Keep the original file upload function for backward compatibility
   const handleTeamFileUpload = async (file: File) => {
     setUploading(true);
     setMessage('');
@@ -350,6 +378,14 @@ export default function AdminDashboard() {
     } finally {
       setUploading(false);
     }
+  };
+
+  // Updated team photo handler to use file selection
+  const handleTeamPhotoSelect = (url: string) => {
+    setTeamFormData(prev => ({
+      ...prev,
+      photo_url: url
+    }));
   };
 
   const handleTeamSubmit = async (e: React.FormEvent) => {
@@ -409,6 +445,7 @@ export default function AdminDashboard() {
     setShowTestimonialModal(false);
   };
 
+  // Keep the original image upload function for backward compatibility
   const handleTestimonialImageUpload = async (file: File) => {
     setUploading(true);
     setMessage('');
@@ -441,6 +478,15 @@ export default function AdminDashboard() {
       setUploading(false);
     }
   };
+
+  // Updated testimonial photo handler to use file selection
+  const handleTestimonialPhotoSelect = (url: string) => {
+    setTestimonialFormData(prev => ({
+      ...prev,
+      client_photo_url: url
+    }));
+  };
+
 
   const handleTestimonialSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -797,32 +843,14 @@ export default function AdminDashboard() {
               </h3>
             </div>
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
-              Upload and manage images and files
+              Upload and organize images and documents
             </p>
-            <button
-              onClick={() => alert('File Management feature coming soon!')}
-              className="w-full bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl"
+            <Link
+              href="/adm_f7f8556683f1cdc65391d8d2_8e91/files"
+              className="w-full bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl inline-block text-center"
             >
               Manage Files
-            </button>
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
-          <div className="text-center text-xs text-gray-600 dark:text-gray-400 space-y-2">
-            <div className="flex items-center justify-center space-x-4">
-              <span className="flex items-center">
-                <span className="mr-1">🔒</span>
-                Secure Admin Portal
-              </span>
-              <span>•</span>
-              <span className="flex items-center">
-                <span className="mr-1">🛡️</span>
-                Enterprise Security
-              </span>
-            </div>
-            <p>Karma Training CMS - Built with Next.js & Enhanced Security</p>
+            </Link>
           </div>
         </div>
       </main>
@@ -833,7 +861,7 @@ export default function AdminDashboard() {
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6 border-b border-gray-200 dark:border-gray-700">
               <div className="flex items-center justify-between">
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white">Add New Course</h2>
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white">Add Course</h2>
                 <button
                   onClick={resetCourseForm}
                   className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
@@ -844,32 +872,33 @@ export default function AdminDashboard() {
             </div>
             
             <form onSubmit={handleCourseSubmit} className="p-6 space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Course Title *
-                  </label>
-                  <input
-                    type="text"
-                    value={courseFormData.title}
-                    onChange={(e) => handleCourseTitleChange(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                    required
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    URL Slug
-                  </label>
-                  <input
-                    type="text"
-                    value={courseFormData.slug}
-                    onChange={(e) => setCourseFormData(prev => ({ ...prev, slug: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-600 text-gray-900 dark:text-white"
-                    placeholder="auto-generated"
-                  />
-                </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Course Title *
+                </label>
+                <input
+                  type="text"
+                  value={courseFormData.title}
+                  onChange={(e) => handleCourseTitleChange(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  URL Slug
+                </label>
+                <input
+                  type="text"
+                  value={courseFormData.slug}
+                  onChange={(e) => setCourseFormData(prev => ({ ...prev, slug: e.target.value }))}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                  placeholder="auto-generated-from-title"
+                />
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  Auto-generated from title. Used in URLs.
+                </p>
               </div>
 
               <div>
@@ -885,7 +914,7 @@ export default function AdminDashboard() {
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Duration
@@ -895,20 +924,7 @@ export default function AdminDashboard() {
                     value={courseFormData.duration}
                     onChange={(e) => setCourseFormData(prev => ({ ...prev, duration: e.target.value }))}
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                    placeholder="e.g., 2 hours"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Target Audience
-                  </label>
-                  <input
-                    type="text"
-                    value={courseFormData.audience}
-                    onChange={(e) => setCourseFormData(prev => ({ ...prev, audience: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                    placeholder="e.g., All employees"
+                    placeholder="e.g., 2 days, 16 hours"
                   />
                 </div>
                 
@@ -921,7 +937,7 @@ export default function AdminDashboard() {
                     onChange={(e) => setCourseFormData(prev => ({ ...prev, category_id: e.target.value }))}
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                   >
-                    <option value="">Select category</option>
+                    <option value="">Select Category</option>
                     {categories.map(category => (
                       <option key={category.id} value={category.id}>
                         {category.name}
@@ -931,32 +947,39 @@ export default function AdminDashboard() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Image URL
-                  </label>
-                  <input
-                    type="url"
-                    value={courseFormData.image_url}
-                    onChange={(e) => setCourseFormData(prev => ({ ...prev, image_url: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                    placeholder="https://..."
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Image Alt Text
-                  </label>
-                  <input
-                    type="text"
-                    value={courseFormData.image_alt}
-                    onChange={(e) => setCourseFormData(prev => ({ ...prev, image_alt: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                    placeholder="Describe the image"
-                  />
-                </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Target Audience
+                </label>
+                <input
+                  type="text"
+                  value={courseFormData.audience}
+                  onChange={(e) => setCourseFormData(prev => ({ ...prev, audience: e.target.value }))}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                  placeholder="e.g., Beginners, Professionals, Managers"
+                />
+              </div>
+
+              {/* Updated Course Image Selection */}
+              <FileSelectionButton
+                value={courseFormData.image_url}
+                onChange={handleCourseImageSelect}
+                category="course-images"
+                label="Course Image"
+                placeholder="No course image selected"
+              />
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Image Alt Text
+                </label>
+                <input
+                  type="text"
+                  value={courseFormData.image_alt}
+                  onChange={(e) => setCourseFormData(prev => ({ ...prev, image_alt: e.target.value }))}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                  placeholder="Describe the image for accessibility"
+                />
               </div>
 
               <div>
@@ -1098,17 +1121,20 @@ export default function AdminDashboard() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Photo URL
-                  </label>
-                  <input
-                    type="url"
+                  {/* Updated Team Photo Selection */}
+                  <FileSelectionButton
                     value={teamFormData.photo_url}
-                    onChange={(e) => setTeamFormData(prev => ({ ...prev, photo_url: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-                    placeholder="https://..."
+                    onChange={handleTeamPhotoSelect}
+                    category="team-photos"
+                    label="Team Member Photo"
+                    placeholder="No photo selected"
                   />
+                  
+                  {/* Keep original file upload as fallback */}
                   <div className="mt-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Or upload new photo:
+                    </label>
                     <input
                       type="file"
                       accept="image/*"
@@ -1316,7 +1342,7 @@ export default function AdminDashboard() {
                   onChange={(e) => setTestimonialFormData(prev => ({ ...prev, content: e.target.value }))}
                   rows={4}
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-                  placeholder="Enter the testimonial content..."
+                  placeholder="What did the client say about your training?"
                   required
                 />
               </div>
@@ -1339,48 +1365,49 @@ export default function AdminDashboard() {
                   </select>
                 </div>
                 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Client Photo URL
-                  </label>
+                <div className="flex items-center">
                   <input
-                    type="url"
-                    value={testimonialFormData.client_photo_url}
-                    onChange={(e) => setTestimonialFormData(prev => ({ ...prev, client_photo_url: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-                    placeholder="https://..."
+                    type="checkbox"
+                    id="testimonial-featured"
+                    checked={testimonialFormData.featured}
+                    onChange={(e) => setTestimonialFormData(prev => ({ ...prev, featured: e.target.checked }))}
+                    className="w-4 h-4 text-orange-600 bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded focus:ring-orange-500 focus:ring-2"
                   />
-                  <div className="mt-2">
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (file) handleTestimonialImageUpload(file);
-                      }}
-                      className="text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100 dark:file:bg-orange-900/20 dark:file:text-orange-400"
-                      disabled={uploading}
-                    />
-                    {uploading && (
-                      <div className="mt-2 text-sm text-orange-600 dark:text-orange-400">
-                        Uploading...
-                      </div>
-                    )}
-                  </div>
+                  <label htmlFor="testimonial-featured" className="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Featured testimonial
+                  </label>
                 </div>
               </div>
 
-              <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  id="testimonial-featured"
-                  checked={testimonialFormData.featured}
-                  onChange={(e) => setTestimonialFormData(prev => ({ ...prev, featured: e.target.checked }))}
-                  className="w-4 h-4 text-orange-600 bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded focus:ring-orange-500 focus:ring-2"
-                />
-                <label htmlFor="testimonial-featured" className="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Featured testimonial
+              {/* Updated Client Photo Selection */}
+              <FileSelectionButton
+                value={testimonialFormData.client_photo_url}
+                onChange={handleTestimonialPhotoSelect}
+                category="testimonials"
+                label="Client Photo"
+                placeholder="No client photo selected"
+              />
+
+              {/* Keep original file upload as fallback */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Or upload new photo:
                 </label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) handleTestimonialImageUpload(file);
+                  }}
+                  className="text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100 dark:file:bg-orange-900/20 dark:file:text-orange-400"
+                  disabled={uploading}
+                />
+                {uploading && (
+                  <div className="mt-2 text-sm text-orange-600 dark:text-orange-400">
+                    Uploading...
+                  </div>
+                )}
               </div>
 
               <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200 dark:border-gray-700">

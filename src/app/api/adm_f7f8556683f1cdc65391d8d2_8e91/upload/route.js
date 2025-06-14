@@ -1,101 +1,166 @@
 import { NextResponse } from 'next/server';
-import formidable from 'formidable';
-import fs from 'fs';
-import path from 'path';
-import { adminSessionsOps } from '../../../../../lib/database';
+import { put } from '@vercel/blob';
+import { validateSession } from '../../../../../lib/session-manager';
+import { filesOps } from '../../../../../lib/database';
 
-// Disable Next.js body parsing for file uploads
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
-// POST - Upload image file
+// POST - Upload file to Vercel Blob
 export async function POST(request) {
   try {
-    // Verify authentication
-    const authHeader = request.headers.get('authorization');
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    // Verify authentication using the same method as middleware
+    const token = request.cookies.get('admin_token')?.value;
+    
+    if (!token) {
       return NextResponse.json(
-        { error: 'Unauthorized: Missing or invalid token' },
+        { error: 'Unauthorized: No session token' },
         { status: 401 }
       );
     }
 
-    const token = authHeader.split(' ')[1];
-    const session = await adminSessionsOps.getByToken(token);
-    if (!session) {
+    // Use the same validateSession function as middleware
+    const sessionResult = await validateSession(token, request);
+    if (!sessionResult.valid) {
       return NextResponse.json(
-        { error: 'Unauthorized: Invalid or expired token' },
+        { error: `Unauthorized: ${sessionResult.reason}` },
         { status: 401 }
       );
     }
+
+    const session = sessionResult.session;
 
     // Parse form data
-    const form = formidable({
-      uploadDir: path.join(process.cwd(), 'public/uploads'),
-      keepExtensions: true,
-      maxFileSize: 5 * 1024 * 1024, // 5MB limit
-      multiples: false,
-      filter: ({ mimetype }) => {
-        // Allow only images
-        return mimetype && mimetype.startsWith('image/');
-      },
-    });
+    const formData = await request.formData();
+    const file = formData.get('file');
+    const category = formData.get('category') || 'general';
+    const altText = formData.get('alt_text') || '';
+    const title = formData.get('title') || '';
+    const description = formData.get('description') || '';
+    const tags = formData.get('tags') || '';
+    const isFeatured = formData.get('is_featured') === 'true';
 
-    // Ensure upload directories exist
-    const contentTypes = ['team-members', 'testimonials'];
-    for (const type of contentTypes) {
-      const dir = path.join(process.cwd(), `public/uploads/${type}`);
-      if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir, { recursive: true });
-      }
-    }
-
-    // Parse the request
-    const [fields, files] = await new Promise((resolve, reject) => {
-      form.parse(request, (err, fields, files) => {
-        if (err) reject(err);
-        else resolve([fields, files]);
-      });
-    });
-
-    // Validate content type
-    const contentType = fields.contentType?.[0];
-    if (!contentType || !contentTypes.includes(contentType)) {
+    // Validate file
+    if (!file || !(file instanceof File)) {
       return NextResponse.json(
-        { error: 'Invalid content type. Must be "team-members" or "testimonials"' },
+        { error: 'No file uploaded or invalid file' },
         { status: 400 }
       );
     }
 
-    // Validate file
-    const file = files.file?.[0];
-    if (!file) {
+    // Validate file type (images only for now)
+    if (!file.type.startsWith('image/')) {
       return NextResponse.json(
-        { error: 'No file uploaded' },
+        { error: 'Only image files are allowed' },
+        { status: 400 }
+      );
+    }
+
+    // Validate file size (5MB limit)
+    const maxSize = 15 * 1024 * 1024; // 5MB
+    if (file.size > maxSize) {
+      return NextResponse.json(
+        { error: 'File size must be less than 5MB' },
+        { status: 400 }
+      );
+    }
+
+    // Validate category
+    const allowedCategories = ['general', 'team-photos', 'course-images', 'testimonials', 'company', 'other'];
+    if (!allowedCategories.includes(category)) {
+      return NextResponse.json(
+        { error: 'Invalid category' },
         { status: 400 }
       );
     }
 
     // Generate unique filename
     const timestamp = Date.now();
-    const originalName = file.originalFilename || 'upload';
-    const extension = path.extname(originalName);
-    const filename = `${timestamp}-${originalName.replace(extension, '')}${extension}`;
-    const newPath = path.join(process.cwd(), `public/uploads/${contentType}`, filename);
+    const originalName = file.name;
+    const fileExtension = originalName.split('.').pop()?.toLowerCase() || '';
+    const sanitizedName = originalName.replace(/[^a-zA-Z0-9.-]/g, '_');
+    const filename = `${timestamp}-${sanitizedName}`;
+    const blobPathname = `${category}/${filename}`;
 
-    // Move file to correct directory
-    fs.renameSync(file.filepath, newPath);
+    try {
+      // Upload to Vercel Blob
+      const blob = await put(blobPathname, file, {
+        access: 'public',
+        addRandomSuffix: false,
+      });
 
-    // Generate public URL
-    const fileUrl = `/uploads/${contentType}/${filename}`;
+      // Get image dimensions if it's an image
+      let width = null;
+      let height = null;
+      let aspectRatio = null;
 
-    return NextResponse.json({
-      success: true,
-      fileUrl,
-    });
+      if (file.type.startsWith('image/')) {
+        try {
+          // Create image to get dimensions
+          // Note: Image processing code commented out for future use
+          // const arrayBuffer = await file.arrayBuffer();
+          // const buffer = Buffer.from(arrayBuffer);
+          
+          // For now, we'll set dimensions to null and add them later
+          // You can add image processing library like 'sharp' if needed
+          // const sharp = require('sharp');
+          // const metadata = await sharp(buffer).metadata();
+          // width = metadata.width;
+          // height = metadata.height;
+          // aspectRatio = width && height ? width / height : null;
+        } catch (error) {
+          console.warn('Could not extract image dimensions:', error);
+        }
+      }
+
+      // Store file metadata in database
+      const fileData = {
+        filename: filename,
+        original_name: originalName,
+        file_size: file.size,
+        mime_type: file.type,
+        file_extension: fileExtension,
+        blob_url: blob.url,
+        blob_pathname: blobPathname,
+        blob_token: blob.pathname, // Store pathname for potential deletion
+        width: width,
+        height: height,
+        aspect_ratio: aspectRatio,
+        alt_text: altText || originalName,
+        title: title || originalName,
+        description: description,
+        tags: tags,
+        category: category,
+        is_featured: isFeatured,
+        uploaded_by: session.user_id
+      };
+
+      const result = await filesOps.create(fileData);
+
+      return NextResponse.json({
+        success: true,
+        file: {
+          id: result.id,
+          filename: filename,
+          original_name: originalName,
+          file_size: file.size,
+          mime_type: file.type,
+          blob_url: blob.url,
+          category: category,
+          alt_text: altText || originalName,
+          title: title || originalName,
+          description: description,
+          tags: tags,
+          is_featured: isFeatured
+        },
+        message: 'File uploaded successfully'
+      });
+
+    } catch (blobError) {
+      console.error('Error uploading to Vercel Blob:', blobError);
+      return NextResponse.json(
+        { error: 'Failed to upload file to storage' },
+        { status: 500 }
+      );
+    }
+
   } catch (error) {
     console.error('Error uploading file:', error);
     return NextResponse.json(
@@ -104,3 +169,42 @@ export async function POST(request) {
     );
   }
 }
+
+// GET - Get upload status or file info (optional)
+export async function GET(request) {
+  try {
+    // Verify authentication using the same method as middleware
+    const token = request.cookies.get('admin_token')?.value;
+    
+    if (!token) {
+      return NextResponse.json(
+        { error: 'Unauthorized: No session token' },
+        { status: 401 }
+      );
+    }
+
+    // Use the same validateSession function as middleware
+    const sessionResult = await validateSession(token, request);
+    if (!sessionResult.valid) {
+      return NextResponse.json(
+        { error: `Unauthorized: ${sessionResult.reason}` },
+        { status: 401 }
+      );
+    }
+
+    // Return upload configuration
+    return NextResponse.json({
+      maxFileSize: 15 * 1024 * 1024, // 5MB
+      allowedTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/gif'],
+      allowedCategories: ['general', 'team-photos', 'course-images', 'testimonials', 'company', 'other']
+    });
+
+  } catch (error) {
+    console.error('Error getting upload info:', error);
+    return NextResponse.json(
+      { error: 'Failed to get upload information' },
+      { status: 500 }
+    );
+  }
+}
+

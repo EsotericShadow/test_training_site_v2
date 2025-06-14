@@ -193,7 +193,7 @@ export default function Testimonials() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link 
               href="/contact"
-              className="inline-flex items-center justify-center space-x-2 bg-brand-yellow hover:bg-brand-yellow-dark text-black px-6 py-3 rounded-lg font-semibold transition-all duration-200 transform hover:-translate-y-1"
+              className="inline-flex items-center justify-center space-x-2 bg-brand-yellow hover:bg-brand-yellow-dark text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200 transform hover:-translate-y-1"
             >
               <span>Get a Quote</span>
               <ArrowRight className="h-4 w-4" />
