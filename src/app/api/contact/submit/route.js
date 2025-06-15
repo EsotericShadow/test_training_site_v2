@@ -119,8 +119,8 @@ async function performSecurityChecks(request, ip, userAgent, referer) {
   if (process.env.NODE_ENV === 'production') {
     const allowedDomains = [
       process.env.NEXT_PUBLIC_DOMAIN,
-      'karmatraining.ca',
-      'www.karmatraining.ca'
+      'test-training-site-v2-xjey.vercel.app',
+      'www.test-training-site-v2-xjey.vercel.app'
     ].filter(Boolean);
 
     const refererDomain = referer ? new URL(referer).hostname : '';
