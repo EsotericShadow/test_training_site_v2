@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Shield, Users, Award, CheckCircle, LucideIcon } from 'lucide-react';
+import Link from 'next/link';
+import { Shield, Users, Award, CheckCircle, LucideIcon, ArrowRight } from 'lucide-react';
 
 interface TeamMember {
   id: number;
@@ -90,18 +91,18 @@ export default function AboutPage() {
   };
 
   // Fallback data
-  const fallbackCompanyInfo = {
+  const fallbackCompanyInfo: CompanyInfo = {
     company_name: 'Karma Training',
     slogan: 'We believe the choices you make today will determine your tomorrow',
     description: 'Established in 2017, we provide premier safety training programs geared to industry and commerce in Northwestern BC. Our experienced team brings over 70 years of combined industrial and educational experience.',
-    mission: 'Karma Training elected not to have a campus but rather provide training using your company&apos;s facilities on the equipment your staff use in the normal day-to-day operation.',
+    mission: 'Karma Training elected not to have a campus but rather provide training using your company\'s facilities on the equipment your staff use in the normal day-to-day operation.',
     total_experience: 70,
     students_trained_count: 2000,
     established_year: 2017,
     total_courses: 14
   };
 
-  const fallbackValues = [
+  const fallbackValues: CompanyValue[] = [
     {
       id: 1,
       title: 'Industrial Safety Training',
@@ -311,17 +312,19 @@ export default function AboutPage() {
             Contact us today to schedule training for your team or to discuss custom course development.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a 
+            <Link 
               href="/contact"
-              className="bg-brand-yellow hover:bg-brand-yellow-dark text-black px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg"
+              className="inline-flex items-center justify-center space-x-2 bg-amber-400 hover:bg-amber-500 text-black px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg"
             >
-              Contact Us Today
-            </a>
+              <span>Contact Us Today</span>
+              <ArrowRight className="h-5 w-5" />
+            </Link>
             <a 
               href="tel:250-615-3727"
-              className="border-2 border-white hover:bg-white hover:text-gray-900 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-200"
+              className="inline-flex items-center justify-center space-x-2 bg-transparent border-2 border-amber-400 hover:bg-amber-400 hover:text-black text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg"
             >
-              Call (250) 615-3727
+              <span>Call (250) 615-3727</span>
+              <ArrowRight className="h-5 w-5" />
             </a>
           </div>
         </div>
@@ -329,4 +332,3 @@ export default function AboutPage() {
     </div>
   );
 }
-
