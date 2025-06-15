@@ -1,4 +1,3 @@
-// src/app/api/contact/security-init/route.js
 import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 import { csrfUtils, honeypotUtils, rateLimiter, securityHeaders } from '../../../../../lib/security-utils';
@@ -6,7 +5,7 @@ import { csrfUtils, honeypotUtils, rateLimiter, securityHeaders } from '../../..
 export async function POST() {
   try {
     // Get client IP
-    const headersList = headers();
+    const headersList = await headers(); // Await headers() to fetch asynchronously
     const forwarded = headersList.get('x-forwarded-for');
     const ip = forwarded ? forwarded.split(',')[0] : headersList.get('x-real-ip') || 'unknown';
 
@@ -32,7 +31,7 @@ export async function POST() {
       honeypotValue: '',
       sessionId,
       timestamp: Date.now()
-    };
+    }; 
 
     // Create response with security headers
     const response = NextResponse.json(securityData);
@@ -60,4 +59,3 @@ export async function POST() {
     );
   }
 }
-

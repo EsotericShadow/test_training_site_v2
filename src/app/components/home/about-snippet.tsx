@@ -138,10 +138,10 @@ export default function AboutSnippet() {
             </div>
             <Link 
               href="/about"
-              className="inline-flex items-center space-x-2 bg-brand-yellow hover:bg-brand-yellow-dark text-black px-6 py-3 rounded-lg font-semibold transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg"
+              className="inline-flex items-center space-x-2 bg-amber-400 hover:bg-amber-500 text-black px-6 py-3 rounded-lg font-semibold text-lg transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg"
             >
               <span>Learn More About Us</span>
-              <ArrowRight className="h-4 w-4" />
+              <ArrowRight className="h-5 w-5" />
             </Link>
           </div>
           <div className="relative">
@@ -208,4 +208,3 @@ export default function AboutSnippet() {
     </section>
   );
 }
-

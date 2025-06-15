@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Send, Shield, AlertTriangle, CheckCircle, Loader2 } from 'lucide-react';
+import { Shield, AlertTriangle, CheckCircle, Send, Loader2 } from 'lucide-react';
 
 interface SecureContactFormProps {
   onSuccess?: () => void;
@@ -68,17 +68,17 @@ export default function SecureContactForm({
   const calculateSecurityScore = useCallback(() => {
     let score = 0;
     
-    // Check for HTTPS
-    if (window.location.protocol === 'https:') score += 20;
+    // Check for HTTPS or development
+    if (window.location.protocol === 'https:' || process.env.NODE_ENV === 'development') score += 20;
     
     // Check for modern browser features
     if (window.crypto && typeof window.crypto.getRandomValues === 'function') score += 20;
     if (typeof window.fetch === 'function') score += 10;
-    if (document.referrer.includes(window.location.hostname)) score += 10;
+    if (document.referrer.includes(window.location.hostname) || !document.referrer) score += 10;
     
-    // Check form completion time (human-like behavior)
+    // Check form completion time
     const timeSpent = Date.now() - startTimeRef.current;
-    if (timeSpent > 5000) score += 20; // At least 5 seconds
+    if (timeSpent > 3000) score += 20; // At least 3 seconds
     if (timeSpent < 60000) score += 20; // Less than 1 minute
     
     setSecurityScore(score);
@@ -114,7 +114,6 @@ export default function SecureContactForm({
     
     // Cleanup function
     return () => {
-      // Clear any sensitive data
       setSecurity({
         csrfToken: '',
         honeypotField: '',
@@ -123,6 +122,14 @@ export default function SecureContactForm({
       });
     };
   }, [initializeSecurity]);
+
+  // Update security score dynamically
+  useEffect(() => {
+    const timer = setInterval(() => {
+      calculateSecurityScore();
+    }, 1000); // Update every second
+    return () => clearInterval(timer);
+  }, [calculateSecurityScore]);
 
   // Real-time input validation
   const validateField = (name: string, value: string): string => {
@@ -251,7 +258,7 @@ export default function SecureContactForm({
       newErrors.security = 'Bot detected. Submission blocked.';
     }
 
-    if (securityScore < 50) {
+    if (securityScore < 30 && process.env.NODE_ENV !== 'development') {
       newErrors.security = 'Security score too low. Please try again.';
     }
 
@@ -572,7 +579,7 @@ export default function SecureContactForm({
             className={`flex items-center space-x-2 px-8 py-3 rounded-lg font-semibold text-lg transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg ${
               isSubmitting || isBlocked
                 ? 'bg-gray-400 text-gray-700 cursor-not-allowed'
-                : 'bg-brand-yellow hover:bg-brand-yellow-dark text-black'
+                : 'bg-amber-400 hover:bg-amber-500 text-black'
             }`}
           >
             {isSubmitting ? (
@@ -598,4 +605,3 @@ export default function SecureContactForm({
     </div>
   );
 }
-

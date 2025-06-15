@@ -204,18 +204,18 @@ export default function Testimonials() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link 
               href="/contact"
-              className="inline-flex items-center justify-center space-x-2 bg-brand-yellow hover:bg-brand-yellow-dark text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200 transform hover:-translate-y-1"
+              className="inline-flex items-center justify-center space-x-2 bg-amber-400 hover:bg-amber-500 text-black px-6 py-3 rounded-lg font-semibold text-lg transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg"
             >
               <span>Get a Quote</span>
-              <ArrowRight className="h-4 w-4" />
+              <ArrowRight className="h-5 w-5" />
             </Link>
             
             <Link 
               href="/courses"
-              className="inline-flex items-center justify-center space-x-2 border-2 border-white hover:bg-white hover:text-black text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200 transform hover:-translate-y-1"
+              className="inline-flex items-center justify-center space-x-2 bg-transparent border-2 border-amber-400 hover:bg-amber-400 hover:text-black text-white px-6 py-3 rounded-lg font-semibold text-lg transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg"
             >
               <span>View Courses</span>
-              <ArrowRight className="h-4 w-4" />
+              <ArrowRight className="h-5 w-5" />
             </Link>
           </div>
         </div>
@@ -223,4 +223,3 @@ export default function Testimonials() {
     </section>
   );
 }
-
