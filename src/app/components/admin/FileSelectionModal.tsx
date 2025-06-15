@@ -54,14 +54,13 @@ export default function FileSelectionModal({
     title: '',
     description: '',
     tags: '',
-    category: category || 'general',
+    category: category || 'other',
     is_featured: false
   });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploadPreview, setUploadPreview] = useState<string | null>(null);
 
   const categories = [
-    'general',
     'team-photos',
     'course-images', 
     'testimonials',

@@ -196,7 +196,7 @@ export async function GET(request) {
     return NextResponse.json({
       maxFileSize: 15 * 1024 * 1024, // 5MB
       allowedTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/gif'],
-      allowedCategories: ['general', 'team-photos', 'course-images', 'testimonials', 'company', 'other']
+      allowedCategories: ['team-photos', 'course-images', 'testimonials', 'company', 'other']
     });
 
   } catch (error) {

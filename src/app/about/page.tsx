@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Shield, Users, Award, CheckCircle, LucideIcon, ArrowRight } from 'lucide-react';
+import Image from 'next/image';
+import { Shield, Users, Award, CheckCircle, LucideIcon, ArrowRight, Camera } from 'lucide-react';
 
 interface TeamMember {
   id: number;
@@ -247,30 +248,52 @@ export default function AboutPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {teamMembers.map((member) => (
               <div key={member.id} className="bg-white dark:bg-gray-900 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden">
-                <div className="p-8">
-                  <div className="flex items-start space-x-4 mb-6">
-                    <div className="bg-brand-yellow/20 rounded-full p-3">
-                      <Users className="h-8 w-8 text-brand-yellow" />
-                    </div>
-                    <div>
-                      <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{member.name}</h3>
-                      <p className="text-gray-600 dark:text-gray-400">{member.role}</p>
+                <div className="p-8 flex flex-col h-full">
+                  <div className="mb-6 flex-shrink-0">
+                    <div className="h-32 w-32 mx-auto mb-4 rounded-lg overflow-hidden group hover:shadow-lg transition-all duration-300">
+                      {member.photo_url ? (
+                        <Image
+                          src={member.photo_url}
+                          alt={`${member.name} - ${member.role}`}
+                          width={128}
+                          height={128}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="bg-gray-200 dark:bg-gray-700 h-full w-full flex items-center justify-center">
+                          <div className="text-center text-gray-500 dark:text-gray-400">
+                            <Camera className="h-8 w-8 mx-auto mb-1 text-brand-yellow" />
+                            <p className="text-xs">Photo</p>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
-                  <p className="text-lg text-gray-600 dark:text-gray-400 mb-6 leading-normal">
-                    {member.bio}
-                  </p>
-                  <div>
-                    <h4 className="font-semibold text-gray-900 dark:text-white mb-3">Specialties:</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {JSON.parse(member.specializations || '[]').map((specialty: string, idx: number) => (
-                        <span 
-                          key={idx}
-                          className="bg-brand-yellow/20 text-brand-yellow px-3 py-1 rounded-full text-sm font-medium"
-                        >
-                          {specialty}
-                        </span>
-                      ))}
+                  <div className="flex-grow">
+                    <div className="flex items-start space-x-4 mb-6">
+                      <div className="bg-brand-yellow/20 rounded-full p-3">
+                        <Users className="h-8 w-8 text-brand-yellow" />
+                      </div>
+                      <div>
+                        <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{member.name}</h3>
+                        <p className="text-gray-600 dark:text-gray-400">{member.role}</p>
+                      </div>
+                    </div>
+                    <p className="text-lg text-gray-600 dark:text-gray-400 mb-6 leading-normal">
+                      {member.bio}
+                    </p>
+                    <div>
+                      <h4 className="font-semibold text-gray-900 dark:text-white mb-3">Specialties:</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {JSON.parse(member.specializations || '[]').map((specialty: string, idx: number) => (
+                          <span 
+                            key={idx}
+                            className="bg-brand-yellow/20 text-brand-yellow px-3 py-1 rounded-full text-sm font-medium"
+                          >
+                            {specialty}
+                          </span>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>

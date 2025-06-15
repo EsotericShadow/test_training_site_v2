@@ -1019,8 +1019,6 @@ export default function FileManagement() {
                     onChange={(e) => setFilters(prev => ({ ...prev, category: e.target.value }))}
                     className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-teal-500 focus:border-transparent"
                   >
-                    <option value="all">All Categories</option>
-                    <option value="general">General</option>
                     <option value="team-photos">Team Photos</option>
                     <option value="course-images">Course Images</option>
                     <option value="testimonials">Testimonials</option>

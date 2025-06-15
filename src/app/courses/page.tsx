@@ -229,9 +229,9 @@ export default function CoursesPage() {
                     )}
                     
                     <div className="flex flex-col sm:flex-row gap-3">
-                      <Link 
+                      <Link
                         href={`/courses/${course.slug}`}
-                        className="flex-1 bg-yellow-500 hover:bg-yellow-600 text-black px-4 py-3 rounded-lg font-semibold text-center transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg flex items-center justify-center space-x-2"
+                        className="flex-1 bg-yellow-500 hover:bg-yellow-600 text-black px-4 py-3 rounded-lg font-semibold text-center transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg flex items-center justify-center space-x-2 animate-fadeIn"
                       >
                         <span>Learn More</span>
                         <ArrowRight className="h-4 w-4" />
