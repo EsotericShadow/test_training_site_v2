@@ -595,12 +595,6 @@ export default function SecureContactForm({
             )}
           </button>
         </div>
-
-        {/* Security Notice */}
-        <div className="text-xs text-gray-500 dark:text-gray-400 text-center">
-          This form is protected by advanced security measures including CSRF protection, 
-          rate limiting, and spam detection.
-        </div>
       </form>
     </div>
   );

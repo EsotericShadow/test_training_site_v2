@@ -157,7 +157,7 @@ export default function CoursesPage() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {courses.map((course) => (
-                <div key={course.id} className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden">
+                <div key={course.id} className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden h-full flex flex-col">
                   {course.popular && (
                     <div className="bg-yellow-500 text-black text-center py-2 text-sm font-semibold">
                       Popular Course
@@ -185,7 +185,7 @@ export default function CoursesPage() {
                     )}
                   </div>
                   
-                  <div className="p-6">
+                  <div className="p-6 flex flex-col flex-1">
                     <div className="mb-4">
                       <span className="bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 px-3 py-1 rounded-full text-sm font-medium">
                         {course.category.name}
@@ -228,19 +228,19 @@ export default function CoursesPage() {
                       </div>
                     )}
                     
-                    <div className="flex flex-col sm:flex-row gap-3">
+                    <div className="flex flex-col sm:flex-row gap-3 mt-auto mb-4">
                       <Link
                         href={`/courses/${course.slug}`}
-                        className="flex-1 bg-yellow-500 hover:bg-yellow-600 text-black px-4 py-3 rounded-lg font-semibold text-center transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg flex items-center justify-center space-x-2 animate-fadeIn"
+                        className="flex-1 bg-yellow-500 hover:bg-yellow-600 text-black px-4 py-3 rounded-lg font-semibold text-center transition-all duration-200 transform hover:-translate-y-1 hover:shadow flex items-center justify-center space-x-2 animate-fadeIn"
                       >
                         <span>Learn More</span>
                         <ArrowRight className="h-4 w-4" />
                       </Link>
                       <Link 
                         href={`/courses/${course.slug}#request-syllabus`}
-                        className="flex-1 border-2 border-yellow-500 text-yellow-600 dark:text-yellow-400 hover:bg-yellow-500 hover:text-black px-4 py-3 rounded-lg font-semibold text-center transition-all duration-200"
+                        className="inline-flex items-center justify-center space-x-2 bg-transparent border-2 border-amber-400 hover:bg-amber-400 hover:text-black text-white px-4 py-2 rounded-lg font-semibold text-lg transition-all duration-200 transform hover:-translate-y-1 hover:shadow"
                       >
-                        Get Syllabus
+                        <span>Get Syllabus</span>
                       </Link>
                     </div>
                   </div>
@@ -267,7 +267,7 @@ export default function CoursesPage() {
             </Link>
             <a 
               href="tel:250-615-3727"
-              className="border-2 border-white hover:bg-white hover:text-gray-900 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-200"
+              className="inline-flex items-center justify-center space-x-2 bg-transparent border-2 border-amber-400 hover:bg-amber-400 hover:text-black text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg"
             >
               Call (250) 615-3727
             </a>
@@ -277,4 +277,3 @@ export default function CoursesPage() {
     </div>
   );
 }
-
