@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -64,6 +64,7 @@ export default function TeamMemberManagement() {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
   const [uploading, setUploading] = useState(false);
+  const formRef = useRef<HTMLDivElement>(null); // Ref for scrolling to form
 
   const [formData, setFormData] = useState({
     name: '',
@@ -162,6 +163,10 @@ export default function TeamMemberManagement() {
     });
     setEditingTeamMember(teamMember);
     setShowAddForm(true);
+    // Scroll to form
+    if (formRef.current) {
+      formRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   };
 
   const handleAddSpecialization = () => {
@@ -187,7 +192,6 @@ export default function TeamMemberManagement() {
     }));
   };
 
-  // File selection handler for team photos
   const handlePhotoSelect = (url: string, file: FileItem | undefined) => {
     setFormData(prev => ({
       ...prev,
@@ -332,14 +336,14 @@ export default function TeamMemberManagement() {
       {/* Header */}
       <header className="bg-card border-b border-border shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div className="flex items-center space-x-4">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-6 space-y-4 sm:space-y-0">
+            <div className="flex items-center space-x-4 w-full sm:w-auto">
               <Link 
                 href="/adm_f7f8556683f1cdc65391d8d2_8e91/dashboard"
-                className="inline-flex items-center space-x-2 px-3 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all duration-200"
+                className="inline-flex items-center space-x-2 px-4 py-3 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all duration-200 text-base"
               >
-                <ArrowLeft className="h-4 w-4" />
-                <span className="text-sm font-medium">Back to Dashboard</span>
+                <ArrowLeft className="h-5 w-5" />
+                <span className="font-medium">Dashboard</span>
               </Link>
               <div className="flex items-center space-x-3">
                 <div className="inline-flex items-center justify-center w-10 h-10 bg-gradient-to-r from-purple-500 to-violet-600 rounded-xl shadow-lg">
@@ -347,23 +351,23 @@ export default function TeamMemberManagement() {
                 </div>
                 <div>
                   <h1 className="text-2xl font-bold text-foreground">Team Members</h1>
-                  <p className="text-sm text-muted-foreground">Manage team member profiles and information</p>
+                  <p className="text-base text-muted-foreground">Manage team profiles</p>
                 </div>
               </div>
             </div>
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-4 w-full sm:w-auto justify-between sm:justify-end">
               <div className="flex items-center space-x-2">
-                <span className="text-sm text-muted-foreground">Welcome, {user?.username}</span>
-                <div className="inline-flex items-center px-2 py-1 bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-full text-xs text-purple-600 dark:text-purple-400">
+                <span className="text-base text-muted-foreground">{user?.username}</span>
+                <div className="inline-flex items-center px-2 py-1 bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-full text-sm text-purple-600 dark:text-purple-400">
                   <div className="w-1.5 h-1.5 bg-purple-500 rounded-full mr-1 animate-pulse"></div>
                   Online
                 </div>
               </div>
               <button
                 onClick={() => setShowAddForm(true)}
-                className="bg-gradient-to-r from-purple-500 to-violet-600 hover:from-purple-600 hover:to-violet-700 text-white font-semibold px-4 py-2 rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl flex items-center space-x-2"
+                className="bg-gradient-to-r from-purple-500 to-violet-600 hover:from-purple-600 hover:to-violet-700 text-white font-semibold px-6 py-3 rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl flex items-center space-x-2"
               >
-                <Plus className="h-4 w-4" />
+                <Plus className="h-5 w-5" />
                 <span>Add Team Member</span>
               </button>
             </div>
@@ -371,24 +375,24 @@ export default function TeamMemberManagement() {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         {/* Success/Error Messages */}
         {message && (
-          <div className={`mb-6 p-4 rounded-xl border ${
+          <div className={`mb-8 p-4 rounded-xl border ${
             message.includes('successfully') || message.includes('✓')
               ? 'bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-400 border-green-200 dark:border-green-800' 
               : 'bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-400 border-red-200 dark:border-red-800'
           }`}>
             <div className="flex items-center space-x-2">
-              <ShieldCheckIcon className="w-5 h-5" />
-              <span className="font-medium">{message}</span>
+              <ShieldCheckIcon className="w-6 h-6" />
+              <span className="font-medium text-base">{message}</span>
             </div>
           </div>
         )}
 
         {/* Add/Edit Form */}
         {showAddForm && (
-          <div className="bg-card border border-border rounded-2xl shadow-xl mb-8">
+          <div ref={formRef} className="bg-card border border-border rounded-2xl shadow-xl mb-10">
             <div className="px-6 py-4 border-b border-border bg-gradient-to-r from-purple-50 to-violet-50 dark:from-purple-900/20 dark:to-violet-900/20 rounded-t-2xl">
               <div className="flex justify-between items-center">
                 <div className="flex items-center space-x-3">
@@ -401,16 +405,16 @@ export default function TeamMemberManagement() {
                 </div>
                 <button
                   onClick={resetForm}
-                  className="text-muted-foreground hover:text-foreground transition-colors duration-200"
+                  className="text-muted-foreground hover:text-foreground p-3 rounded-lg hover:bg-background transition-colors"
                 >
-                  <X className="h-5 w-5" />
+                  <X className="h-6 w-6" />
                 </button>
               </div>
             </div>
-            <form onSubmit={handleSubmit} className="p-6 space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold text-foreground">
+            <form onSubmit={handleSubmit} className="p-6 space-y-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="space-y-3">
+                  <label className="text-base font-semibold text-foreground">
                     Name *
                   </label>
                   <input
@@ -419,12 +423,12 @@ export default function TeamMemberManagement() {
                     onChange={(e) =>
                       setFormData((prev) => ({ ...prev, name: e.target.value }))
                     }
-                    className="w-full px-4 py-3 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200"
+                    className="w-full px-4 py-4 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200 text-base"
                     required
                   />
                 </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold text-foreground">
+                <div className="space-y-3">
+                  <label className="text-base font-semibold text-foreground">
                     Role *
                   </label>
                   <input
@@ -434,12 +438,12 @@ export default function TeamMemberManagement() {
                       setFormData((prev) => ({ ...prev, role: e.target.value }))
                     }
                     placeholder="e.g., Instructor, Manager"
-                    className="w-full px-4 py-3 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200"
+                    className="w-full px-4 py-4 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200 text-base"
                     required
                   />
                 </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold text-foreground">
+                <div className="space-y-3">
+                  <label className="text-base font-semibold text-foreground">
                     Experience Years
                   </label>
                   <input
@@ -452,11 +456,11 @@ export default function TeamMemberManagement() {
                       }))
                     }
                     min="0"
-                    className="w-full px-4 py-3 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200"
+                    className="w-full px-4 py-4 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200 text-base"
                   />
                 </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold text-foreground">
+                <div className="space-y-3">
+                  <label className="text-base font-semibold text-foreground">
                     Display Order
                   </label>
                   <input
@@ -469,7 +473,7 @@ export default function TeamMemberManagement() {
                       }))
                     }
                     min="0"
-                    className="w-full px-4 py-3 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200"
+                    className="w-full px-4 py-4 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200 text-base"
                   />
                 </div>
                 <div className="flex items-center space-x-3">
@@ -480,17 +484,16 @@ export default function TeamMemberManagement() {
                     onChange={(e) =>
                       setFormData((prev) => ({ ...prev, featured: e.target.checked }))
                     }
-                    className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-input rounded"
+                    className="h-5 w-5 text-purple-600 focus:ring-purple-500 border-input rounded"
                   />
-                  <label htmlFor="featured" className="text-sm font-semibold text-foreground flex items-center space-x-2">
-                    <Star className="h-4 w-4 text-yellow-500" />
+                  <label htmlFor="featured" className="text-base font-semibold text-foreground flex items-center space-x-2">
+                    <Star className="h-5 w-5 text-yellow-500" />
                     <span>Mark as Featured</span>
                   </label>
                 </div>
               </div>
-              
-              <div className="space-y-2">
-                <label className="text-sm font-semibold text-foreground">
+              <div className="space-y-3">
+                <label className="text-base font-semibold text-foreground">
                   Bio
                 </label>
                 <textarea
@@ -498,14 +501,12 @@ export default function TeamMemberManagement() {
                   onChange={(e) =>
                     setFormData((prev) => ({ ...prev, bio: e.target.value }))
                   }
-                  rows={4}
-                  className="w-full px-4 py-3 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200"
+                  rows={6}
+                  className="w-full px-4 py-4 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200 text-base"
                 />
               </div>
-              
-              {/* Photo Selection - New File Selection System */}
-              <div className="space-y-2">
-                <label className="text-sm font-semibold text-foreground">
+              <div className="space-y-3">
+                <label className="text-base font-semibold text-foreground">
                   Team Member Photo
                 </label>
                 <FileSelectionButton
@@ -516,8 +517,8 @@ export default function TeamMemberManagement() {
                   placeholder="No photo selected"
                 />
                 {formData.photo_alt && (
-                  <div className="mt-2">
-                    <label className="text-sm font-semibold text-foreground">
+                  <div className="mt-4">
+                    <label className="text-base font-semibold text-foreground">
                       Photo Alt Text
                     </label>
                     <input
@@ -527,15 +528,13 @@ export default function TeamMemberManagement() {
                         setFormData((prev) => ({ ...prev, photo_alt: e.target.value }))
                       }
                       placeholder="Describe the photo for accessibility"
-                      className="w-full px-4 py-3 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200"
+                      className="w-full px-4 py-4 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200 text-base"
                     />
                   </div>
                 )}
               </div>
-
-              {/* Legacy Photo Upload - Keep as fallback */}
-              <div className="space-y-2">
-                <label className="text-sm font-semibold text-foreground">
+              <div className="space-y-3">
+                <label className="text-base font-semibold text-foreground">
                   Or Upload New Photo (Legacy)
                 </label>
                 <div className="flex items-center space-x-4">
@@ -554,9 +553,9 @@ export default function TeamMemberManagement() {
                   />
                   <label
                     htmlFor="photo-upload"
-                    className="inline-flex items-center space-x-2 px-4 py-3 bg-muted border border-input rounded-xl text-foreground hover:bg-muted/80 cursor-pointer transition-all duration-200"
+                    className="inline-flex items-center space-x-2 px-6 py-3 bg-muted border border-input rounded-xl text-foreground hover:bg-muted/80 cursor-pointer transition-all duration-200 text-base"
                   >
-                    <Upload className="h-4 w-4" />
+                    <Upload className="h-5 w-5" />
                     <span>{uploading ? 'Uploading...' : 'Choose Photo'}</span>
                   </label>
                   {formData.photo_url && (
@@ -570,28 +569,27 @@ export default function TeamMemberManagement() {
                   )}
                 </div>
               </div>
-              
-              <div className="space-y-2">
-                <label className="text-sm font-semibold text-foreground">
+              <div className="space-y-4">
+                <label className="text-base font-semibold text-foreground">
                   Specializations
                 </label>
-                <div className="space-y-3">
+                <div className="space-y-4">
                   {formData.specializations.map((specialization, index) => (
-                    <div key={index} className="flex items-center space-x-2">
+                    <div key={index} className="flex items-center space-x-3">
                       <input
                         type="text"
                         value={specialization}
                         onChange={(e) => handleSpecializationChange(index, e.target.value)}
                         placeholder="e.g., Fall Protection, WHMIS"
-                        className="flex-1 px-4 py-3 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200"
+                        className="flex-1 px-4 py-4 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200 text-base"
                       />
                       {formData.specializations.length > 1 && (
                         <button
                           type="button"
                           onClick={() => handleRemoveSpecialization(index)}
-                          className="text-red-500 hover:text-red-700 transition-colors duration-200"
+                          className="p-3 text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
                         >
-                          <X className="h-4 w-4" />
+                          <X className="h-5 w-5" />
                         </button>
                       )}
                     </div>
@@ -599,26 +597,25 @@ export default function TeamMemberManagement() {
                   <button
                     type="button"
                     onClick={handleAddSpecialization}
-                    className="text-purple-600 hover:text-purple-800 text-sm flex items-center space-x-1 transition-colors duration-200"
+                    className="inline-flex items-center space-x-2 px-6 py-3 bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 border border-purple-200 dark:border-purple-800 rounded-xl hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors text-base"
                   >
-                    <Plus className="h-4 w-4" />
+                    <Plus className="h-5 w-5" />
                     <span>Add Specialization</span>
                   </button>
                 </div>
               </div>
-              
-              <div className="flex justify-end space-x-4 pt-6 border-t border-border">
+              <div className="flex flex-col sm:flex-row justify-end space-y-4 sm:space-y-0 sm:space-x-4 pt-8 border-t border-border">
                 <button
                   type="button"
                   onClick={resetForm}
-                  className="px-6 py-3 border border-input rounded-xl text-foreground hover:bg-muted transition-all duration-200"
+                  className="px-8 py-4 border border-input rounded-xl text-foreground hover:bg-muted transition-all duration-200 text-base"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="bg-gradient-to-r from-purple-500 to-violet-600 hover:from-purple-600 hover:to-violet-700 disabled:from-gray-300 disabled:to-gray-300 dark:disabled:from-gray-600 dark:disabled:to-gray-600 text-white font-semibold px-6 py-3 rounded-xl transition-all duration-200 transform hover:scale-[1.02] disabled:scale-100 disabled:cursor-not-allowed shadow-lg hover:shadow-xl flex items-center space-x-2"
+                  className="bg-gradient-to-r from-purple-500 to-violet-600 hover:from-purple-600 hover:to-violet-700 disabled:from-gray-300 disabled:to-gray-300 dark:disabled:from-gray-600 dark:disabled:to-gray-600 text-white font-semibold px-8 py-4 rounded-xl transition-all duration-200 transform hover:scale-[1.02] disabled:scale-100 disabled:cursor-not-allowed shadow-lg hover:shadow-xl flex items-center space-x-2"
                 >
                   {saving ? (
                     <>
@@ -627,7 +624,7 @@ export default function TeamMemberManagement() {
                     </>
                   ) : (
                     <>
-                      <Save className="h-4 w-4" />
+                      <Save className="h-5 w-5" />
                       <span>{editingTeamMember ? 'Update' : 'Create'} Team Member</span>
                     </>
                   )}
@@ -645,6 +642,9 @@ export default function TeamMemberManagement() {
                 <Users className="w-4 h-4 text-white" />
               </div>
               <h2 className="text-lg font-bold text-foreground">Current Team Members</h2>
+              <span className="px-2 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 text-sm font-medium rounded-full">
+                {teamMembers.length} members
+              </span>
             </div>
           </div>
           <div className="p-6">
@@ -654,16 +654,16 @@ export default function TeamMemberManagement() {
                   <Users className="h-8 w-8 text-purple-500" />
                 </div>
                 <h3 className="text-lg font-semibold text-foreground mb-2">No team members found</h3>
-                <p className="text-muted-foreground mb-6">Get started by adding your first team member</p>
+                <p className="text-base text-muted-foreground mb-6">Get started by adding your first team member</p>
                 <button
                   onClick={() => setShowAddForm(true)}
-                  className="bg-gradient-to-r from-purple-500 to-violet-600 hover:from-purple-600 hover:to-violet-700 text-white font-semibold px-6 py-3 rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl"
+                  className="bg-gradient-to-r from-purple-500 to-violet-600 hover:from-purple-600 hover:to-violet-700 text-white font-semibold px-8 py-4 rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl text-base"
                 >
                   Add your first team member
                 </button>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 gap-8">
                 {teamMembers.map((member) => (
                   <div key={member.id} className="border border-border rounded-xl p-6 bg-muted/30 hover:bg-muted/50 transition-all duration-200">
                     <div className="flex items-start justify-between mb-4">
@@ -682,47 +682,47 @@ export default function TeamMemberManagement() {
                           </div>
                         )}
                         <div>
-                          <h3 className="font-semibold text-foreground flex items-center space-x-2">
+                          <h3 className="font-semibold text-lg text-foreground flex items-center space-x-2">
                             <span>{member.name}</span>
                             {member.featured && (
-                              <Star className="h-4 w-4 text-yellow-500 fill-current" />
+                              <Star className="h-5 w-5 text-yellow-500 fill-current" />
                             )}
                           </h3>
-                          <p className="text-sm text-muted-foreground">{member.role}</p>
+                          <p className="text-base text-muted-foreground">{member.role}</p>
                         </div>
                       </div>
                       <div className="flex items-center space-x-2">
                         <button
                           onClick={() => handleEdit(member)}
-                          className="text-purple-600 hover:text-purple-800 transition-colors duration-200"
+                          className="p-3 text-purple-600 hover:text-purple-800 hover:bg-purple-50 dark:hover:bg-purple-900/20 rounded-lg transition-colors"
                         >
-                          <Edit className="h-4 w-4" />
+                          <Edit className="h-5 w-5" />
                         </button>
                         <button
                           onClick={() => handleDelete(member.id, member.name)}
-                          className="text-red-500 hover:text-red-700 transition-colors duration-200"
+                          className="p-3 text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
                         >
-                          <Trash2 className="h-4 w-4" />
+                          <Trash2 className="h-5 w-5" />
                         </button>
                       </div>
                     </div>
                     {member.bio && (
-                      <p className="text-sm text-muted-foreground mb-4 line-clamp-3">{member.bio}</p>
+                      <p className="text-base text-muted-foreground mb-4 line-clamp-4">{member.bio}</p>
                     )}
                     {member.specializations && (
                       <div className="mb-4">
-                        <p className="text-xs font-semibold text-foreground mb-2 flex items-center space-x-1">
-                          <Award className="h-3 w-3" />
+                        <p className="text-sm font-semibold text-foreground mb-2 flex items-center space-x-1">
+                          <Award className="h-4 w-4" />
                           <span>Specializations:</span>
                         </p>
-                        <div className="flex flex-wrap gap-1">
+                        <div className="flex flex-wrap gap-2">
                           {(typeof member.specializations === 'string' 
                             ? JSON.parse(member.specializations) 
                             : member.specializations
                           ).map((spec: string, idx: number) => (
                             <span
                               key={idx}
-                              className="bg-purple-100 dark:bg-purple-900/20 text-purple-800 dark:text-purple-400 px-2 py-1 rounded-lg text-xs border border-purple-200 dark:border-purple-800"
+                              className="bg-purple-100 dark:bg-purple-900/20 text-purple-800 dark:text-purple-400 px-3 py-1 rounded-lg text-sm border border-purple-200 dark:border-purple-800"
                             >
                               {spec}
                             </span>
@@ -730,7 +730,7 @@ export default function TeamMemberManagement() {
                         </div>
                       </div>
                     )}
-                    <div className="flex justify-between items-center text-xs text-muted-foreground pt-3 border-t border-border">
+                    <div className="flex justify-between items-center text-sm text-muted-foreground pt-4 border-t border-border">
                       <span>Order: {member.display_order}</span>
                       {member.experience_years && (
                         <span>{member.experience_years} years exp.</span>
@@ -745,7 +745,7 @@ export default function TeamMemberManagement() {
 
         {/* Footer */}
         <div className="mt-12 pt-8 border-t border-border">
-          <div className="text-center text-xs text-muted-foreground space-y-2">
+          <div className="text-center text-sm text-muted-foreground space-y-2">
             <div className="flex items-center justify-center space-x-4">
               <span className="flex items-center">
                 <span className="mr-1">👥</span>
@@ -757,7 +757,7 @@ export default function TeamMemberManagement() {
                 Secure Portal
               </span>
             </div>
-            <p className="text-xs">
+            <p className="text-sm">
               Karma Training • Team Member Management System
             </p>
           </div>
@@ -766,4 +766,3 @@ export default function TeamMemberManagement() {
     </div>
   );
 }
-

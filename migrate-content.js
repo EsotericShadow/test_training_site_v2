@@ -34,7 +34,7 @@ const companyValues = [
 // Why Choose Us Data
 const whyChooseUs = [
   { point: 'Expert instructors with 70+ years combined experience', display_order: 1 },
-  { point: 'Comprehensive curriculum covering 14+ safety topics', display_order: 2 },
+  { point: 'Comprehensive syllabus covering 14+ safety topics', display_order: 2 },
   { point: 'Official KIST & IVES certification upon completion', display_order: 3 },
   { point: 'Tailored for Northwestern BC industries', display_order: 4 },
   { point: 'Flexible scheduling and on-site training options', display_order: 5 },

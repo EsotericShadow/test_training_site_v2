@@ -336,7 +336,7 @@ export default function CoursePage({ params }: PageProps) {
       <section id="request-syllabus" className="py-16 bg-gray-50 dark:bg-gray-800">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Request Course Curriculum</h2>
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Request Course Syllabus</h2>
             <p className="text-xl text-gray-600 dark:text-gray-400 mb-8">
               Get detailed information about this course including learning objectives, schedule, and certification requirements.
             </p>

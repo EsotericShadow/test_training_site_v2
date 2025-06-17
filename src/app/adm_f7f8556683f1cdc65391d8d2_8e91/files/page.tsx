@@ -22,10 +22,9 @@ import {
   CheckSquare,
   Square,
   Upload,
-  ImageIcon,
+  User,
 } from 'lucide-react';
 import Image from 'next/image';
-import { ShieldCheckIcon } from '@heroicons/react/24/outline';
 
 interface FileItem {
   id: number;
@@ -63,7 +62,6 @@ export default function FileManagement() {
   const [files, setFiles] = useState<FileItem[]>([]);
   const [message, setMessage] = useState('');
 
-  // Edit form states (following courses pattern)
   const [showEditForm, setShowEditForm] = useState(false);
   const [editingFile, setEditingFile] = useState<FileItem | null>(null);
   const [saving, setSaving] = useState(false);
@@ -78,7 +76,6 @@ export default function FileManagement() {
     is_featured: false
   });
 
-  // Upload form states (Phase 4A)
   const [showUploadForm, setShowUploadForm] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -93,7 +90,6 @@ export default function FileManagement() {
     is_featured: false
   });
 
-  // Organization states (Phase 3B)
   const [filters, setFilters] = useState({
     category: 'all',
     featured: false,
@@ -149,20 +145,14 @@ export default function FileManagement() {
     checkAuth();
   }, [checkAuth]);
 
-  // Organization functions (Phase 3B)
   const filteredAndSortedFiles = useMemo(() => {
     const filtered = files.filter(file => {
-      // Category filter
       if (filters.category !== 'all' && file.category !== filters.category) {
         return false;
       }
-      
-      // Featured filter
       if (filters.featured && !file.is_featured) {
         return false;
       }
-      
-      // Search filter
       if (filters.search) {
         const searchLower = filters.search.toLowerCase();
         return (
@@ -172,16 +162,13 @@ export default function FileManagement() {
           file.tags?.toLowerCase().includes(searchLower)
         );
       }
-      
       return true;
     });
 
-    // Sort files
     filtered.sort((a, b) => {
       let aValue: string | number = a[sortBy as keyof FileItem] as string | number;
       let bValue: string | number = b[sortBy as keyof FileItem] as string | number;
       
-      // Handle different data types
       if (sortBy === 'file_size') {
         aValue = Number(aValue);
         bValue = Number(bValue);
@@ -270,7 +257,6 @@ export default function FileManagement() {
     return stats;
   };
 
-  // Upload form handlers (Phase 4A)
   const resetUploadForm = () => {
     setUploadFormData({
       alt_text: '',
@@ -291,7 +277,6 @@ export default function FileManagement() {
     
     setSelectedFile(file);
     
-    // Create preview for images
     if (file.type.startsWith('image/')) {
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -302,7 +287,6 @@ export default function FileManagement() {
       setUploadPreview(null);
     }
     
-    // Auto-populate alt text with filename
     if (!uploadFormData.alt_text) {
       setUploadFormData(prev => ({
         ...prev,
@@ -327,7 +311,6 @@ export default function FileManagement() {
     if (!file) return;
     setSelectedFile(file);
     
-    // Create preview for images
     if (file.type.startsWith('image/')) {
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -338,7 +321,6 @@ export default function FileManagement() {
       setUploadPreview(null);
     }
     
-    // Auto-populate alt text with filename
     if (!uploadFormData.alt_text) {
       setUploadFormData(prev => ({
         ...prev,
@@ -374,7 +356,7 @@ export default function FileManagement() {
         await response.json();
         setMessage('✓ File uploaded successfully');
         resetUploadForm();
-        loadData(); // Refresh the file list
+        loadData();
       } else if (response.status === 401) {
         router.push('/adm_f7f8556683f1cdc65391d8d2_8e91');
         return;
@@ -390,7 +372,6 @@ export default function FileManagement() {
     }
   };
 
-  // Edit form handlers (following courses pattern)
   const resetEditForm = () => {
     setEditFormData({
       alt_text: '',
@@ -536,38 +517,43 @@ export default function FileManagement() {
       {/* Header */}
       <header className="bg-card border-b border-border shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div className="flex items-center space-x-4">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-6 space-y-4 sm:space-y-0">
+            <div className="flex items-center space-x-4 w-full sm:w-auto">
               <Link 
                 href="/adm_f7f8556683f1cdc65391d8d2_8e91/dashboard"
-                className="inline-flex items-center space-x-2 px-3 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all duration-200"
+                className="text-sm inline-flex items-center space-x-2 px-4 py-3 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all duration-200 text-base"
               >
                 <ArrowLeft className="h-4 w-4" />
-                <span className="text-sm font-medium">Back to Dashboard</span>
+                <span className="font-medium">Dashboard</span>
               </Link>
               <div className="flex items-center space-x-3">
                 <div className="inline-flex items-center justify-center w-10 h-10 bg-gradient-to-r from-teal-500 to-cyan-600 rounded-xl shadow-lg">
                   <Folder className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold text-foreground">File Management</h1>
-                  <p className="text-sm text-muted-foreground">Upload and manage images and files</p>
+                  <h1 className="text-base font-bold text-foreground">File Management</h1>
+                  <p className="text-sm text-muted-foreground">Manage your media files</p>
                 </div>
               </div>
             </div>
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
-                <span className="text-sm text-muted-foreground">Welcome, {user?.username}</span>
-                <div className="inline-flex items-center px-2 py-1 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-full text-xs text-green-600 dark:text-green-400">
-                  <div className="w-1.5 h-1.5 bg-green-500 rounded-full mr-1 animate-pulse"></div>
-                  Online
+            <div className="flex items-center space-x-4 w-full sm:w-auto justify-between sm:justify-end">
+              {user && (
+                <div className="flex items-center space-x-2">
+                  <div className="inline-flex items-center justify-center w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full">
+                    <User className="h-3 w-3 text-white" />
+                  </div>
+                  <span className="text-sm text-muted-foreground">{user.username}</span>
+                  <div className="inline-flex items-center px-2 py-1 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-full text-sm text-green-600 dark:text-green-400">
+                    <div className="w-2.5 h-2.5 bg-green-500 rounded-full mr-1 animate-pulse"></div>
+                    Online
+                  </div>
                 </div>
-              </div>
+              )}
               <button
                 onClick={() => setShowUploadForm(true)}
-                className="bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 text-white px-4 py-2 rounded-xl flex items-center space-x-2 font-semibold transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl"
+                className="text-sm bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 text-white px-4 py-3 rounded-xl flex items-center space-x-2 font-semibold transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl"
               >
-                <Plus className="h-4 w-4" />
+                <Plus className="h-5 w-5" />
                 <span>Upload File</span>
               </button>
             </div>
@@ -575,167 +561,393 @@ export default function FileManagement() {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         {/* Success/Error Messages */}
         {message && (
-          <div className={`mb-6 p-4 rounded-xl border ${
-            message.includes('successfully') || message.includes('✓')
+          <div className={`mb-8 p-4 rounded-xl border ${
+            message.includes('✓') 
               ? 'bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-400 border-green-200 dark:border-green-800' 
               : 'bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-400 border-red-200 dark:border-red-800'
           }`}>
             <div className="flex items-center space-x-2">
-              <ShieldCheckIcon className="w-5 h-5" />
-              <span className="font-medium">{message}</span>
+              <span className="font-medium text-base">{message}</span>
             </div>
           </div>
         )}
 
-        {/* Upload Form (Phase 4A) */}
-        {showUploadForm && (
-          <div className="bg-card border border-border rounded-2xl shadow-xl mb-6 overflow-hidden">
-            <div className="px-6 py-4 border-b border-border bg-gradient-to-r from-teal-50 to-cyan-50 dark:from-teal-900/20 dark:to-cyan-900/20">
-              <div className="flex items-center justify-between">
-                <h2 className="text-xl font-bold text-foreground">Upload New File</h2>
-                <button
-                  onClick={resetUploadForm}
-                  className="text-muted-foreground hover:text-foreground"
-                >
-                  <X className="w-6 h-6" />
-                </button>
-              </div>
-            </div>
-            
-            <form onSubmit={handleUploadSubmit} className="p-6 space-y-6">
-              {/* File Selection Area */}
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
-                  Select File *
-                </label>
-                <div
-                  onDragOver={handleDragOver}
-                  onDrop={handleDrop}
-                  className="border-2 border-dashed border-border rounded-xl p-8 text-center hover:border-teal-500 transition-colors"
-                >
-                  {selectedFile ? (
-                    <div className="space-y-4">
-                      {uploadPreview ? (
-                        <div className="flex justify-center">
-                          <Image
-                            src={uploadPreview}
-                            alt="Preview"
-                            width={200}
-                            height={200}
-                            className="max-w-48 max-h-48 object-cover rounded-lg border border-border"
-                          />
-                        </div>
-                      ) : (
-                        <div className="flex justify-center">
-                          <div className="w-16 h-16 bg-gradient-to-br from-teal-100 to-cyan-100 dark:from-teal-900/30 dark:to-cyan-900/30 rounded-lg flex items-center justify-center">
-                            <FileText className="w-8 h-8 text-teal-600 dark:text-teal-400" />
-                          </div>
-                        </div>
-                      )}
-                      <div>
-                        <p className="text-sm font-medium text-foreground">{selectedFile.name}</p>
-                        <p className="text-xs text-muted-foreground">{formatFileSize(selectedFile.size)}</p>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setSelectedFile(null);
-                          setUploadPreview(null);
-                        }}
-                        className="text-sm text-red-600 hover:text-red-800"
-                      >
-                        Remove file
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
-                      <div className="flex justify-center">
-                        <div className="w-16 h-16 bg-gradient-to-br from-teal-100 to-cyan-100 dark:from-teal-900/30 dark:to-cyan-900/30 rounded-lg flex items-center justify-center">
-                          <Upload className="w-8 h-8 text-teal-600 dark:text-teal-400" />
-                        </div>
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-foreground">
-                          Drag and drop your file here, or click to browse
-                        </p>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          Maximum file size: 15MB
-                        </p>
-                      </div>
-                      <input
-                        type="file"
-                        onChange={handleFileSelect}
-                        className="hidden"
-                        id="file-upload"
-                        accept="image/*"
-                      />
-                      <label
-                        htmlFor="file-upload"
-                        className="inline-flex items-center px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg cursor-pointer transition-colors"
-                      >
-                        <ImageIcon className="w-4 h-4 mr-2" />
-                        Choose File
-                      </label>
-                    </div>
-                  )}
+        {/* Filters and Search */}
+        <div className="bg-card border border-border rounded-2xl shadow-lg mb-8">
+          <div className="p-6">
+            <div className="flex flex-col lg:flex-row gap-6">
+              {/* Search */}
+              <div className="flex-1">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                  <input
+                    type="text"
+                    placeholder="Search files by name, alt text, title, or tags..."
+                    value={filters.search}
+                    onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
+                    className="w-full pl-10 pr-4 py-3 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
+                  />
                 </div>
               </div>
 
-              {/* Metadata Fields */}
+              {/* Filters Toggle */}
+              <button
+                onClick={() => setShowFilters(!showFilters)}
+                className="flex items-center space-x-2 px-4 py-3 bg-background border border-input rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+              >
+                <Filter className="h-5 w-5" />
+                <span className="font-medium">Filters</span>
+              </button>
+            </div>
+
+            {/* Expanded Filters */}
+            {showFilters && (
+              <div className="mt-6 pt-6 border-t border-border">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">Category</label>
+                    <select
+                      value={filters.category}
+                      onChange={(e) => setFilters(prev => ({ ...prev, category: e.target.value }))}
+                      className="w-full px-3 py-2 bg-background border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                    >
+                      <option value="all">All Categories</option>
+                      {Object.entries(categoryStats).map(([category, count]) => (
+                        <option key={category} value={category}>
+                          {category} ({count})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">Sort By</label>
+                    <select
+                      value={sortBy}
+                      onChange={(e) => setSortBy(e.target.value)}
+                      className="w-full px-3 py-2 bg-background border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                    >
+                      <option value="uploaded_at">Upload Date</option>
+                      <option value="original_name">Name</option>
+                      <option value="file_size">Size</option>
+                      <option value="category">Category</option>
+                    </select>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">Order</label>
+                    <button
+                      onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+                      className="w-full flex items-center justify-center space-x-2 px-3 py-2 bg-background border border-input rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+                    >
+                      {sortOrder === 'asc' ? <SortAsc className="h-4 w-4" /> : <SortDesc className="h-4 w-4" />}
+                      <span>{sortOrder === 'asc' ? 'Ascending' : 'Descending'}</span>
+                    </button>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">Featured</label>
+                    <div className="flex items-center space-x-2 py-2">
+                      <input
+                        type="checkbox"
+                        id="featured-filter"
+                        checked={filters.featured}
+                        onChange={(e) => setFilters(prev => ({ ...prev, featured: e.target.checked }))}
+                        className="rounded border-input text-teal-600 focus:ring-teal-500"
+                      />
+                      <label htmlFor="featured-filter" className="text-sm text-foreground">
+                        Featured files only
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Bulk Actions */}
+        {showBulkActions && (
+          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4 mb-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <span className="text-sm font-medium text-blue-800 dark:text-blue-400">
+                {selectedFiles.length} file{selectedFiles.length !== 1 ? 's' : ''} selected
+              </span>
+              <div className="flex items-center space-x-3">
+                <button
+                  onClick={handleBulkDelete}
+                  disabled={saving}
+                  className="flex items-center space-x-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  <Trash2 className="h-4 w-4" />
+                  <span>Delete Selected</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setSelectedFiles([]);
+                    setShowBulkActions(false);
+                  }}
+                  className="px-4 py-2 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Files Grid */}
+        {filteredAndSortedFiles.length === 0 ? (
+          <div className="text-center py-12">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-full mb-4">
+              <FileText className="h-8 w-8 text-slate-400" />
+            </div>
+            <h3 className="text-lg font-semibold text-foreground mb-2">No files found</h3>
+            <p className="text-muted-foreground mb-4">
+              {filters.search || filters.category !== 'all' || filters.featured 
+                ? 'Try adjusting your filters or search terms.'
+                : 'Upload your first file to get started.'
+              }
+            </p>
+            {!filters.search && filters.category === 'all' && !filters.featured && (
+              <button
+                onClick={() => setShowUploadForm(true)}
+                className="inline-flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-teal-500 to-cyan-600 text-white rounded-xl hover:from-teal-600 hover:to-cyan-700 transition-all duration-200 shadow-lg hover:shadow-xl font-semibold"
+              >
+                <Plus className="h-5 w-5" />
+                <span>Upload File</span>
+              </button>
+            )}
+          </div>
+        ) : (
+          <>
+            {/* Select All */}
+            <div className="flex items-center justify-between mb-6">
+              <button
+                onClick={handleSelectAll}
+                className="flex items-center space-x-2 px-4 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+              >
+                {selectedFiles.length === filteredAndSortedFiles.length ? (
+                  <CheckSquare className="h-5 w-5" />
+                ) : (
+                  <Square className="h-5 w-5" />
+                )}
+                <span>
+                  {selectedFiles.length === filteredAndSortedFiles.length ? 'Deselect All' : 'Select All'}
+                </span>
+              </button>
+              
+              <span className="text-sm text-muted-foreground">
+                {filteredAndSortedFiles.length} file{filteredAndSortedFiles.length !== 1 ? 's' : ''}
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+              {filteredAndSortedFiles.map((file) => (
+                <div
+                  key={file.id}
+                  className={`bg-card border border-border rounded-xl overflow-hidden hover:shadow-lg transition-all duration-200 ${
+                    selectedFiles.includes(file.id) ? 'ring-2 ring-teal-500 border-teal-500' : ''
+                  }`}
+                >
+                  {/* File Preview */}
+                  <div className="relative aspect-square bg-slate-100 dark:bg-slate-800">
+                    {/* Selection Checkbox */}
+                    <button
+                      onClick={() => handleSelectFile(file.id)}
+                      className="absolute top-2 left-2 z-10 p-1 bg-white/90 dark:bg-black/90 rounded-md hover:bg-white dark:hover:bg-black transition-colors"
+                    >
+                      {selectedFiles.includes(file.id) ? (
+                        <CheckSquare className="h-4 w-4 text-teal-600" />
+                      ) : (
+                        <Square className="h-4 w-4 text-slate-400" />
+                      )}
+                    </button>
+
+                    {/* Featured Star */}
+                    {file.is_featured && (
+                      <div className="absolute top-2 right-2 z-10">
+                        <Star className="h-5 w-5 text-yellow-500 fill-current" />
+                      </div>
+                    )}
+
+                    {/* File Content */}
+                    <div className="w-full h-full flex items-center justify-center">
+                      {file.mime_type.startsWith('image/') ? (
+                        <Image
+                          src={file.blob_url}
+                          alt={file.alt_text || file.original_name}
+                          width={300}
+                          height={300}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="flex flex-col items-center space-y-2">
+                          <FileText className="h-12 w-12 text-slate-400" />
+                          <span className="text-xs text-slate-500 font-medium">
+                            {file.file_extension.toUpperCase()}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* File Info */}
+                  <div className="p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getCategoryColor(file.category)}`}>
+                        {file.category}
+                      </span>
+                    </div>
+                    
+                    <h3 className="font-semibold text-foreground text-sm mb-1 truncate">
+                      {file.title || file.original_name}
+                    </h3>
+                    
+                    <div className="text-xs text-muted-foreground space-y-1 mb-3">
+                      <div>{formatFileSize(file.file_size)}</div>
+                      <div>{formatDate(file.uploaded_at)}</div>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex items-center space-x-1">
+                      <button
+                        onClick={() => handleEdit(file)}
+                        className="flex-1 flex items-center justify-center space-x-1 px-2 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors text-xs"
+                      >
+                        <Edit className="h-3 w-3" />
+                        <span>Edit</span>
+                      </button>
+                      
+                      <a
+                        href={file.blob_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center p-1.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                      >
+                        <Eye className="h-3 w-3" />
+                      </a>
+                      
+                      <a
+                        href={file.blob_url}
+                        download={file.original_name}
+                        className="flex items-center justify-center p-1.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                      >
+                        <Download className="h-3 w-3" />
+                      </a>
+                      
+                      <button
+                        onClick={() => handleDelete(file.id, file.original_name)}
+                        className="flex items-center justify-center p-1.5 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-200 dark:hover:bg-red-900/50 transition-colors"
+                      >
+                        <Trash2 className="h-3 w-3" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+      </main>
+
+      {/* Upload Form Modal */}
+      {showUploadForm && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+          <div className="bg-card border border-border rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-card border-b border-border px-6 py-4 flex items-center justify-between rounded-t-2xl">
+              <h2 className="text-xl font-bold text-foreground">Upload File</h2>
+              <button
+                onClick={resetUploadForm}
+                className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleUploadSubmit} className="p-6 space-y-6">
+              {/* File Upload Area */}
+              <div
+                onDragOver={handleDragOver}
+                onDrop={handleDrop}
+                className="relative border-2 border-dashed border-border rounded-xl p-8 text-center hover:border-teal-500 transition-colors"
+              >
+                {uploadPreview ? (
+                  <div className="space-y-4">
+                    <div className="relative inline-block">
+                      <Image
+                        src={uploadPreview}
+                        alt="Preview"
+                        width={200}
+                        height={200}
+                        className="max-w-full h-auto max-h-48 rounded-lg shadow-lg"
+                      />
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      {selectedFile?.name} ({formatFileSize(selectedFile?.size || 0)})
+                    </p>
+                  </div>
+                ) : selectedFile ? (
+                  <div className="space-y-4">
+                    <div className="inline-flex items-center justify-center w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-xl">
+                      <FileText className="h-8 w-8 text-slate-400" />
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      {selectedFile.name} ({formatFileSize(selectedFile.size)})
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-teal-500 to-cyan-600 rounded-xl">
+                      <Upload className="h-8 w-8 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-lg font-semibold text-foreground mb-2">
+                        Drop files here or click to browse
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        Supports images, documents, and other file types
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                <input
+                  type="file"
+                  onChange={handleFileSelect}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  accept="*/*"
+                />
+              </div>
+
+              {/* Form Fields */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
+                <div className="md:col-span-2">
                   <label className="block text-sm font-medium text-foreground mb-2">
-                    Alt Text (SEO) *
+                    Alt Text / Title
                   </label>
                   <input
                     type="text"
                     value={uploadFormData.alt_text}
                     onChange={(e) => setUploadFormData(prev => ({ ...prev, alt_text: e.target.value }))}
-                    className="w-full px-4 py-3 border border-border rounded-xl bg-background text-foreground focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
-                    placeholder="Descriptive alt text for accessibility"
-                    required
+                    className="w-full px-4 py-3 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
+                    placeholder="Enter descriptive text for the file"
                   />
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-2">
-                    Title (SEO)
+                    Display Title
                   </label>
                   <input
                     type="text"
                     value={uploadFormData.title}
                     onChange={(e) => setUploadFormData(prev => ({ ...prev, title: e.target.value }))}
-                    className="w-full px-4 py-3 border border-border rounded-xl bg-background text-foreground focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
-                    placeholder="SEO-friendly title"
-                  />
-                </div>
-
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-foreground mb-2">
-                    Description
-                  </label>
-                  <textarea
-                    value={uploadFormData.description}
-                    onChange={(e) => setUploadFormData(prev => ({ ...prev, description: e.target.value }))}
-                    rows={3}
-                    className="w-full px-4 py-3 border border-border rounded-xl bg-background text-foreground focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all resize-none"
-                    placeholder="Detailed description of the file content"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">
-                    Tags (comma-separated)
-                  </label>
-                  <input
-                    type="text"
-                    value={uploadFormData.tags}
-                    onChange={(e) => setUploadFormData(prev => ({ ...prev, tags: e.target.value }))}
-                    className="w-full px-4 py-3 border border-border rounded-xl bg-background text-foreground focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
-                    placeholder="tag1, tag2, tag3"
+                    className="w-full px-4 py-3 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
+                    placeholder="Optional display title"
                   />
                 </div>
 
@@ -746,7 +958,7 @@ export default function FileManagement() {
                   <select
                     value={uploadFormData.category}
                     onChange={(e) => setUploadFormData(prev => ({ ...prev, category: e.target.value }))}
-                    className="w-full px-4 py-3 border border-border rounded-xl bg-background text-foreground focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 bg-background border border-input rounded-xl text-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
                   >
                     <option value="general">General</option>
                     <option value="team-photos">Team Photos</option>
@@ -758,150 +970,145 @@ export default function FileManagement() {
                 </div>
 
                 <div className="md:col-span-2">
-                  <div className="flex items-center space-x-3">
-                    <input
-                      type="checkbox"
-                      id="upload_is_featured"
-                      checked={uploadFormData.is_featured}
-                      onChange={(e) => setUploadFormData(prev => ({ ...prev, is_featured: e.target.checked }))}
-                      className="w-4 h-4 text-teal-600 bg-background border-border rounded focus:ring-teal-500"
-                    />
-                    <label htmlFor="upload_is_featured" className="text-sm font-medium text-foreground">
-                      Mark as featured file
-                    </label>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex justify-end space-x-4 pt-6 border-t border-border">
-                <button
-                  type="button"
-                  onClick={resetUploadForm}
-                  className="px-6 py-3 border border-border rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all font-medium"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={uploading || !selectedFile}
-                  className="px-6 py-3 bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 text-white rounded-xl font-semibold transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
-                >
-                  {uploading ? (
-                    <>
-                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                      <span>Uploading...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Upload className="w-4 h-4" />
-                      <span>Upload File</span>
-                    </>
-                  )}
-                </button>
-              </div>
-            </form>
-          </div>
-        )}
-
-        {/* Bulk Actions Bar */}
-        {showBulkActions && (
-          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4 mb-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <CheckSquare className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                <span className="text-blue-800 dark:text-blue-400 font-medium">
-                  {selectedFiles.length} file{selectedFiles.length !== 1 ? 's' : ''} selected
-                </span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <button
-                  onClick={() => {
-                    setSelectedFiles([]);
-                    setShowBulkActions(false);
-                  }}
-                  className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium"
-                >
-                  Clear Selection
-                </button>
-                <button
-                  onClick={handleBulkDelete}
-                  disabled={saving}
-                  className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors disabled:opacity-50"
-                >
-                  {saving ? 'Deleting...' : 'Delete Selected'}
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Edit Form (following courses pattern) */}
-        {showEditForm && editingFile && (
-          <div className="bg-card border border-border rounded-2xl shadow-xl mb-6 overflow-hidden">
-            <div className="px-6 py-4 border-b border-border bg-gradient-to-r from-teal-50 to-cyan-50 dark:from-teal-900/20 dark:to-cyan-900/20">
-              <div className="flex items-center justify-between">
-                <h2 className="text-xl font-bold text-foreground">Edit File Metadata</h2>
-                <button
-                  onClick={resetEditForm}
-                  className="text-muted-foreground hover:text-foreground"
-                >
-                  <X className="w-6 h-6" />
-                </button>
-              </div>
-            </div>
-            
-            <form onSubmit={handleEditSubmit} className="p-6 space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
                   <label className="block text-sm font-medium text-foreground mb-2">
-                    Alt Text (SEO) *
+                    Description
                   </label>
-                  <input
-                    type="text"
-                    value={editFormData.alt_text}
-                    onChange={(e) => setEditFormData(prev => ({ ...prev, alt_text: e.target.value }))}
-                    className="w-full px-4 py-3 border border-border rounded-xl bg-background text-foreground focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
-                    placeholder="Descriptive alt text for accessibility"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">
-                    Title (SEO)
-                  </label>
-                  <input
-                    type="text"
-                    value={editFormData.title}
-                    onChange={(e) => setEditFormData(prev => ({ ...prev, title: e.target.value }))}
-                    className="w-full px-4 py-3 border border-border rounded-xl bg-background text-foreground focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
-                    placeholder="SEO-friendly title"
+                  <textarea
+                    value={uploadFormData.description}
+                    onChange={(e) => setUploadFormData(prev => ({ ...prev, description: e.target.value }))}
+                    rows={3}
+                    className="w-full px-4 py-3 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 resize-none"
+                    placeholder="Optional description"
                   />
                 </div>
 
                 <div className="md:col-span-2">
                   <label className="block text-sm font-medium text-foreground mb-2">
-                    Description
+                    Tags
                   </label>
-                  <textarea
-                    value={editFormData.description}
-                    onChange={(e) => setEditFormData(prev => ({ ...prev, description: e.target.value }))}
-                    rows={3}
-                    className="w-full px-4 py-3 border border-border rounded-xl bg-background text-foreground focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all resize-none"
-                    placeholder="Detailed description of the file content"
+                  <input
+                    type="text"
+                    value={uploadFormData.tags}
+                    onChange={(e) => setUploadFormData(prev => ({ ...prev, tags: e.target.value }))}
+                    className="w-full px-4 py-3 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
+                    placeholder="Comma-separated tags"
+                  />
+                </div>
+
+                <div className="md:col-span-2">
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      id="upload-featured"
+                      checked={uploadFormData.is_featured}
+                      onChange={(e) => setUploadFormData(prev => ({ ...prev, is_featured: e.target.checked }))}
+                      className="rounded border-input text-teal-600 focus:ring-teal-500"
+                    />
+                    <label htmlFor="upload-featured" className="text-sm font-medium text-foreground">
+                      Mark as featured
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              {/* Form Actions */}
+              <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-border">
+                <button
+                  type="submit"
+                  disabled={!selectedFile || uploading}
+                  className="flex-1 sm:flex-none inline-flex items-center justify-center space-x-2 px-6 py-3 bg-gradient-to-r from-teal-500 to-cyan-600 text-white rounded-xl hover:from-teal-600 hover:to-cyan-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl font-semibold"
+                >
+                  {uploading ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                      <span>Uploading...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Save className="h-5 w-5" />
+                      <span>Upload File</span>
+                    </>
+                  )}
+                </button>
+                
+                <button
+                  type="button"
+                  onClick={resetUploadForm}
+                  className="flex-1 sm:flex-none px-6 py-3 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors font-semibold"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Form Modal */}
+      {showEditForm && editingFile && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+          <div className="bg-card border border-border rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-card border-b border-border px-6 py-4 flex items-center justify-between rounded-t-2xl">
+              <h2 className="text-xl font-bold text-foreground">Edit File</h2>
+              <button
+                onClick={resetEditForm}
+                className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleEditSubmit} className="p-6 space-y-6">
+              {/* File Preview */}
+              <div className="text-center">
+                <div className="inline-block bg-slate-100 dark:bg-slate-800 rounded-xl p-4">
+                  {editingFile.mime_type.startsWith('image/') ? (
+                    <Image
+                      src={editingFile.blob_url}
+                      alt={editingFile.alt_text || editingFile.original_name}
+                      width={200}
+                      height={200}
+                      className="max-w-full h-auto max-h-48 rounded-lg shadow-lg"
+                    />
+                  ) : (
+                    <div className="flex flex-col items-center space-y-2 p-8">
+                      <FileText className="h-12 w-12 text-slate-400" />
+                      <span className="text-sm font-medium text-slate-600 dark:text-slate-400">
+                        {editingFile.file_extension.toUpperCase()}
+                      </span>
+                    </div>
+                  )}
+                </div>
+                <p className="text-sm text-muted-foreground mt-2">
+                  {editingFile.original_name} ({formatFileSize(editingFile.file_size)})
+                </p>
+              </div>
+
+              {/* Form Fields */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium text-foreground mb-2">
+                    Alt Text
+                  </label>
+                  <input
+                    type="text"
+                    value={editFormData.alt_text}
+                    onChange={(e) => setEditFormData(prev => ({ ...prev, alt_text: e.target.value }))}
+                    className="w-full px-4 py-3 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
+                    placeholder="Enter descriptive text for the file"
                   />
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-2">
-                    Tags (comma-separated)
+                    Display Title
                   </label>
                   <input
                     type="text"
-                    value={editFormData.tags}
-                    onChange={(e) => setEditFormData(prev => ({ ...prev, tags: e.target.value }))}
-                    className="w-full px-4 py-3 border border-border rounded-xl bg-background text-foreground focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
-                    placeholder="tag1, tag2, tag3"
+                    value={editFormData.title}
+                    onChange={(e) => setEditFormData(prev => ({ ...prev, title: e.target.value }))}
+                    className="w-full px-4 py-3 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
+                    placeholder="Optional display title"
                   />
                 </div>
 
@@ -912,7 +1119,7 @@ export default function FileManagement() {
                   <select
                     value={editFormData.category}
                     onChange={(e) => setEditFormData(prev => ({ ...prev, category: e.target.value }))}
-                    className="w-full px-4 py-3 border border-border rounded-xl bg-background text-foreground focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 bg-background border border-input rounded-xl text-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
                   >
                     <option value="general">General</option>
                     <option value="team-photos">Team Photos</option>
@@ -924,339 +1131,79 @@ export default function FileManagement() {
                 </div>
 
                 <div className="md:col-span-2">
-                  <div className="flex items-center space-x-3">
+                  <label className="block text-sm font-medium text-foreground mb-2">
+                    Description
+                  </label>
+                  <textarea
+                    value={editFormData.description}
+                    onChange={(e) => setEditFormData(prev => ({ ...prev, description: e.target.value }))}
+                    rows={3}
+                    className="w-full px-4 py-3 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 resize-none"
+                    placeholder="Optional description"
+                  />
+                </div>
+
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium text-foreground mb-2">
+                    Tags
+                  </label>
+                  <input
+                    type="text"
+                    value={editFormData.tags}
+                    onChange={(e) => setEditFormData(prev => ({ ...prev, tags: e.target.value }))}
+                    className="w-full px-4 py-3 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
+                    placeholder="Comma-separated tags"
+                  />
+                </div>
+
+                <div className="md:col-span-2">
+                  <div className="flex items-center space-x-2">
                     <input
                       type="checkbox"
-                      id="is_featured"
+                      id="edit-featured"
                       checked={editFormData.is_featured}
                       onChange={(e) => setEditFormData(prev => ({ ...prev, is_featured: e.target.checked }))}
-                      className="w-4 h-4 text-teal-600 bg-background border-border rounded focus:ring-teal-500"
+                      className="rounded border-input text-teal-600 focus:ring-teal-500"
                     />
-                    <label htmlFor="is_featured" className="text-sm font-medium text-foreground">
-                      Mark as featured file
+                    <label htmlFor="edit-featured" className="text-sm font-medium text-foreground">
+                      Mark as featured
                     </label>
                   </div>
                 </div>
               </div>
 
-              <div className="flex justify-end space-x-4 pt-6 border-t border-border">
-                <button
-                  type="button"
-                  onClick={resetEditForm}
-                  className="px-6 py-3 border border-border rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all font-medium"
-                >
-                  Cancel
-                </button>
+              {/* Form Actions */}
+              <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-border">
                 <button
                   type="submit"
                   disabled={saving}
-                  className="px-6 py-3 bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 text-white rounded-xl font-semibold transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
+                  className="flex-1 sm:flex-none inline-flex items-center justify-center space-x-2 px-6 py-3 bg-gradient-to-r from-teal-500 to-cyan-600 text-white rounded-xl hover:from-teal-600 hover:to-cyan-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl font-semibold"
                 >
                   {saving ? (
                     <>
-                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                       <span>Saving...</span>
                     </>
                   ) : (
                     <>
-                      <Save className="w-4 h-4" />
+                      <Save className="h-5 w-5" />
                       <span>Save Changes</span>
                     </>
                   )}
                 </button>
+                
+                <button
+                  type="button"
+                  onClick={resetEditForm}
+                  className="flex-1 sm:flex-none px-6 py-3 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors font-semibold"
+                >
+                  Cancel
+                </button>
               </div>
             </form>
           </div>
-        )}
-
-        {/* Filters and Controls */}
-        <div className="bg-card border border-border rounded-2xl shadow-xl mb-6 overflow-hidden">
-          <div className="px-6 py-4 border-b border-border">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <h2 className="text-lg font-bold text-foreground">
-                  Files ({filteredAndSortedFiles.length} of {files.length})
-                </h2>
-                <div className="flex items-center space-x-2">
-                  {Object.entries(categoryStats).map(([category, count]) => (
-                    <span key={category} className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getCategoryColor(category)}`}>
-                      {category.replace('-', ' ')}: {count}
-                    </span>
-                  ))}
-                </div>
-              </div>
-              <button
-                onClick={() => setShowFilters(!showFilters)}
-                className="flex items-center space-x-2 px-3 py-2 bg-muted/50 hover:bg-muted rounded-lg transition-colors"
-              >
-                <Filter className="w-4 h-4" />
-                <span className="text-sm font-medium">Filters</span>
-              </button>
-            </div>
-          </div>
-
-          {showFilters && (
-            <div className="px-6 py-4 border-b border-border bg-muted/20">
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Search</label>
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                    <input
-                      type="text"
-                      value={filters.search}
-                      onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
-                      className="w-full pl-10 pr-4 py-2 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                      placeholder="Search files..."
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Category</label>
-                  <select
-                    value={filters.category}
-                    onChange={(e) => setFilters(prev => ({ ...prev, category: e.target.value }))}
-                    className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                  >
-                    <option value="team-photos">Team Photos</option>
-                    <option value="course-images">Course Images</option>
-                    <option value="testimonials">Testimonials</option>
-                    <option value="company">Company</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Sort By</label>
-                  <div className="flex space-x-2">
-                    <select
-                      value={sortBy}
-                      onChange={(e) => setSortBy(e.target.value)}
-                      className="flex-1 px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                    >
-                      <option value="uploaded_at">Upload Date</option>
-                      <option value="original_name">Name</option>
-                      <option value="file_size">Size</option>
-                      <option value="category">Category</option>
-                    </select>
-                    <button
-                      onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-                      className="px-3 py-2 border border-border rounded-lg bg-background hover:bg-muted transition-colors"
-                    >
-                      {sortOrder === 'asc' ? <SortAsc className="w-4 h-4" /> : <SortDesc className="w-4 h-4" />}
-                    </button>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Options</label>
-                  <div className="flex items-center space-x-3">
-                    <label className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        checked={filters.featured}
-                        onChange={(e) => setFilters(prev => ({ ...prev, featured: e.target.checked }))}
-                        className="w-4 h-4 text-teal-600 bg-background border-border rounded focus:ring-teal-500"
-                      />
-                      <span className="text-sm">Featured only</span>
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
-
-        {/* Files Table */}
-        <div className="bg-card border border-border rounded-2xl shadow-xl overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-border">
-              <thead className="bg-muted/50">
-                <tr>
-                  <th className="px-6 py-3 text-left">
-                    <button
-                      onClick={handleSelectAll}
-                      className="flex items-center space-x-2 text-xs font-medium text-muted-foreground uppercase tracking-wider hover:text-foreground"
-                    >
-                      {selectedFiles.length === filteredAndSortedFiles.length && filteredAndSortedFiles.length > 0 ? (
-                        <CheckSquare className="w-4 h-4" />
-                      ) : (
-                        <Square className="w-4 h-4" />
-                      )}
-                      <span>File</span>
-                    </button>
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                    Details
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                    Category
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                    Uploaded
-                  </th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-card divide-y divide-border">
-                {filteredAndSortedFiles.map((file) => (
-                  <tr key={file.id} className="hover:bg-muted/30 transition-colors">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center space-x-3">
-                        <button
-                          onClick={() => handleSelectFile(file.id)}
-                          className="text-muted-foreground hover:text-foreground"
-                        >
-                          {selectedFiles.includes(file.id) ? (
-                            <CheckSquare className="w-4 h-4 text-teal-600" />
-                          ) : (
-                            <Square className="w-4 h-4" />
-                          )}
-                        </button>
-                        <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-teal-100 to-cyan-100 dark:from-teal-900/30 dark:to-cyan-900/30 rounded-lg flex items-center justify-center overflow-hidden">
-                          {file.mime_type.startsWith('image/') ? (
-                            <Image 
-                              src={file.blob_url} 
-                              alt={file.alt_text || file.original_name}
-                              width={48}
-                              height={48}
-                              className="w-full h-full object-cover rounded-lg"
-                              unoptimized={true}
-                            />
-                          ) : (
-                            <FileText className="w-6 h-6 text-teal-600 dark:text-teal-400" />
-                          )}
-                        </div>
-                        <div>
-                          <div className="text-sm font-medium text-foreground">
-                            {file.original_name}
-                          </div>
-                          <div className="text-xs text-muted-foreground">
-                            {file.filename}
-                          </div>
-                          {file.alt_text && (
-                            <div className="text-xs text-muted-foreground mt-1">
-                              Alt: {file.alt_text.substring(0, 30)}{file.alt_text.length > 30 ? '...' : ''}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="space-y-1">
-                        <div className="text-sm text-foreground">
-                          {formatFileSize(file.file_size)}
-                        </div>
-                        <div className="text-xs text-muted-foreground">
-                          {file.mime_type}
-                        </div>
-                        {file.width && file.height && (
-                          <div className="text-xs text-muted-foreground">
-                            {file.width} × {file.height}
-                          </div>
-                        )}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${getCategoryColor(file.category)}`}>
-                        {file.category.replace('-', ' ')}
-                      </span>
-                      {file.is_featured && (
-                        <div className="mt-1">
-                          <span className="inline-flex items-center px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-400">
-                            <Star className="w-3 h-3 mr-1" />
-                            Featured
-                          </span>
-                        </div>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
-                      {formatDate(file.uploaded_at)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <div className="flex justify-end space-x-2">
-                        <button
-                          onClick={() => handleEdit(file)}
-                          className="p-2 text-emerald-600 hover:text-emerald-800 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-lg transition-colors"
-                          title="Edit file metadata"
-                        >
-                          <Edit className="h-4 w-4" />
-                        </button>
-                        <a
-                          href={file.blob_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="p-2 text-teal-600 hover:text-teal-800 hover:bg-teal-50 dark:hover:bg-teal-900/20 rounded-lg transition-colors"
-                          title="View file"
-                        >
-                          <Eye className="h-4 w-4" />
-                        </a>
-                        <a
-                          href={file.blob_url}
-                          download={file.original_name}
-                          className="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
-                          title="Download file"
-                        >
-                          <Download className="h-4 w-4" />
-                        </a>
-                        <button
-                          onClick={() => handleDelete(file.id, file.original_name)}
-                          className="p-2 text-red-600 hover:text-red-800 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
-                          title="Delete file"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            {filteredAndSortedFiles.length === 0 && (
-              <div className="text-center py-12">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-teal-500 to-cyan-600 rounded-full mb-4 opacity-50">
-                  <Folder className="w-8 h-8 text-white" />
-                </div>
-                <p className="text-muted-foreground font-medium">
-                  {filters.search || filters.category !== 'all' || filters.featured 
-                    ? 'No files match your filters' 
-                    : 'No files found'
-                  }
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  {filters.search || filters.category !== 'all' || filters.featured 
-                    ? 'Try adjusting your search or filter criteria.' 
-                    : 'Upload your first file to get started.'
-                  }
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className="mt-12 pt-8 border-t border-border">
-          <div className="text-center text-xs text-muted-foreground space-y-2">
-            <div className="flex items-center justify-center space-x-4">
-              <span className="flex items-center">
-                <span className="mr-1">📁</span>
-                File Management
-              </span>
-              <span>•</span>
-              <span className="flex items-center">
-                <span className="mr-1">🛡️</span>
-                Secure Portal
-              </span>
-            </div>
-            <p className="text-xs">
-              Karma Training • File Management System
-            </p>
-          </div>
-        </div>
-      </main>
+      )}
     </div>
   );
 }

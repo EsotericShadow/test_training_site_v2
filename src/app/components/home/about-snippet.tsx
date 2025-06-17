@@ -170,7 +170,7 @@ export default function AboutSnippet() {
                       <div className="bg-brand-yellow rounded-full p-1 mt-1">
                         <div className="w-2 h-2 bg-black rounded-full"></div>
                       </div>
-                      <span>Comprehensive curriculum covering {companyInfo?.total_courses || '14'} safety topics</span>
+                      <span>Comprehensive syllabus covering {companyInfo?.total_courses || '14'} safety topics</span>
                     </li>
                     <li className="flex items-start space-x-3">
                       <div className="bg-brand-yellow rounded-full p-1 mt-1">

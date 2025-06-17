@@ -99,7 +99,7 @@ export async function POST(request) {
           // const buffer = Buffer.from(arrayBuffer);
           
           // For now, we'll set dimensions to null and add them later
-          // You can add image processing library like 'sharp' if needed
+          // Add image processing library like 'sharp' if needed
           // const sharp = require('sharp');
           // const metadata = await sharp(buffer).metadata();
           // width = metadata.width;

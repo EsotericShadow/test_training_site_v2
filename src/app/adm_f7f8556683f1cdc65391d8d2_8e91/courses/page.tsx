@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -20,6 +20,7 @@ import {
 import { ShieldCheckIcon } from '@heroicons/react/24/outline';
 import FileSelectionButton from '../../components/admin/FileSelectionButton';
 
+// Interfaces remain unchanged
 interface Course {
   id: number;
   slug: string;
@@ -73,6 +74,9 @@ export default function CourseManagement() {
   const [editingCourse, setEditingCourse] = useState<Course | null>(null);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
+
+  // Add ref for scrolling to the top of the main content
+  const mainRef = useRef<HTMLElement>(null);
 
   const [formData, setFormData] = useState({
     slug: '',
@@ -170,6 +174,10 @@ export default function CourseManagement() {
     });
     setEditingCourse(course);
     setShowAddForm(true);
+    // Scroll to the top of the main content
+    if (mainRef.current) {
+      mainRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   const handleAddFeature = () => {
@@ -210,7 +218,6 @@ export default function CourseManagement() {
     }));
   };
 
-  // File selection handler for course images
   const handleCourseImageSelect = (url: string, file: FileItem | undefined) => {
     setFormData(prev => ({
       ...prev,
@@ -311,38 +318,38 @@ export default function CourseManagement() {
       {/* Header */}
       <header className="bg-card border-b border-border shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div className="flex items-center space-x-4">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-6 space-y-4 sm:space-y-0">
+            <div className="flex items-center space-x-4 w-full sm:w-auto">
               <Link 
                 href="/adm_f7f8556683f1cdc65391d8d2_8e91/dashboard"
-                className="inline-flex items-center space-x-2 px-3 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all duration-200"
+                className="inline-flex items-center space-x-2 px-4 py-3 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all duration-200 text-base"
               >
-                <ArrowLeft className="h-4 w-4" />
-                <span className="text-sm font-medium">Back to Dashboard</span>
+                <ArrowLeft className="h-5 w-5" />
+                <span className="font-medium">Dashboard</span>
               </Link>
               <div className="flex items-center space-x-3">
                 <div className="inline-flex items-center justify-center w-10 h-10 bg-gradient-to-r from-emerald-500 to-green-600 rounded-xl shadow-lg">
                   <BookOpen className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold text-foreground">Course Management</h1>
-                  <p className="text-sm text-muted-foreground">Manage training courses and content</p>
+                  <h1 className="text-xl font-bold text-foreground">Course Management</h1>
+                  <p className="text-sm text-muted-foreground">Manage training courses</p>
                 </div>
               </div>
             </div>
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-4 w-full sm:w-auto justify-between sm:justify-end">
               <div className="flex items-center space-x-2">
-                <span className="text-sm text-muted-foreground">Welcome, {user?.username}</span>
-                <div className="inline-flex items-center px-2 py-1 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-full text-xs text-green-600 dark:text-green-400">
+                <span className="text-base text-muted-foreground">{user?.username}</span>
+                <div className="inline-flex items-center px-2 py-1 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-full text-sm text-green-600 dark:text-green-400">
                   <div className="w-1.5 h-1.5 bg-green-500 rounded-full mr-1 animate-pulse"></div>
                   Online
                 </div>
               </div>
               <button
                 onClick={() => setShowAddForm(true)}
-                className="bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white px-4 py-2 rounded-xl flex items-center space-x-2 font-semibold transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl"
+                className="bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white px-6 py-3 rounded-xl flex items-center space-x-2 font-semibold transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl"
               >
-                <Plus className="h-4 w-4" />
+                <Plus className="h-5 w-5" />
                 <span>Add Course</span>
               </button>
             </div>
@@ -350,24 +357,24 @@ export default function CourseManagement() {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main ref={mainRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         {/* Success/Error Messages */}
         {message && (
-          <div className={`mb-6 p-4 rounded-xl border ${
+          <div className={`mb-8 p-4 rounded-xl border ${
             message.includes('successfully') 
               ? 'bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-400 border-green-200 dark:border-green-800' 
               : 'bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-400 border-red-200 dark:border-red-800'
           }`}>
             <div className="flex items-center space-x-2">
-              <ShieldCheckIcon className="w-5 h-5" />
-              <span className="font-medium">{message}</span>
+              <ShieldCheckIcon className="w-6 h-6" />
+              <span className="font-medium text-base">{message}</span>
             </div>
           </div>
         )}
 
         {/* Add/Edit Form */}
         {showAddForm && (
-          <div className="bg-card border border-border rounded-2xl shadow-xl mb-8">
+          <div className="bg-card border border-border rounded-2xl shadow-xl mb-10">
             <div className="px-6 py-4 border-b border-border bg-gradient-to-r from-emerald-50 to-green-50 dark:from-emerald-900/20 dark:to-green-900/20 rounded-t-2xl">
               <div className="flex justify-between items-center">
                 <div className="flex items-center space-x-3">
@@ -380,43 +387,43 @@ export default function CourseManagement() {
                 </div>
                 <button
                   onClick={resetForm}
-                  className="text-muted-foreground hover:text-foreground p-1 rounded-lg hover:bg-background transition-colors"
+                  className="text-muted-foreground hover:text-foreground p-3 rounded-lg hover:bg-background transition-colors"
                 >
-                  <X className="h-5 w-5" />
+                  <X className="h-6 w-6" />
                 </button>
               </div>
             </div>
-            <form onSubmit={handleSubmit} className="p-6 space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold text-foreground">
+            <form onSubmit={handleSubmit} className="p-6 space-y-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="space-y-3">
+                  <label className="text-base font-semibold text-foreground">
                     Course Title *
                   </label>
                   <input
                     type="text"
                     value={formData.title}
                     onChange={(e) => handleTitleChange(e.target.value)}
-                    className="w-full px-4 py-3 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200"
+                    className="w-full px-4 py-4 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200 text-base"
                     placeholder="Enter course title"
                     required
                   />
                 </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold text-foreground">
+                <div className="space-y-3">
+                  <label className="text-base font-semibold text-foreground">
                     URL Slug *
                   </label>
                   <input
                     type="text"
                     value={formData.slug}
                     onChange={(e) => setFormData(prev => ({ ...prev, slug: e.target.value }))}
-                    className="w-full px-4 py-3 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200"
+                    className="w-full px-4 py-4 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200 text-base"
                     placeholder="course-url-slug"
                     required
                   />
-                  <p className="text-xs text-muted-foreground">Used in the course URL</p>
+                  <p className="text-sm text-muted-foreground">Used in the course URL</p>
                 </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold text-foreground">
+                <div className="space-y-3">
+                  <label className="text-base font-semibold text-foreground">
                     Duration *
                   </label>
                   <input
@@ -424,12 +431,12 @@ export default function CourseManagement() {
                     value={formData.duration}
                     onChange={(e) => setFormData(prev => ({ ...prev, duration: e.target.value }))}
                     placeholder="e.g., 6-8 hours, 2 days"
-                    className="w-full px-4 py-3 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200"
+                    className="w-full px-4 py-4 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200 text-base"
                     required
                   />
                 </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold text-foreground">
+                <div className="space-y-3">
+                  <label className="text-base font-semibold text-foreground">
                     Target Audience *
                   </label>
                   <input
@@ -437,18 +444,18 @@ export default function CourseManagement() {
                     value={formData.audience}
                     onChange={(e) => setFormData(prev => ({ ...prev, audience: e.target.value }))}
                     placeholder="e.g., BC Workers, All Workers"
-                    className="w-full px-4 py-3 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200"
+                    className="w-full px-4 py-4 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200 text-base"
                     required
                   />
                 </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold text-foreground">
+                <div className="space-y-3">
+                  <label className="text-base font-semibold text-foreground">
                     Category
                   </label>
                   <select
                     value={formData.category_id}
                     onChange={(e) => setFormData(prev => ({ ...prev, category_id: e.target.value }))}
-                    className="w-full px-4 py-3 bg-background border border-input rounded-xl text-foreground focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200"
+                    className="w-full px-4 py-4 bg-background border border-input rounded-xl text-foreground focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200 text-base"
                   >
                     <option value="">Select a category</option>
                     {categories.map((category) => (
@@ -464,31 +471,29 @@ export default function CourseManagement() {
                     id="popular"
                     checked={formData.popular}
                     onChange={(e) => setFormData(prev => ({ ...prev, popular: e.target.checked }))}
-                    className="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-input rounded"
+                    className="h-5 w-5 text-emerald-600 focus:ring-emerald-500 border-input rounded"
                   />
-                  <label htmlFor="popular" className="text-sm font-medium text-foreground">
+                  <label htmlFor="popular" className="text-base font-medium text-foreground">
                     Mark as Popular/Featured
                   </label>
                 </div>
               </div>
-              <div className="space-y-2">
-                <label className="text-sm font-semibold text-foreground">
+              <div className="space-y-3">
+                <label className="text-base font-semibold text-foreground">
                   Description *
                 </label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                  rows={4}
-                  className="w-full px-4 py-3 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200"
+                  rows={6}
+                  className="w-full px-4 py-4 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200 text-base"
                   placeholder="Enter course description"
                   required
                 />
               </div>
-              
-              {/* Course Image Selection - UPDATED */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold text-foreground">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="space-y-3">
+                  <label className="text-base font-semibold text-foreground">
                     Course Image
                   </label>
                   <FileSelectionButton
@@ -499,8 +504,8 @@ export default function CourseManagement() {
                     placeholder="No course image selected"
                   />
                 </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold text-foreground">
+                <div className="space-y-3">
+                  <label className="text-base font-semibold text-foreground">
                     Image Alt Text
                   </label>
                   <input
@@ -508,16 +513,15 @@ export default function CourseManagement() {
                     value={formData.image_alt}
                     onChange={(e) => setFormData(prev => ({ ...prev, image_alt: e.target.value }))}
                     placeholder="Describe the image for accessibility"
-                    className="w-full px-4 py-3 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200"
+                    className="w-full px-4 py-4 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200 text-base"
                   />
                 </div>
               </div>
-              
               <div className="space-y-4">
-                <label className="text-sm font-semibold text-foreground">
+                <label className="text-base font-semibold text-foreground">
                   Course Features
                 </label>
-                <div className="space-y-3">
+                <div className="space-y-4">
                   {formData.features.map((feature, index) => (
                     <div key={index} className="flex items-center space-x-3">
                       <input
@@ -525,15 +529,15 @@ export default function CourseManagement() {
                         value={feature}
                         onChange={(e) => handleFeatureChange(index, e.target.value)}
                         placeholder="Enter a course feature"
-                        className="flex-1 px-4 py-3 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200"
+                        className="flex-1 px-4 py-4 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200 text-base"
                       />
                       {formData.features.length > 1 && (
                         <button
                           type="button"
                           onClick={() => handleRemoveFeature(index)}
-                          className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                          className="p-3 text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
                         >
-                          <Trash2 className="h-4 w-4" />
+                          <Trash2 className="h-5 w-5" />
                         </button>
                       )}
                     </div>
@@ -541,34 +545,34 @@ export default function CourseManagement() {
                   <button
                     type="button"
                     onClick={handleAddFeature}
-                    className="inline-flex items-center space-x-2 px-4 py-2 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 rounded-xl hover:bg-emerald-100 dark:hover:bg-emerald-900/30 transition-colors"
+                    className="inline-flex items-center space-x-2 px-6 py-3 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 rounded-xl hover:bg-emerald-100 dark:hover:bg-emerald-900/30 transition-colors text-base"
                   >
-                    <Plus className="h-4 w-4" />
+                    <Plus className="h-5 w-5" />
                     <span>Add Feature</span>
                   </button>
                 </div>
               </div>
-              <div className="flex justify-end space-x-4 pt-6 border-t border-border">
+              <div className="flex flex-col sm:flex-row justify-end space-y-4 sm:space-y-0 sm:space-x-4 pt-8 border-t border-border">
                 <button
                   type="button"
                   onClick={resetForm}
-                  className="px-6 py-3 bg-background border border-input text-foreground rounded-xl hover:bg-muted transition-colors"
+                  className="px-8 py-4 bg-background border border-input text-foreground rounded-xl hover:bg-muted transition-colors text-base"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="px-6 py-3 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white rounded-xl flex items-center space-x-2 font-semibold transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-8 py-4 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white rounded-xl flex items-center space-x-2 font-semibold transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {saving ? (
                     <>
-                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                       <span>Saving...</span>
                     </>
                   ) : (
                     <>
-                      <Save className="h-4 w-4" />
+                      <Save className="h-5 w-5" />
                       <span>{editingCourse ? 'Update Course' : 'Create Course'}</span>
                     </>
                   )}
@@ -587,7 +591,7 @@ export default function CourseManagement() {
                   <BookOpen className="w-4 h-4 text-white" />
                 </div>
                 <h2 className="text-lg font-bold text-foreground">All Courses</h2>
-                <span className="px-2 py-1 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 text-xs font-medium rounded-full">
+                <span className="px-2 py-1 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 text-sm font-medium rounded-full">
                   {courses.length} courses
                 </span>
               </div>
@@ -600,44 +604,44 @@ export default function CourseManagement() {
                   <BookOpen className="w-8 h-8 text-white" />
                 </div>
                 <h3 className="text-lg font-semibold text-foreground mb-2">No courses yet</h3>
-                <p className="text-muted-foreground mb-6">Get started by creating your first course</p>
+                <p className="text-base text-muted-foreground mb-6">Get started by creating your first course</p>
                 <button
                   onClick={() => setShowAddForm(true)}
-                  className="bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white px-6 py-3 rounded-xl flex items-center space-x-2 font-semibold transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl mx-auto"
+                  className="bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white px-8 py-4 rounded-xl flex items-center space-x-2 font-semibold transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl mx-auto text-base"
                 >
-                  <Plus className="h-4 w-4" />
+                  <Plus className="h-5 w-5" />
                   <span>Add First Course</span>
                 </button>
               </div>
             ) : (
-              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 gap-8">
                 {courses.map((course) => (
                   <div key={course.id} className="bg-background border border-border rounded-xl p-6 hover:shadow-lg transition-all duration-200 group">
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex-1">
                         <div className="flex items-center space-x-2 mb-2">
-                          <h3 className="font-semibold text-foreground group-hover:text-emerald-600 transition-colors">
+                          <h3 className="font-semibold text-lg text-foreground group-hover:text-emerald-600 transition-colors">
                             {course.title}
                           </h3>
                           {course.popular && (
-                            <Star className="h-4 w-4 text-yellow-500 fill-current" />
+                            <Star className="h-5 w-5 text-yellow-500 fill-current" />
                           )}
                         </div>
-                        <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
+                        <p className="text-base text-muted-foreground mb-3 line-clamp-3">
                           {course.description}
                         </p>
                         <div className="flex flex-wrap gap-2 mb-3">
-                          <div className="inline-flex items-center space-x-1 px-2 py-1 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-xs rounded-full">
-                            <Clock className="h-3 w-3" />
+                          <div className="inline-flex items-center space-x-1 px-3 py-1 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-sm rounded-full">
+                            <Clock className="h-4 w-4" />
                             <span>{course.duration}</span>
                           </div>
-                          <div className="inline-flex items-center space-x-1 px-2 py-1 bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 text-xs rounded-full">
-                            <Users className="h-3 w-3" />
+                          <div className="inline-flex items-center space-x-1 px-3 py-1 bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 text-sm rounded-full">
+                            <Users className="h-4 w-4" />
                             <span>{course.audience}</span>
                           </div>
                           {course.category_name && (
-                            <div className="inline-flex items-center space-x-1 px-2 py-1 bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 text-xs rounded-full">
-                              <Tag className="h-3 w-3" />
+                            <div className="inline-flex items-center space-x-1 px-3 py-1 bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 text-sm rounded-full">
+                              <Tag className="h-4 w-4" />
                               <span>{course.category_name}</span>
                             </div>
                           )}
@@ -651,26 +655,27 @@ export default function CourseManagement() {
                           alt={course.image_alt || course.title}
                           width={400}
                           height={128}
+                          sizes="100vw"
                           className="w-full h-32 object-cover rounded-lg"
                         />
                       </div>
                     )}
                     <div className="flex justify-between items-center">
-                      <span className="text-xs text-muted-foreground">
+                      <span className="text-sm text-muted-foreground">
                         /{course.slug}
                       </span>
                       <div className="flex space-x-2">
                         <button
                           onClick={() => handleEdit(course)}
-                          className="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
+                          className="p-3 text-blue-600 hover:text-blue-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
                         >
-                          <Edit className="h-4 w-4" />
+                          <Edit className="h-5 w-5" />
                         </button>
                         <button
                           onClick={() => handleDelete(course.id, course.title)}
-                          className="p-2 text-red-600 hover:text-red-800 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                          className="p-3 text-red-600 hover:text-red-800 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
                         >
-                          <Trash2 className="h-4 w-4" />
+                          <Trash2 className="h-5 w-5" />
                         </button>
                       </div>
                     </div>
@@ -684,4 +689,3 @@ export default function CourseManagement() {
     </div>
   );
 }
-

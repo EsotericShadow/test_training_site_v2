@@ -79,6 +79,8 @@ export default function HeroSection() {
             fill
             className="object-cover opacity-30"
             priority
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
+            quality={85}
           />
         </div>
       )}
@@ -90,7 +92,7 @@ export default function HeroSection() {
             </p>
           )}
           {(heroSection.main_heading || heroSection.highlight_text) && (
-            <h1 className="text-5xl font-bold mb-6">
+            <h1 className="text-4xl font-bold mb-6">
               {heroSection.main_heading}{' '}
               {heroSection.highlight_text && (
                 <span className="text-yellow-400">{heroSection.highlight_text}</span>
