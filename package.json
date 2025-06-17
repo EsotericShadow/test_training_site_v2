@@ -46,6 +46,8 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.57.0",
+    "react-parallax": "^3.5.2",
+    "react-scroll-parallax": "^3.4.5",
     "sanitize-html": "^2.17.0",
     "tailwind-merge": "^3.3.0",
     "validator": "^13.15.15",
