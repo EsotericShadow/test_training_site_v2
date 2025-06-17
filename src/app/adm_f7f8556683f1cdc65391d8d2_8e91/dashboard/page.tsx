@@ -418,14 +418,14 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pt-10">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pt-0">
       {/* Header */}
       <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-6 space-y-4 sm:space-y-0">
-            <div className="flex items-center space-x-4">
-              <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-yellow-400 to-amber-400 rounded-xl shadow-lg">
-                <ShieldCheckIcon className="w-6 h-6 text-white" />
+            <div className="flex items-center space-x-8">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-yellow-400 to-amber-400 rounded-xl shadow-lg">
+                <ShieldCheckIcon className="w-10 h-10 text-white" />
               </div>
               <div>
                 <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
@@ -434,7 +434,7 @@ export default function AdminDashboard() {
                 <div className="flex items-center space-x-2">
                   <p className="text-base text-gray-600 dark:text-gray-400">{user?.username}</p>
                   <div className="inline-flex items-center px-2 py-1 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-full text-sm text-green-600 dark:text-green-400">
-                    <div className="w-1.5 h-1.5 bg-green-500 rounded-full mr-1 animate-pulse"></div>
+                    <div className="w-2.5 h-2.5 bg-green-500 rounded-full mr-2 animate-pulse"></div>
                     Online
                   </div>
                 </div>
@@ -442,9 +442,9 @@ export default function AdminDashboard() {
             </div>
             <button
               onClick={handleLogout}
-              className="inline-flex items-center px-6 py-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/30 transition-all duration-200 font-medium text-base"
+              className="inline-flex items-center px-8 py-3 bg-red-50 dark:bg-red-900/60 border border-red-300 dark:border-red-500 rounded-xl text-red-600 dark:text-red-500 hover:bg-red-100 dark:hover:bg-red-600/90 dark:hover:text-red-900 transition-all duration-200 font-medium text-xl"
             >
-              <LogOut className="w-5 h-5 mr-2" />
+              <LogOut className="w-8 h8 mr-4" />
               Logout
             </button>
           </div>

@@ -311,14 +311,6 @@ export default function Header() {
                     <div className="px-6 py-4 text-gray-600 dark:text-gray-400 text-base">No courses available</div>
                   ) : (
                     <div className="flex flex-col" style={{ maxHeight: '70vh', overflowY: 'auto' }}>
-                      <Link
-                        href="/courses"
-                        onClick={() => handleCourseNavigation('/courses')}
-                        className="block px-6 py-4 text-gray-900 dark:text-white hover:bg-brand-yellow hover:text-black font-semibold text-base border-b border-gray-200 dark:border-gray-800 transition-colors"
-                      >
-                        View All Courses
-                      </Link>
-                      
                       <div className="max-h-[70vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 flex flex-col">
                         <Link
                           href="/courses"
