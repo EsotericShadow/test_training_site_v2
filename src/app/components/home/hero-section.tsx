@@ -77,7 +77,7 @@ export default function HeroSection() {
           : 'none',
         backgroundAttachment: 'fixed',
         backgroundSize: 'cover',
-        backgroundPosition: 'center -30px',
+        backgroundPosition: 'center -64px',
         backgroundRepeat: 'no-repeat'
       }}
     >
