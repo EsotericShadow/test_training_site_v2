@@ -92,7 +92,7 @@ export default function AboutSnippet() {
             </h2>
             <div className="mb-6">
               <p className="text-brand-yellow font-medium text-lg italic">
-                "{companyInfo?.slogan || 'We believe the choices you make today will define your tomorrow'}"
+                &quot;{companyInfo?.slogan || 'We believe the choices you make today will define your tomorrow'}&quot;
               </p>
             </div>
             <p className="text-lg text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
