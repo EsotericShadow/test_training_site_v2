@@ -104,11 +104,12 @@ export default function HeroSection() {
               {heroSection.subtitle}
             </p>
           )}
+               
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             {heroSection.primary_button_text && heroSection.primary_button_link && (
               <Link
                 href={heroSection.primary_button_link}
-                className="bg-yellow-400 hover:bg-yellow-500 text-black px-8 py-4 rounded-lg font-semibold text-lg transition-colors duration-200"
+                className="inline-flex items-center justify-center space-x-2 bg-transparent border-2 border-amber-400 hover:bg-amber-400 hover:text-black text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg"
               >
                 {heroSection.primary_button_text}
               </Link>
@@ -116,7 +117,7 @@ export default function HeroSection() {
             {heroSection.secondary_button_text && heroSection.secondary_button_link && (
               <Link
                 href={heroSection.secondary_button_link}
-                className="border-2 border-gray-300 hover:bg-gray-300 hover:text-gray-900 text-gray-300 px-8 py-4 rounded-lg font-semibold text-lg transition-colors duration-200"
+                className="inline-flex items-center justify-center space-x-2 bg-transparent border-2 border-amber-400 hover:bg-amber-400 hover:text-black text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg"
               >
                 {heroSection.secondary_button_text}
               </Link>

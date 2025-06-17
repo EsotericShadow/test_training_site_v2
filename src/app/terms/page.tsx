@@ -150,14 +150,14 @@ export default function TermsConditionsPage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link 
               href="/contact"
-              className="bg-brand-yellow hover:bg-brand-yellow-dark text-black px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg"
-            >
+              className="inline-flex items-center justify-center space-x-2 bg-amber-400 hover:bg-amber-500 text-black px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg"
+           >
               Request a Quote
             </Link>
             <a 
               href="tel:250-615-3727"
-              className="border-2 border-white hover:bg-white hover:text-gray-900 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-200"
-            >
+              className="inline-flex items-center justify-center space-x-2 bg-transparent border-2 border-amber-400 hover:bg-amber-400 hover:text-black text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg"
+           >
               Call 250-615-3727
             </a>
           </div>

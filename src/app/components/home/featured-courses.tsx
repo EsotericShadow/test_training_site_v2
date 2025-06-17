@@ -138,7 +138,7 @@ export default function FeaturedCourses() {
                 </div>
                 <Link
                   href={`/courses/${course.slug}`}
-                  className="w-full inline-flex items-center justify-center space-x-2 bg-yellow-500 hover:bg-yellow-600 text-black px-4 py-3 rounded-lg font-semibold transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg animate-fadeIn"
+                  className="inline-flex items-center justify-center space-x-2 bg-transparent border-2 border-amber-400 hover:bg-amber-400 hover:text-black text-white px-6 py-2 rounded-lg font-semibold text-base transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg"
                 >
                   <span>Learn More</span>
                   <ArrowRight className="h-4 w-4" />
@@ -151,8 +151,8 @@ export default function FeaturedCourses() {
         <div className="text-center">
           <Link
             href="/courses"
-            className="inline-flex items-center space-x-2 bg-yellow-500 hover:bg-yellow-600 text-black px-8 py-4 rounded-lg font-semibold transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg animate-fadeIn"
-          >
+            className="inline-flex items-center justify-center space-x-2 bg-transparent border-2 border-amber-400 hover:bg-amber-400 hover:text-black text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg"
+           >
             <span>View All 14 Courses</span>
             <ArrowRight className="h-5 w-5" />
           </Link>

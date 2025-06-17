@@ -92,7 +92,7 @@ export default function AboutSnippet() {
             </h2>
             <div className="mb-6">
               <p className="text-brand-yellow font-medium text-lg italic">
-                &quot;{companyInfo?.slogan || 'We believe the choices you make today will define your tomorrow'}&quot;
+                "{companyInfo?.slogan || 'We believe the choices you make today will define your tomorrow'}"
               </p>
             </div>
             <p className="text-lg text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
@@ -136,13 +136,6 @@ export default function AboutSnippet() {
                 ))}
               </div>
             </div>
-            <Link 
-              href="/about"
-              className="inline-flex items-center space-x-2 bg-amber-400 hover:bg-amber-500 text-black px-6 py-3 rounded-lg font-semibold text-lg transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg"
-            >
-              <span>Learn More About Us</span>
-              <ArrowRight className="h-5 w-5" />
-            </Link>
           </div>
           <div className="relative">
             <div className="bg-gradient-to-br from-gray-900 to-black dark:from-gray-800 dark:to-gray-900 rounded-2xl p-8 text-white">
@@ -158,7 +151,6 @@ export default function AboutSnippet() {
                     </li>
                   ))
                 ) : (
-                  // Fallback to hardcoded content if no database content
                   <>
                     <li className="flex items-start space-x-3">
                       <div className="bg-brand-yellow rounded-full p-1 mt-1">
@@ -203,6 +195,15 @@ export default function AboutSnippet() {
               </div>
             </div>
           </div>
+        </div>
+        <div className="flex justify-center mt-8">
+          <Link 
+            href="/about"
+            className="inline-flex items-center justify-center space-x-2 bg-transparent border-2 border-amber-400 hover:bg-amber-400 hover:text-black text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg"
+          >
+            <span>Learn More About Us</span>
+            <ArrowRight className="h-5 w-5" />
+          </Link>
         </div>
       </div>
     </section>
