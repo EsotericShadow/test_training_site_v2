@@ -2,14 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 
 interface HeroSection {
   slogan?: string;
   main_heading?: string;
   highlight_text?: string;
   subtitle?: string;
-  background_image_url?: string;  // ✅ Fixed: Changed to match database
+  background_image_url?: string;
   background_image_alt?: string;
   primary_button_text?: string;
   primary_button_link?: string;
@@ -70,20 +69,19 @@ export default function HeroSection() {
   const { heroSection, heroStats } = heroData;
 
   return (
-    <section className="relative bg-gradient-to-br from-gray-900 to-black dark:from-black dark:to-gray-900 text-white py-20">
-      {heroSection.background_image_url && (  // ✅ Fixed: Changed to match database
-        <div className="absolute inset-0">
-          <Image
-            src={heroSection.background_image_url}  // ✅ Fixed: Changed to match database
-            alt={heroSection.background_image_alt || 'Hero background'}
-            fill
-            className="object-cover opacity-30"
-            priority
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
-            quality={85}
-          />
-        </div>
-      )}
+    <section
+      className="relative bg-gradient-to-br from-gray-900 to-black dark:from-black dark:to-gray-900 text-white py-20"
+      style={{
+        backgroundImage: heroSection.background_image_url
+          ? `url(${heroSection.background_image_url})`
+          : 'none',
+        backgroundAttachment: 'fixed',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center -30px',
+        backgroundRepeat: 'no-repeat'
+      }}
+    >
+      <div className="absolute inset-0 bg-black/70"></div>
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
           {heroSection.slogan && (
@@ -104,7 +102,6 @@ export default function HeroSection() {
               {heroSection.subtitle}
             </p>
           )}
-               
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             {heroSection.primary_button_text && heroSection.primary_button_link && (
               <Link
@@ -143,4 +140,3 @@ export default function HeroSection() {
     </section>
   );
 }
-
