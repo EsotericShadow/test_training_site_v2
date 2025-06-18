@@ -1,0 +1,8 @@
+User-agent: *
+Disallow: /adm_*/ 
+Disallow: /api/
+Allow: /admin/ 
+Allow: /wp-login/ 
+Allow: /login/ 
+
+Sitemap: https://test-training-site-v2-xjey.vercel.app/sitemap.xml

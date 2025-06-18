@@ -106,52 +106,52 @@ export default function Footer() {
 
   // Fallback data
   const fallbackFooterContent = {
-    company_name: 'Karma Training',
-    tagline: 'Industrial Safety Northwestern BC',
-    slogan: 'We believe the choices you make today will define your tomorrow',
-    description: 'Karma Training is Northwestern British Columbia&apos;s premier provider of workplace safety training. We specialize in delivering comprehensive, industry-specific safety courses that meet the unique challenges of our region&apos;s diverse industries.',
-    phone: '250-615-3727',
-    email: 'info@karmatraining.ca',
-    location: 'Northwestern British Columbia',
-    logo_url: '/assets/logos/logo.png',
-    logo_alt: 'Karma Training Logo',
-    copyright_text: '© 2025 Karma Training. All rights reserved.',
-    tagline_bottom: 'Professional Safety Training for Northwestern BC'
+    company_name: 'Fallback data 01',
+    tagline: 'Fallback data 02',
+    slogan: 'Fallback data 03',
+    description: 'Fallback data 04',
+    phone: 'Fallback data 05',
+    email: 'Fallback data 06',
+    location: 'Fallback data 07',
+    logo_url: 'Fallback data 08',
+    logo_alt: 'Fallback data 09',
+    copyright_text: 'Fallback data 10',
+    tagline_bottom: 'Fallback data 11'
   };
 
   const fallbackStats = [
-    { id: 1, number_text: '2017', label: 'Established', display_order: 1 },
-    { id: 2, number_text: '70+', label: 'Years Experience', display_order: 2 },
-    { id: 3, number_text: '2000+', label: 'Students Trained', display_order: 3 }
+    { id: 1, number_text: 'fallback', label: 'fallback', display_order: 1 },
+    { id: 2, number_text: 'fallback', label: 'fallback', display_order: 2 },
+    { id: 3, number_text: 'fallback', label: 'fallback', display_order: 3 }
   ];
 
   const fallbackQuickLinks = [
-    { id: 1, title: 'About Us', url: '/about', display_order: 1, is_active: true },
-    { id: 2, title: 'All Courses', url: '/courses', display_order: 2, is_active: true },
-    { id: 3, title: 'Contact & Quote', url: '/contact', display_order: 3, is_active: true },
-    { id: 4, title: 'Our Team', url: '/about#team', display_order: 4, is_active: true },
-    { id: 5, title: 'Privacy Policy', url: '/privacy', display_order: 5, is_active: true },
-    { id: 6, title: 'Terms of Use', url: '/terms', display_order: 6, is_active: true }
+    { id: 1, title: 'fallback', url: '/about', display_order: 1, is_active: true },
+    { id: 2, title: 'fallback', url: '/courses', display_order: 2, is_active: true },
+    { id: 3, title: 'fallback', url: '/contact', display_order: 3, is_active: true },
+    { id: 4, title: 'fallback', url: '/about#team', display_order: 4, is_active: true },
+    { id: 5, title: 'fallback', url: '/privacy', display_order: 5, is_active: true },
+    { id: 6, title: 'fallback', url: '/terms', display_order: 6, is_active: true }
   ];
 
   const fallbackCertifications = [
-    { id: 1, title: 'Certificate of Completion', icon: 'Award', display_order: 1, is_active: true },
-    { id: 2, title: 'Industry Recognized', icon: 'Users', display_order: 2, is_active: true },
-    { id: 3, title: 'IVES Certification Available', icon: 'Award', display_order: 3, is_active: true },
-    { id: 4, title: 'WorkSafeBC Compliant', icon: 'Users', display_order: 4, is_active: true }
+    { id: 1, title: 'fallback', icon: 'Award', display_order: 1, is_active: true },
+    { id: 2, title: 'fallback', icon: 'Users', display_order: 2, is_active: true },
+    { id: 3, title: 'fallback', icon: 'Award', display_order: 3, is_active: true },
+    { id: 4, title: 'fallback', icon: 'Users', display_order: 4, is_active: true }
   ];
 
   const fallbackBottomBadges = [
-    { id: 1, title: 'WorkSafeBC Compliant', icon: 'Award', display_order: 1, is_active: true },
-    { id: 2, title: 'IVES Certified', icon: 'Users', display_order: 2, is_active: true }
+    { id: 1, title: 'fallback', icon: 'Award', display_order: 1, is_active: true },
+    { id: 2, title: 'fallback', icon: 'Users', display_order: 2, is_active: true }
   ];
 
   const fallbackCourses = [
-    { id: 1, slug: 'kist-orientation', title: 'KIST Orientation to Workplace Safety', popular: true },
-    { id: 2, slug: 'whmis-2018', title: 'WHMIS 2018 GHS', popular: true },
-    { id: 3, slug: 'kist-fall-protection', title: 'KIST Fall Protection', popular: true },
-    { id: 4, slug: 'kist-confined-space', title: 'KIST Confined Space Entry & Standby', popular: true },
-    { id: 5, slug: 'operator-equipment', title: 'Certified Operator Equipment Training', popular: true }
+    { id: 1, slug: 'fallback', title: 'fallback', popular: true },
+    { id: 2, slug: 'fallback', title: 'fallback', popular: true },
+    { id: 3, slug: 'fallback', title: 'fallback', popular: true },
+    { id: 4, slug: 'fallback', title: 'fallback', popular: true },
+    { id: 5, slug: 'fallback', title: 'fallback', popular: true }
   ];
 
   // Use CMS data or fallback

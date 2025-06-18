@@ -63,7 +63,7 @@ export default function FileSelectionModal({
   const categories = [
     'team-photos',
     'course-images', 
-    'testimonials',
+    'general',
     'company',
     'other'
   ];
