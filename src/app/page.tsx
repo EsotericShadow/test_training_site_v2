@@ -1,13 +1,61 @@
-// Fixed version of src/app/page.tsx
+// Optimized version of src/app/page.tsx with server-side hero data fetching
 
 import { Metadata } from 'next';
 import HeroSection from '@/app/components/home/hero-section';
 import FeaturedCourses from '@/app/components/home/featured-courses';
 import AboutSnippet from '@/app/components/home/about-snippet';
 
+interface HeroSection {
+  slogan?: string;
+  main_heading?: string;
+  highlight_text?: string;
+  subtitle?: string;
+  background_image_url?: string;
+  background_image_alt?: string;
+  primary_button_text?: string;
+  primary_button_link?: string;
+  secondary_button_text?: string;
+  secondary_button_link?: string;
+}
+
+
+
+// Fetch hero data server-side for better performance
+async function getHeroData() {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://test-training-site-v2-xjey.vercel.app';
+    const response = await fetch(`${baseUrl}/api/hero-section`, {
+      cache: 'force-cache', // Cache for better performance
+      next: { revalidate: 3600 } // Revalidate every hour
+    });
+    
+    if (response.ok) {
+      const data = await response.json();
+      return {
+        heroSection: data.heroSection || {},
+        heroStats: data.heroStats || [],
+        heroFeatures: data.heroFeatures || []
+      };
+    }
+  } catch (error) {
+    console.error('Error fetching hero data:', error);
+  }
+  
+  // Return fallback data if fetch fails
+  return {
+    heroSection: {},
+    heroStats: [],
+    heroFeatures: []
+  };
+}
+
 // Generate metadata for SEO (replaces NextSeo)
 export async function generateMetadata(): Promise<Metadata> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://test-training-site-v2-xjey.vercel.app';
+  
+  // Fetch hero data for potential image preloading
+  const heroData = await getHeroData();
+  const heroImage = heroData.heroSection.background_image_url;
   
   return {
     title: 'Industrial Safety Training | Karma Industrial Safety Trainings',
@@ -32,10 +80,10 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName: 'Karma Industrial Safety Trainings',
       images: [
         {
-          url: '/assets/logos/logo.png',
-          width: 600,
-          height: 315,
-          alt: 'Karma Industrial Safety Trainings Logo',
+          url: heroImage || '/assets/logos/logo.png',
+          width: 1200,
+          height: 630,
+          alt: 'Karma Industrial Safety Trainings',
           type: 'image/png',
         },
       ],
@@ -47,7 +95,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title: 'Industrial Safety Training | Karma Industrial Safety Trainings',
       description: 'Certified industrial safety training in Northwestern BC. WorkSafeBC-compliant courses, IVES operator certification, and custom safety solutions.',
       site: '@KarmaTraining',
-      images: ['/assets/logos/logo.png'],
+      images: [heroImage || '/assets/logos/logo.png'],
     },
     robots: {
       index: true,
@@ -63,12 +111,19 @@ export async function generateMetadata(): Promise<Metadata> {
     verification: {
       google: 'your-google-verification-code', // Replace with actual verification code
     },
+    // Add preload hints for critical resources
+    other: heroImage
+      ? { preload: `<${heroImage}>; rel=preload; as=image` }
+      : {},
   };
 }
 
 // Server component (no 'use client' directive)
-export default function Home() {
+export default async function Home() {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://test-training-site-v2-xjey.vercel.app';
+  
+  // Fetch hero data server-side
+  const heroData = await getHeroData();
 
   // JSON-LD structured data
   const jsonLd = {
@@ -99,6 +154,16 @@ export default function Home() {
 
   return (
     <>
+      {/* Preload critical hero image */}
+      {heroData.heroSection.background_image_url && (
+        <link
+          rel="preload"
+          href={heroData.heroSection.background_image_url}
+          as="image"
+          fetchPriority="high"
+        />
+      )}
+      
       {/* JSON-LD structured data */}
       <script
         type="application/ld+json"
@@ -108,7 +173,7 @@ export default function Home() {
       />
       
       <div>
-        <HeroSection />
+        <HeroSection initialData={heroData} />
         <FeaturedCourses />
         <AboutSnippet />
       </div>
