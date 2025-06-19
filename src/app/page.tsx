@@ -160,6 +160,7 @@ export default async function Home() {
           rel="preload"
           href={heroData.heroSection.background_image_url}
           as="image"
+          type="image/webp"
           fetchPriority="high"
         />
       )}
