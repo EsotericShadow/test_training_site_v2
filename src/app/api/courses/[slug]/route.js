@@ -3,7 +3,9 @@ import { coursesOps, courseFeaturesOps, courseCategoriesOps } from '../../../../
 
 export async function GET(request, { params }) {
   try {
-    const { slug } = params;
+    // Await params before using its properties (Next.js 15 requirement)
+    const resolvedParams = await params;
+    const { slug } = resolvedParams;
     
     if (!slug) {
       return NextResponse.json(

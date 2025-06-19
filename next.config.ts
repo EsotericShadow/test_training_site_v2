@@ -10,13 +10,13 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ['lucide-react', '@radix-ui/react-dialog'],
   },
   
-  // Image optimization
+  // Image optimization - FIXED: Removed deprecated 'domains' property
   images: {
     formats: ['image/webp', 'image/avif'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 60 * 60 * 24 * 30, // 30 days
-    domains: ['localhost', '192.168.1.222'], // Add your IP address here
+    // REMOVED: domains: ['localhost', '192.168.1.222'], // This was deprecated
     remotePatterns: [
       {
         protocol: 'http',
@@ -38,6 +38,22 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: '*.vercel-storage.com',
+        pathname: '/**',
+      },
+      // Additional patterns for common image sources
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cdn.pixabay.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'via.placeholder.com',
         pathname: '/**',
       },
     ],
@@ -87,7 +103,7 @@ const nextConfig: NextConfig = {
               "default-src 'self'",
               "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://va.vercel-scripts.com",
               "style-src 'self' 'unsafe-inline'",
-              "img-src 'self' data: blob: http://192.168.1.222:3000 https://*.vercel.app https://*.vercel-storage.com",
+              "img-src 'self' data: blob: http://192.168.1.222:3000 https://*.vercel.app https://*.vercel-storage.com https://images.unsplash.com https://cdn.pixabay.com https://via.placeholder.com",
               "font-src 'self'",
               "connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://vitals.vercel-insights.com",
               "media-src 'self'",
@@ -116,6 +132,34 @@ const nextConfig: NextConfig = {
   // Compression and caching
   compress: true,
   poweredByHeader: false,
+  
+  // Optional: Configure trailing slash behavior
+  trailingSlash: false,
+  
+  // Optional: Configure redirects if needed
+  async redirects() {
+    return [
+      // Add any necessary redirects here
+      // Example:
+      // {
+      //   source: '/old-page',
+      //   destination: '/new-page',
+      //   permanent: true,
+      // },
+    ];
+  },
+  
+  // Optional: Configure rewrites if needed
+  async rewrites() {
+    return [
+      // Add any necessary rewrites here
+      // Example:
+      // {
+      //   source: '/api/proxy/:path*',
+      //   destination: 'https://external-api.com/:path*',
+      // },
+    ];
+  },
 };
 
 export default nextConfig;
