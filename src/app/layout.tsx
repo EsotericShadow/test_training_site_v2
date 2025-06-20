@@ -6,6 +6,7 @@ import Header from '@/app/components/layout/header';
 import Footer from '@/app/components/layout/footer';
 import { ThemeProvider } from './components/theme/smart-theme-provider';
 import { Analytics } from '@vercel/analytics/next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -58,6 +59,7 @@ export default function RootLayout({
         </ThemeProvider>
         {/* Keep Vercel Analytics too - they work great together */}
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
