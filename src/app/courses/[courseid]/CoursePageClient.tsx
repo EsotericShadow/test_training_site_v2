@@ -1,7 +1,10 @@
+// Updated CoursePageClient.tsx - Use this with the corrected globals.css
 'use client';
 
 import Link from 'next/link';
 import Image from 'next/image';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { ArrowLeft, Clock, Users, Award, CheckCircle, Camera, Phone, Mail, Shield, MapPin, BookOpen } from 'lucide-react';
 
 interface Course {
@@ -46,24 +49,33 @@ export default function CoursePageClient({ course }: CoursePageClientProps) {
       {/* Hero Section */}
       <section className="py-20 bg-gradient-to-br from-gray-900 to-black text-white">
         <div className="container mx-auto px-4">
-          <div className="max-w-5xl mx-auto text-center">
-            <div className="mb-6">
-              <span className="bg-yellow-500/20 text-yellow-500 px-4 py-2 rounded-full text-sm font-medium">
-                {course.category.name}
-              </span>
-              {course.popular && (
-                <span className="ml-3 bg-yellow-500 text-black px-4 py-2 rounded-full text-sm font-medium">
-                  Popular Course
+          <div className="max-w-5xl mx-auto">
+            {/* Centered badges and title */}
+            <div className="text-center mb-8">
+              <div className="mb-6">
+                <span className="bg-yellow-500/20 text-yellow-500 px-4 py-2 rounded-full text-sm font-medium">
+                  {course.category.name}
                 </span>
-              )}
+                {course.popular && (
+                  <span className="ml-3 bg-yellow-500 text-black px-4 py-2 rounded-full text-sm font-medium">
+                    Popular Course
+                  </span>
+                )}
+              </div>
+              
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-8 text-white">{course.title}</h1>
             </div>
             
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-white">{course.title}</h1>
+            {/* Left-aligned description with Markdown styling */}
+            <div className="text-xl text-gray-300 mb-8 max-w-4xl mx-auto leading-relaxed">
+              <div className="markdown-content hero-markdown text-left">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  {course.description}
+                </ReactMarkdown>
+              </div>
+            </div>
             
-            <p className="text-xl text-gray-300 mb-8 max-w-4xl mx-auto leading-relaxed">
-              {course.description}
-            </p>
-            
+            {/* Centered buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a 
                 href="#request-syllabus"
@@ -124,10 +136,10 @@ export default function CoursePageClient({ course }: CoursePageClientProps) {
                 {/* Course Overview */}
                 <div>
                   <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Course Overview</h2>
-                  <div className="prose prose-lg dark:prose-invert max-w-none">
-                    <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                  <div className="markdown-content text-gray-600 dark:text-gray-400">
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
                       {course.overview || course.description}
-                    </p>
+                    </ReactMarkdown>
                   </div>
                 </div>
 
@@ -135,9 +147,11 @@ export default function CoursePageClient({ course }: CoursePageClientProps) {
                 {course.includes && (
                   <div>
                     <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">What&apos;s Included</h3>
-                    <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                      {course.includes}
-                    </p>
+                    <div className="markdown-content text-gray-600 dark:text-gray-400">
+                      <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                        {course.includes}
+                      </ReactMarkdown>
+                    </div>
                   </div>
                 )}
 
