@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 import { validateToken } from '../../../../../lib/csrf';
 import { logger, handleApiError } from '../../../../../lib/logger';
 import { validateSession, terminateSession } from '../../../../../lib/session-manager';
-import { verifySecureToken } from '../../../../../lib/secure-jwt';
 
 export async function POST(request) {
   try {
@@ -40,15 +39,15 @@ export async function POST(request) {
       return response;
     }
 
-    // Get the CSRF token from the request body
-    const body = await request.json();
-    const csrfToken = body.csrfToken;
+    // Get the CSRF token from the request headers
+    const csrfToken = request.headers.get('x-csrf-token');
 
-    // Validate CSRF token
-    if (!csrfToken || !validateToken(token, csrfToken)) {
+    // Validate CSRF token using the session ID from the database
+    if (!csrfToken || !validateToken(sessionResult.session.id, csrfToken)) {
       logger.warn('Logout failed: Invalid CSRF token', { 
         ip,
-        hasToken: !!csrfToken
+        hasToken: !!csrfToken,
+        sessionId: sessionResult.session.id
       });
       
       return NextResponse.json(
@@ -57,21 +56,10 @@ export async function POST(request) {
       );
     }
 
-    // Verify token using our secure module to get user ID
-    const tokenResult = verifySecureToken(token, request);
-    if (!tokenResult.valid) {
-      logger.warn('Logout failed: Invalid token structure', { ip });
-      
-      // Still clear the cookie even if token is malformed
-      const response = NextResponse.json({ success: true });
-      response.cookies.delete('admin_token');
-      return response;
-    }
-
-    const userId = tokenResult.decoded.id;
+    const userId = sessionResult.session.user_id;
 
     // Terminate the session using the session manager
-    await terminateSession(token, userId);
+    await terminateSession(sessionResult.session.id, userId);
     
     // Log successful logout
     logger.info('Logout successful', { ip, userId });

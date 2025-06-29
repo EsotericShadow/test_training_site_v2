@@ -1,13 +1,21 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Enable Turbopack (stable, no longer experimental)
-  turbopack: {},
+  
 
   // Performance optimizations
   experimental: {
-    optimizeCss: true,
+    optimizeCss: false,
     optimizePackageImports: ['lucide-react', '@radix-ui/react-dialog'],
+  },
+
+  webpack: (config: any) => {
+    // Remove Critters plugin if it exists
+    config.plugins = config.plugins.filter(
+      (plugin: { constructor: { name: string } }) => (plugin.constructor.name as string) !== 'Critters'
+    );
+
+    return config;
   },
   
   // Image optimization - FIXED: Removed deprecated 'domains' property

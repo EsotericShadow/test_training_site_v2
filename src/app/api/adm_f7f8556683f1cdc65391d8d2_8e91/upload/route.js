@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { put } from '@vercel/blob';
 import { validateSession } from '../../../../../lib/session-manager';
 import { filesOps } from '../../../../../lib/database';
+import { sanitizeInput, validateInput } from '../../../../../lib/security-utils';
 
 // POST - Upload file to Vercel Blob
 export async function POST(request) {
@@ -37,6 +38,24 @@ export async function POST(request) {
     const tags = formData.get('tags') || '';
     const isFeatured = formData.get('is_featured') === 'true';
 
+    // Sanitize and validate input fields
+    const sanitizedData = {
+      category: sanitizeInput.text(category),
+      alt_text: sanitizeInput.text(altText),
+      title: sanitizeInput.text(title),
+      description: sanitizeInput.text(description),
+      tags: sanitizeInput.text(tags),
+      is_featured: isFeatured,
+    };
+
+    const validationResult = validateInput.fileMetadata(sanitizedData);
+    if (!validationResult.success) {
+      return NextResponse.json(
+        { error: `Invalid file metadata: ${validationResult.error}` },
+        { status: 400 }
+      );
+    }
+
     // Validate file
     if (!file || !(file instanceof File)) {
       return NextResponse.json(
@@ -54,17 +73,17 @@ export async function POST(request) {
     }
 
     // Validate file size (5MB limit)
-    const maxSize = 15 * 1024 * 1024; // 5MB
+    const maxSize = 15 * 1024 * 1024; // 15MB
     if (file.size > maxSize) {
       return NextResponse.json(
-        { error: 'File size must be less than 5MB' },
+        { error: 'File size must be less than 15MB' },
         { status: 400 }
       );
     }
 
     // Validate category
     const allowedCategories = ['general', 'team-photos', 'course-images', 'testimonials', 'company', 'other'];
-    if (!allowedCategories.includes(category)) {
+    if (!allowedCategories.includes(validationResult.data.category)) {
       return NextResponse.json(
         { error: 'Invalid category' },
         { status: 400 }
@@ -77,7 +96,7 @@ export async function POST(request) {
     const fileExtension = originalName.split('.').pop()?.toLowerCase() || '';
     const sanitizedName = originalName.replace(/[^a-zA-Z0-9.-]/g, '_');
     const filename = `${timestamp}-${sanitizedName}`;
-    const blobPathname = `${category}/${filename}`;
+    const blobPathname = `${validationResult.data.category}/${filename}`;
 
     try {
       // Upload to Vercel Blob
@@ -123,12 +142,12 @@ export async function POST(request) {
         width: width,
         height: height,
         aspect_ratio: aspectRatio,
-        alt_text: altText || originalName,
-        title: title || originalName,
-        description: description,
-        tags: tags,
-        category: category,
-        is_featured: isFeatured,
+        alt_text: validationResult.data.alt_text || originalName,
+        title: validationResult.data.title || originalName,
+        description: validationResult.data.description,
+        tags: validationResult.data.tags,
+        category: validationResult.data.category,
+        is_featured: validationResult.data.is_featured,
         uploaded_by: session.user_id
       };
 
@@ -143,12 +162,12 @@ export async function POST(request) {
           file_size: file.size,
           mime_type: file.type,
           blob_url: blob.url,
-          category: category,
-          alt_text: altText || originalName,
-          title: title || originalName,
-          description: description,
-          tags: tags,
-          is_featured: isFeatured
+          category: validationResult.data.category,
+          alt_text: validationResult.data.alt_text || originalName,
+          title: validationResult.data.title || originalName,
+          description: validationResult.data.description,
+          tags: validationResult.data.tags,
+          is_featured: validationResult.data.is_featured
         },
         message: 'File uploaded successfully'
       });

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { withSecureAuth } from '../../../../../../lib/secure-jwt';
 import { teamMembersOps } from '../../../../../../lib/database';
+import { sanitizeInput, validateInput } from '../../../../../../lib/security-utils';
 
 // GET - Get team member by ID (SECURED)
 async function getTeamMember(request, { params }) {
@@ -33,13 +34,35 @@ async function updateTeamMember(request, { params }) {
     
     const data = await request.json();
 
-    // Validate required fields
-    if (!data.name || !data.role) {
+    // Sanitize input
+    const sanitizedData = {
+      name: sanitizeInput.text(data.name),
+      role: sanitizeInput.text(data.role),
+      bio: sanitizeInput.text(data.bio),
+      photo_url: sanitizeInput.text(data.photo_url),
+      experience_years: data.experience_years,
+      specializations: data.specializations,
+      featured: data.featured,
+      display_order: data.display_order,
+    };
+
+    // Validate input
+    const validationResult = validateInput.teamMember(sanitizedData);
+    if (!validationResult.success) {
       return NextResponse.json(
-        { error: 'Missing required fields: name, role' },
+        { error: validationResult.error },
         { status: 400 }
       );
     }
+
+    // Ensure numeric and boolean fields are correctly parsed after validation
+    const teamMemberData = {
+      ...validationResult.data,
+      experience_years: validationResult.data.experience_years !== undefined ? parseInt(validationResult.data.experience_years) : null,
+      featured: Boolean(validationResult.data.featured),
+      display_order: validationResult.data.display_order !== undefined ? parseInt(validationResult.data.display_order) : 0,
+      specializations: JSON.stringify(validationResult.data.specializations || [])
+    };
 
     // Check if team member exists
     const existing = await teamMembersOps.getById(id);
@@ -51,7 +74,7 @@ async function updateTeamMember(request, { params }) {
     }
 
     // Update the team member
-    await teamMembersOps.update(id, data);
+    await teamMembersOps.update(id, teamMemberData);
 
     return NextResponse.json({
       success: true,

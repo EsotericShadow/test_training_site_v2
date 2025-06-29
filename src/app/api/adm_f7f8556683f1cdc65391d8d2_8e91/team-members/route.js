@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { withSecureAuth } from '../../../../../lib/secure-jwt';
 import { teamMembersOps } from '../../../../../lib/database';
+import { sanitizeInput, validateInput } from '../../../../../lib/security-utils';
+import { validateToken } from '../../../../../lib/csrf';
 
 // GET - Get all team members for admin management (SECURED)
 async function getTeamMembersForAdmin() {
@@ -19,37 +21,44 @@ async function getTeamMembersForAdmin() {
 // POST - Create new team member (SECURED)
 async function createTeamMember(request) {
   try {
+    const adminToken = request.cookies.get('admin_token')?.value;
+    const csrfToken = request.headers.get('x-csrf-token');
+
+    if (!validateToken(adminToken, csrfToken)) {
+      return NextResponse.json({ error: 'Invalid CSRF token' }, { status: 403 });
+    }
+
     const data = await request.json();
 
-    // Validate required fields
-    if (!data.name || !data.role) {
-      return NextResponse.json(
-        { error: 'Missing required fields: name, role' },
-        { status: 400 }
-      );
-    }
-
-    // Validate data types and sanitize input
-    const teamMemberData = {
-      name: String(data.name).trim(),
-      role: String(data.role).trim(),
-      bio: data.bio ? String(data.bio).trim() : null,
-      photo_url: data.photo_url ? String(data.photo_url).trim() : null,
-      experience_years: data.experience_years ? parseInt(data.experience_years) : null,
-      specializations: Array.isArray(data.specializations) 
-        ? data.specializations.filter(s => s && String(s).trim() !== '').map(s => String(s).trim())
-        : [],
-      featured: Boolean(data.featured),
-      display_order: data.display_order ? parseInt(data.display_order) : 0,
+    // Sanitize input
+    const sanitizedData = {
+      name: sanitizeInput.text(data.name),
+      role: sanitizeInput.text(data.role),
+      bio: sanitizeInput.text(data.bio),
+      photo_url: sanitizeInput.text(data.photo_url),
+      experience_years: data.experience_years,
+      specializations: data.specializations,
+      featured: data.featured,
+      display_order: data.display_order,
     };
 
-    // Validate experience_years if provided
-    if (teamMemberData.experience_years !== null && (teamMemberData.experience_years < 0 || teamMemberData.experience_years > 100)) {
+    // Validate input
+    const validationResult = validateInput.teamMember(sanitizedData);
+    if (!validationResult.success) {
       return NextResponse.json(
-        { error: 'Experience years must be between 0 and 100' },
+        { error: validationResult.error },
         { status: 400 }
       );
     }
+
+    // Ensure numeric and boolean fields are correctly parsed after validation
+    const teamMemberData = {
+      ...validationResult.data,
+      experience_years: validationResult.data.experience_years !== undefined ? parseInt(validationResult.data.experience_years) : null,
+      featured: Boolean(validationResult.data.featured),
+      display_order: validationResult.data.display_order !== undefined ? parseInt(validationResult.data.display_order) : 0,
+      specializations: JSON.stringify(validationResult.data.specializations || [])
+    };
 
     // Create the team member
     const result = await teamMembersOps.create(teamMemberData);
