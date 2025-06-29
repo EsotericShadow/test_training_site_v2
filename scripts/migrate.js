@@ -47,7 +47,7 @@ async function runMigration(migrationFile, direction) {
   await migration[direction]();
 }
 
-async function migrate() {
+export async function migrate() {
   await ensureMigrationsTable();
   const appliedMigrations = await getAppliedMigrations();
   const migrationFiles = await getMigrationFiles();
@@ -136,4 +136,4 @@ async function main() {
   }
 }
 
-main();
+// main();
