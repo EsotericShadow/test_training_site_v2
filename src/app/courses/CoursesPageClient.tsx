@@ -15,7 +15,7 @@ interface Course {
   image_url?: string;
   image_alt?: string;
   features: { feature: string; display_order: number }[];
-  category: { name: string };
+  category?: { name: string };
   popular: boolean;
 }
 
@@ -27,10 +27,10 @@ export default function CoursesPageClient() {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await fetch('/api/courses');
+        const response = await fetch('/api/courses?all=true');
         if (response.ok) {
-          const data = await response.json();
-          setCourses(data);
+          const { courses } = await response.json();
+          setCourses(courses);
         } else {
           setError('Failed to load courses');
         }
@@ -191,7 +191,7 @@ export default function CoursesPageClient() {
                   <div className="p-6 flex flex-col flex-1">
                     <div className="mb-4">
                       <span className="bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 px-3 py-1 rounded-full text-sm font-medium">
-                        {course.category.name}
+                        {course.category?.name || 'Uncategorized'}
                       </span>
                     </div>
                     <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">{course.title}</h3>

@@ -51,7 +51,7 @@ export default function Header() {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`)
         }
-        const courses: ApiCourse[] = await response.json()
+        const { courses }: { courses: ApiCourse[] } = await response.json()
 
         // Group courses by category
         const groupedCourses = courses.reduce((acc: CourseCategories, course: ApiCourse) => {
