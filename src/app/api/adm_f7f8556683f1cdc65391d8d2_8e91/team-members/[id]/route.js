@@ -16,7 +16,16 @@ async function getTeamMember(request, { params }) {
         { status: 404 }
       );
     }
-    return NextResponse.json(teamMember);
+    // Normalize specializations to ensure it's an array
+    const normalizedTeamMember = {
+      ...teamMember,
+      specializations: teamMember.specializations
+        ? Array.isArray(member.specializations)
+          ? member.specializations
+          : JSON.parse(member.specializations)
+        : []
+    };
+    return NextResponse.json(normalizedTeamMember);
   } catch (error) {
     console.error('Error fetching team member:', error);
     return NextResponse.json(
@@ -124,4 +133,3 @@ async function deleteTeamMember(request, { params }) {
 export const GET = withSecureAuth(getTeamMember);
 export const PUT = withSecureAuth(updateTeamMember);
 export const DELETE = withSecureAuth(deleteTeamMember);
-

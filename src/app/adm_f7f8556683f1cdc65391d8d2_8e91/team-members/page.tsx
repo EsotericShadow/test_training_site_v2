@@ -28,7 +28,7 @@ interface TeamMember {
   photo_url?: string;
   photo_alt?: string;
   experience_years?: number;
-  specializations?: string[] | string;
+  specializations?: string[];
   featured: boolean;
   display_order: number;
 }
@@ -138,16 +138,11 @@ export default function TeamMemberManagement() {
   const handleEdit = (teamMember: TeamMember) => {
     let specializations: string[] = [''];
     if (teamMember.specializations) {
-      try {
-        specializations =
-          typeof teamMember.specializations === 'string'
-            ? JSON.parse(teamMember.specializations)
-            : teamMember.specializations;
-        specializations = Array.isArray(specializations) && specializations.length > 0 ? specializations : [''];
-      } catch (error) {
-        console.error('Error parsing specializations:', error);
-        specializations = [''];
-      }
+      specializations = Array.isArray(teamMember.specializations)
+        ? teamMember.specializations.length > 0
+          ? teamMember.specializations
+          : ['']
+        : [''];
     }
 
     setFormData({
@@ -709,17 +704,14 @@ export default function TeamMemberManagement() {
                     {member.bio && (
                       <p className="text-base text-muted-foreground mb-4 line-clamp-4">{member.bio}</p>
                     )}
-                    {member.specializations && (
+                    {member.specializations && member.specializations.length > 0 && (
                       <div className="mb-4">
                         <p className="text-sm font-semibold text-foreground mb-2 flex items-center space-x-1">
                           <Award className="h-4 w-4" />
                           <span>Specializations:</span>
                         </p>
                         <div className="flex flex-wrap gap-2">
-                          {(typeof member.specializations === 'string' 
-                            ? JSON.parse(member.specializations) 
-                            : member.specializations
-                          ).map((spec: string, idx: number) => (
+                          {(Array.isArray(member.specializations) ? member.specializations : []).map((spec: string, idx: number) => (
                             <span
                               key={idx}
                               className="bg-purple-100 dark:bg-purple-900/20 text-purple-800 dark:text-purple-400 px-3 py-1 rounded-lg text-sm border border-purple-200 dark:border-purple-800"
@@ -748,12 +740,12 @@ export default function TeamMemberManagement() {
           <div className="text-center text-sm text-muted-foreground space-y-2">
             <div className="flex items-center justify-center space-x-4">
               <span className="flex items-center">
-                <span className="mr-1">👥</span>
+                <span className="mr-1"></span>
                 Team Members
               </span>
               <span>•</span>
               <span className="flex items-center">
-                <span className="mr-1">🛡️</span>
+                <span className="mr-1">️</span>
                 Secure Portal
               </span>
             </div>

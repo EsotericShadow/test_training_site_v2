@@ -8,7 +8,16 @@ import { validateToken } from '../../../../../lib/csrf';
 async function getTeamMembersForAdmin() {
   try {
     const teamMembers = await teamMembersOps.getAll();
-    return NextResponse.json({ teamMembers });
+    // Ensure specializations is always an array
+    const normalizedTeamMembers = teamMembers.map(member => ({
+      ...member,
+      specializations: member.specializations
+        ? Array.isArray(member.specializations)
+          ? member.specializations
+          : JSON.parse(member.specializations)
+        : []
+    }));
+    return NextResponse.json({ teamMembers: normalizedTeamMembers });
   } catch (error) {
     console.error('Error fetching team members for admin:', error);
     return NextResponse.json(
@@ -66,7 +75,10 @@ async function createTeamMember(request) {
     return NextResponse.json({
       success: true,
       message: 'Team member created successfully',
-      teamMember: result
+      teamMember: {
+        ...result,
+        specializations: validationResult.data.specializations || []
+      }
     }, { status: 201 });
 
   } catch (error) {
@@ -81,4 +93,3 @@ async function createTeamMember(request) {
 // Export secured routes
 export const GET = withSecureAuth(getTeamMembersForAdmin);
 export const POST = withSecureAuth(createTeamMember);
-
