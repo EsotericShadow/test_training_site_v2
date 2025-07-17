@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -39,11 +40,9 @@ export default function HeroSection({ initialData }: HeroSectionProps) {
 
   const sectionRef = useGsap((ref) => {
     if (!ref.current) return;
-    // Set initial state for all elements to be animated
-    gsap.set(ref.current.querySelectorAll('.slogan, h1, .subtitle, .cta-button'), { opacity: 0, y: 50 });
 
     // Animate all elements to their final visible state with a stagger
-    gsap.to(ref.current.querySelectorAll('.slogan, h1, .subtitle, .cta-button'), {
+    gsap.to(ref.current.querySelectorAll('.slogan, .main-heading, .subtitle, .cta-button'), {
       opacity: 1,
       y: 0, // Animate to their original Y position
       duration: 1,
@@ -86,18 +85,18 @@ export default function HeroSection({ initialData }: HeroSectionProps) {
       </div>
 
       <div className="relative container mx-auto px-4 py-48 text-center">
-        <p className="slogan text-yellow-400 font-semibold text-lg mb-4">{heroSection?.slogan}</p>
-        <h1 className="text-4xl md:text-6xl font-extrabold leading-tight mb-6">
+        <p className="slogan text-yellow-400 font-semibold text-lg mb-4 opacity-0 translate-y-[50px]">{heroSection?.slogan}</p>
+        <h1 className="main-heading text-4xl md:text-6xl font-extrabold leading-tight mb-6 opacity-0 translate-y-[50px]">
           {heroSection?.main_heading} <span className="text-yellow-400">{heroSection?.highlight_text}</span>
         </h1>
-        <p className="subtitle text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto mb-10">
+        <p className="subtitle text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto mb-10 opacity-0 translate-y-[50px]">
           {heroSection?.subtitle}
         </p>
         <div className="flex justify-center gap-4">
-          <Link href={heroSection?.primary_button_link || '/courses'} className="cta-button bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-4 px-8 rounded-lg transition duration-300 transform hover:scale-105 shadow-lg">
+          <Link href={heroSection?.primary_button_link || '/courses'} className="cta-button bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-4 px-8 rounded-lg transition duration-300 transform hover:scale-105 shadow-lg opacity-0 translate-y-[50px]">
             {heroSection?.primary_button_text || 'View Courses'}
           </Link>
-          <Link href={heroSection?.secondary_button_link || '/contact'} className="cta-button bg-transparent border-2 border-yellow-500 text-yellow-500 font-bold py-4 px-8 rounded-lg hover:bg-yellow-500 hover:text-black transition duration-300 transform hover:scale-105">
+          <Link href={heroSection?.secondary_button_link || '/contact'} className="cta-button bg-transparent border-2 border-yellow-500 text-yellow-500 font-bold py-4 px-8 rounded-lg hover:bg-yellow-500 hover:text-black transition duration-300 transform hover:scale-105 opacity-0 translate-y-[50px]">
             {heroSection?.secondary_button_text || 'Contact Us'}
           </Link>
         </div>
