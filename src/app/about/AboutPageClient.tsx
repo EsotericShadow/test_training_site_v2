@@ -43,6 +43,10 @@ interface AboutPageClientProps {
   teamMembers: TeamMember[];
 }
 
+function toPascalCase(str: string): string {
+  return str.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join('');
+}
+
 export default function AboutPageClient({ teamMembers }: AboutPageClientProps) {
   const [companyInfo, setCompanyInfo] = useState<CompanyInfo | null>(null);
   const [companyValues, setCompanyValues] = useState<CompanyValue[]>([]);
@@ -141,7 +145,9 @@ export default function AboutPageClient({ teamMembers }: AboutPageClientProps) {
               <div key={value.id} className="bg-white dark:bg-gray-900 p-8 rounded-lg shadow-lg text-center">
                 <div className="bg-yellow-400 text-white rounded-full p-4 w-20 h-20 mx-auto mb-6 flex items-center justify-center">
                   {(() => {
-                    const IconComponent = (value.icon && LucideIcons[value.icon as keyof typeof LucideIcons] ? LucideIcons[value.icon as keyof typeof LucideIcons] : Shield) as React.ElementType;
+                    console.log('Company Value Icon:', value.icon); // Log the icon name
+                    const iconName = toPascalCase(value.icon);
+                    const IconComponent = LucideIcons[iconName as keyof typeof LucideIcons] as React.ElementType | undefined ?? Shield;
                     return <IconComponent className="h-10 w-10" />;
                   })()}
                 </div>
@@ -161,9 +167,6 @@ export default function AboutPageClient({ teamMembers }: AboutPageClientProps) {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {whyChooseUs.map(item => (
               <div key={item.id} className="bg-white dark:bg-gray-900 p-8 rounded-lg shadow-lg text-center">
-                <div className="bg-yellow-400 text-white rounded-full p-4 w-20 h-20 mx-auto mb-6 flex items-center justify-center">
-                  <Shield className="h-10 w-10" />
-                </div>
                 <h3 className="text-2xl font-semibold mb-3">{item.point}</h3>
               </div>
             ))}
@@ -210,7 +213,7 @@ export default function AboutPageClient({ teamMembers }: AboutPageClientProps) {
       <section className="bg-yellow-500 text-black py-20">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-4xl font-bold mb-4">Ready to Improve Your Workplace Safety?</h2>
-          <p className="text-xl mb-8">Let&apos;s work together to create a safer, more productive environment for your team.</p>
+          <p className="text-xl mb-8">Let's work together to create a safer, more productive environment for your team.</p>
           <Link href="/contact" className="bg-black text-white font-bold py-4 px-8 rounded-lg hover:bg-gray-800 transition-colors">
             Get in Touch
           </Link>
