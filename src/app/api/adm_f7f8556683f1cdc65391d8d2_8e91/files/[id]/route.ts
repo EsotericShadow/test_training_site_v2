@@ -29,9 +29,9 @@ async function handleRequest(
 // GET - Get a single file by ID
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
-  return handleRequest(request, params, async (id) => {
+  return handleRequest(request, context.params, async (id) => {
     try {
       const file = await filesOps.getById(id);
       if (!file) {
@@ -48,9 +48,9 @@ export async function GET(
 // PUT - Update a file's metadata
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
-  return handleRequest(request, params, async (id) => {
+  return handleRequest(request, context.params, async (id) => {
     try {
       const data = await request.json();
       
@@ -74,9 +74,9 @@ export async function PUT(
 // DELETE - Delete a file
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
-  return handleRequest(request, params, async (id) => {
+  return handleRequest(request, context.params, async (id) => {
     try {
       await filesOps.delete(id);
       return NextResponse.json({ message: 'File deleted successfully' });
