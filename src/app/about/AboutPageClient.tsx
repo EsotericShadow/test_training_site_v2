@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Shield, Camera, Briefcase, Calendar } from 'lucide-react';
+import { Shield, Camera, Briefcase, Calendar, Users, BookOpen } from 'lucide-react';
+import * as LucideIcons from 'lucide-react';
 import { useGsap } from '@/app/hooks/useGsap';
 import { gsap } from 'gsap';
 import type { TeamMember } from '../../../types/database';
@@ -14,6 +15,16 @@ interface CompanyInfo {
   description: string;
   mission: string;
   established_year: number;
+  total_experience?: number;
+  students_trained_count?: number;
+  total_courses?: number;
+  phone?: string;
+  email?: string;
+  location?: string;
+  business_hours?: string;
+  response_time?: string;
+  service_area?: string;
+  emergency_availability?: string;
 }
 
 interface CompanyValue {
@@ -70,7 +81,7 @@ export default function AboutPageClient({ teamMembers }: AboutPageClientProps) {
 
   return (
     <div ref={sectionRefs} className="bg-white dark:bg-gray-900">
-      <section className="relative bg-gray-900 text-white py-32">
+      <section className="relative bg-gray-900 text-white py-24">
         <div className="absolute inset-0">
           <Image
             src="https://bluvpssu00ym8qv7.public.blob.vercel-storage.com/other/1750011620811-IMG_8439.JPG"
@@ -80,8 +91,8 @@ export default function AboutPageClient({ teamMembers }: AboutPageClientProps) {
           />
         </div>
         <div className="relative container mx-auto px-4 text-center">
-          <h1 className="text-5xl md:text-7xl font-extrabold mb-4">About Us</h1>
-          <p className="text-xl md:text-2xl text-yellow-400 font-semibold">{companyInfo?.slogan}</p>
+          <h1 className="text-5xl md:text-7xl font-extrabold mb-4">About <span className="text-yellow-400">{companyInfo?.company_name || 'Us'}</span></h1>
+          <p className="text-xl md:text-2xl text-gray-300 font-semibold">{companyInfo?.slogan}</p>
         </div>
       </section>
 
@@ -94,16 +105,26 @@ export default function AboutPageClient({ teamMembers }: AboutPageClientProps) {
               <h2 className="text-4xl font-bold text-gray-900 dark:text-white mt-12">Our Story</h2>
               <p>{companyInfo?.description}</p>
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="bg-gray-100 dark:bg-gray-800 p-8 rounded-lg text-center">
-                <Calendar className="h-12 w-12 text-yellow-500 mx-auto mb-4" />
-                <p className="text-5xl font-bold text-gray-900 dark:text-white">{companyInfo?.established_year}</p>
-                <p className="text-lg text-gray-600 dark:text-gray-400">Established</p>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="bg-gray-100 dark:bg-gray-800 p-6 rounded-lg shadow-md text-center">
+                <Calendar className="h-10 w-10 text-yellow-500 mx-auto mb-3" />
+                <p className="text-4xl font-bold text-gray-900 dark:text-white">{companyInfo?.established_year}</p>
+                <p className="text-md text-gray-600 dark:text-gray-400">Established</p>
               </div>
-              <div className="bg-gray-100 dark:bg-gray-800 p-8 rounded-lg text-center">
-                <Briefcase className="h-12 w-12 text-yellow-500 mx-auto mb-4" />
-                <p className="text-5xl font-bold text-gray-900 dark:text-white">70+</p>
-                <p className="text-lg text-gray-600 dark:text-gray-400">Years Combined Experience</p>
+              <div className="bg-gray-100 dark:bg-gray-800 p-6 rounded-lg shadow-md text-center">
+                <Briefcase className="h-10 w-10 text-yellow-500 mx-auto mb-3" />
+                <p className="text-4xl font-bold text-gray-900 dark:text-white">{companyInfo?.total_experience || 'N/A'}</p>
+                <p className="text-md text-gray-600 dark:text-gray-400">Years Experience</p>
+              </div>
+              <div className="bg-gray-100 dark:bg-gray-800 p-6 rounded-lg shadow-md text-center">
+                <Users className="h-10 w-10 text-yellow-500 mx-auto mb-3" />
+                <p className="text-4xl font-bold text-gray-900 dark:text-white">{companyInfo?.students_trained_count || 'N/A'}</p>
+                <p className="text-md text-gray-600 dark:text-gray-400">Students Trained</p>
+              </div>
+              <div className="bg-gray-100 dark:bg-gray-800 p-6 rounded-lg shadow-md text-center">
+                <BookOpen className="h-10 w-10 text-yellow-500 mx-auto mb-3" />
+                <p className="text-4xl font-bold text-gray-900 dark:text-white">{companyInfo?.total_courses || 'N/A'}</p>
+                <p className="text-md text-gray-600 dark:text-gray-400">Courses Offered</p>
               </div>
             </div>
           </div>
@@ -119,7 +140,10 @@ export default function AboutPageClient({ teamMembers }: AboutPageClientProps) {
             {companyValues.map(value => (
               <div key={value.id} className="bg-white dark:bg-gray-900 p-8 rounded-lg shadow-lg text-center">
                 <div className="bg-yellow-400 text-white rounded-full p-4 w-20 h-20 mx-auto mb-6 flex items-center justify-center">
-                  <Shield className="h-10 w-10" />
+                  {(() => {
+                    const IconComponent = (value.icon && LucideIcons[value.icon as keyof typeof LucideIcons] ? LucideIcons[value.icon as keyof typeof LucideIcons] : Shield) as React.ElementType;
+                    return <IconComponent className="h-10 w-10" />;
+                  })()}
                 </div>
                 <h3 className="text-2xl font-semibold mb-3">{value.title}</h3>
                 <p className="text-gray-600 dark:text-gray-400">{value.description}</p>
