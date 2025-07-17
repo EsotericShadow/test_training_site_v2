@@ -3,6 +3,11 @@ import { filesOps } from '../../../../../../lib/database';
 import { validateSession } from '../../../../../../lib/session-manager';
 import { validateInput } from '../../../../../../lib/security-utils';
 
+// Define the expected context type
+interface RouteContext {
+  params: { id: string };
+}
+
 async function handleRequest(
   request: NextRequest,
   params: { id: string },
@@ -28,9 +33,9 @@ async function handleRequest(
 // GET - Get a single file by ID
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } } // Explicitly destructure params
+  context: RouteContext
 ) {
-  return handleRequest(request, params, async (id) => {
+  return handleRequest(request, context.params, async (id) => {
     try {
       const file = await filesOps.getById(id);
       if (!file) {
@@ -44,12 +49,12 @@ export async function GET(
   });
 }
 
-// PUT and DELETE remain unchanged
+// PUT - Update a file's metadata
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: RouteContext
 ) {
-  return handleRequest(request, params, async (id) => {
+  return handleRequest(request, context.params, async (id) => {
     try {
       const data = await request.json();
       
@@ -70,11 +75,12 @@ export async function PUT(
   });
 }
 
+// DELETE - Delete a file
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: RouteContext
 ) {
-  return handleRequest(request, params, async (id) => {
+  return handleRequest(request, context.params, async (id) => {
     try {
       await filesOps.delete(id);
       return NextResponse.json({ message: 'File deleted successfully' });
