@@ -39,9 +39,13 @@ export default function HeroSection({ initialData }: HeroSectionProps) {
 
   const sectionRef = useGsap((ref) => {
     if (!ref.current) return;
-    gsap.from(ref.current.querySelectorAll('.slogan, h1, .subtitle, .cta-button'), {
-      opacity: 0,
-      y: 50, // Start 50px below final position
+    // Set initial state for all elements to be animated
+    gsap.set(ref.current.querySelectorAll('.slogan, h1, .subtitle, .cta-button'), { opacity: 0, y: 50 });
+
+    // Animate all elements to their final visible state with a stagger
+    gsap.to(ref.current.querySelectorAll('.slogan, h1, .subtitle, .cta-button'), {
+      opacity: 1,
+      y: 0, // Animate to their original Y position
       duration: 1,
       ease: 'power3.out',
       stagger: 0.15, // Stagger the animation for each element
