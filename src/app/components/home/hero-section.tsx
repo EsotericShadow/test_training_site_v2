@@ -39,14 +39,13 @@ export default function HeroSection({ initialData }: HeroSectionProps) {
 
   const sectionRef = useGsap((ref) => {
     if (!ref.current) return;
-    // Set initial state for animations
-    gsap.set(ref.current.querySelectorAll('.cta-button'), { opacity: 0, y: 20 });
-
-    const tl = gsap.timeline();
-    tl.from(ref.current.querySelector('.slogan'), { opacity: 0, y: -20, duration: 0.8, ease: 'power3.out' })
-      .from(ref.current.querySelector('h1'), { opacity: 0, y: -20, duration: 0.8, ease: 'power3.out' }, '-=0.6')
-      .from(ref.current.querySelector('.subtitle'), { opacity: 0, y: -20, duration: 0.8, ease: 'power3.out' }, '-=0.6')
-      .to(ref.current.querySelectorAll('.cta-button'), { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', stagger: 0.2 }, '-=0.6');
+    gsap.from(ref.current.querySelectorAll('.slogan, h1, .subtitle, .cta-button'), {
+      opacity: 0,
+      y: 50, // Start 50px below final position
+      duration: 1,
+      ease: 'power3.out',
+      stagger: 0.15, // Stagger the animation for each element
+    });
   });
 
   useEffect(() => {
