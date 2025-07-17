@@ -3,9 +3,9 @@ import { filesOps } from '../../../../../../lib/database';
 import { validateSession } from '../../../../../../lib/session-manager';
 import { validateInput } from '../../../../../../lib/security-utils';
 
-// Define the expected context type
+// Define the expected context type (params is now a Promise in Next.js 15)
 interface RouteContext {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 async function handleRequest(
@@ -35,7 +35,8 @@ export async function GET(
   request: NextRequest,
   context: RouteContext
 ) {
-  return handleRequest(request, context.params, async (id) => {
+  const params = await context.params;
+  return handleRequest(request, params, async (id) => {
     try {
       const file = await filesOps.getById(id);
       if (!file) {
@@ -54,7 +55,8 @@ export async function PUT(
   request: NextRequest,
   context: RouteContext
 ) {
-  return handleRequest(request, context.params, async (id) => {
+  const params = await context.params;
+  return handleRequest(request, params, async (id) => {
     try {
       const data = await request.json();
       
@@ -80,7 +82,8 @@ export async function DELETE(
   request: NextRequest,
   context: RouteContext
 ) {
-  return handleRequest(request, context.params, async (id) => {
+  const params = await context.params;
+  return handleRequest(request, params, async (id) => {
     try {
       await filesOps.delete(id);
       return NextResponse.json({ message: 'File deleted successfully' });
