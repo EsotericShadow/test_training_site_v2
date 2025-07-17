@@ -100,6 +100,7 @@ export default function FooterEditor() {
         const data: ResponseData = await response.json();
         
         setFooterContent({
+          id: data.footerContent?.id,
           company_name: data.footerContent?.company_name || '',
           tagline: data.footerContent?.tagline || '',
           slogan: data.footerContent?.slogan || '',

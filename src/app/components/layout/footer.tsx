@@ -12,6 +12,7 @@ interface FooterContent {
   email: string;
   location: string;
   logo_url: string;
+  copyright_text: string;
 }
 
 interface Course {
@@ -83,7 +84,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="mt-16 pt-8 border-t border-gray-800 text-center text-gray-500">
-          <p>&copy; {new Date().getFullYear()} {footerContent?.company_name}. All Rights Reserved.</p>
+          <p>{footerContent?.copyright_text || `© ${new Date().getFullYear()} ${footerContent?.company_name}. All Rights Reserved.`}</p>
         </div>
       </div>
     </footer>

@@ -281,9 +281,15 @@ export const validateInput = {
     if (!data['title'] || typeof data['title'] !== 'string' || (data['title'] as string).length < 2) {
       return { success: false, error: 'Link title must be at least 2 characters' };
     }
-    if (!data['url'] || typeof data['url'] !== 'string' || !validator.isURL(data['url'] as string)) {
-      return { success: false, error: 'Invalid link URL' };
+    const url = data['url'] as string;
+    if (!url) {
+      return { success: false, error: 'URL is required' };
     }
+    // Allow relative paths or valid absolute URLs
+    if (!url.startsWith('/') && !url.startsWith('#') && !validator.isURL(url, { require_protocol: true })) {
+      return { success: false, error: 'Invalid link URL. Must be a full URL (e.g., https://example.com) or a relative path (e.g., /about).' };
+    }
+    data['url'] = DOMPurify.sanitize(url);
     return { success: true, data };
   },
 

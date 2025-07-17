@@ -84,6 +84,7 @@ async function updateFooterData(
     // Update footer content
     if (footerContent) {
       const sanitizedFooterContent = {
+        id: 1,
         company_name: sanitizeInput.text(footerContent.company_name),
         tagline: sanitizeInput.text(footerContent.tagline),
         slogan: sanitizeInput.text(footerContent.slogan),
@@ -132,7 +133,7 @@ async function updateFooterData(
       for (const link of footerQuickLinks) {
         const sanitizedLink = {
           title: sanitizeInput.text(link.title),
-          url: sanitizeInput.text(link.url),
+          url: link.url, // URL is validated and sanitized in the validation function
           display_order: link.display_order,
           is_active: link.is_active,
         };
