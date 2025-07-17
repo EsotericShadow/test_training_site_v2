@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
-    "db:init": "node database-init.js",
+    "db:init": "node scripts/database-init.js",
     "db:seed:admin": "node scripts/seed-default-admin-users.js",
     "db:seed:content": "node scripts/seed-content.js",
     "db:migrate": "node scripts/migrate.js up",
