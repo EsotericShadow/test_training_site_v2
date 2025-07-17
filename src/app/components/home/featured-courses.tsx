@@ -3,18 +3,21 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, Clock, Users, Award, Camera } from 'lucide-react';
+import { ArrowRight, Clock, Users, Camera } from 'lucide-react';
+import { useGsap } from '@/app/hooks/useGsap';
+import { gsap } from 'gsap';
 
 interface Course {
   id: number;
   slug: string;
   title: string;
   description: string;
-  duration: number;
+  duration: string;
   audience: string;
   features: { feature: string; display_order: number }[];
   popular: boolean;
   image_url?: string;
+  image_alt?: string;
 }
 
 export default function FeaturedCourses() {
@@ -22,139 +25,103 @@ export default function FeaturedCourses() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const sectionRef = useGsap((ref) => {
+    if (!ref.current) return;
+    gsap.from(ref.current.querySelectorAll('.course-card'), {
+      opacity: 0,
+      y: 50,
+      duration: 0.8,
+      ease: 'power3.out',
+      stagger: 0.2,
+      scrollTrigger: {
+        trigger: ref.current,
+        start: 'top 80%',
+      },
+    });
+  });
+
   useEffect(() => {
-    fetch('/api/courses')
+    fetch('/api/adm_f7f8556683f1cdc65391d8d2_8e91/courses')
       .then((res) => res.json())
       .then((data) => {
-        if (Array.isArray(data)) {
-          setCourses(data.filter((course: Course) => course.popular));
+        if (data && Array.isArray(data.courses)) {
+          setCourses(data.courses.filter((course: Course) => course.popular).slice(0, 3));
         } else {
-          console.error('Expected array from /api/courses, got:', data);
           setError('Failed to load featured courses');
-          setCourses([]);
         }
         setLoading(false);
       })
-      .catch((error) => {
-        console.error('Error fetching courses:', error);
+      .catch(() => {
         setError('Failed to load featured courses');
-        setCourses([]);
         setLoading(false);
       });
   }, []);
 
   if (loading) {
     return (
-      <div className="py-20 bg-gray-50 dark:bg-gray-800 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-yellow"></div>
-      </div>
+      <section className="py-20 bg-gray-50 dark:bg-gray-900">
+        <div className="container mx-auto px-4 text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-500 mx-auto"></div>
+        </div>
+      </section>
     );
   }
 
   if (error) {
     return (
-      <section className="py-20 bg-gray-50 dark:bg-gray-800">
+      <section className="py-20 bg-gray-50 dark:bg-gray-900">
         <div className="container mx-auto px-4 text-center">
-          <p className="text-red-600">{error}</p>
+          <p className="text-red-500">{error}</p>
         </div>
       </section>
     );
   }
 
   return (
-    <section className="py-20 bg-gray-50 dark:bg-gray-800 transition-colors duration-300">
+    <section ref={sectionRef} className="py-20 bg-white dark:bg-gray-800">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-            Featured Safety Courses
-          </h2>
-          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
-            Discover our most popular workplace safety training programs designed for Northwestern BC industries
+          <h2 className="text-4xl font-bold text-gray-900 dark:text-white">Featured Courses</h2>
+          <p className="text-xl text-gray-600 dark:text-gray-400 mt-4 max-w-2xl mx-auto">
+            Explore our most popular safety training programs, designed for the industries of Northwestern BC.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {courses.map((course) => (
-            <div key={course.id} className="bg-white dark:bg-gray-900 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden h-full flex flex-col">
-              <div className="h-48 bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800 relative overflow-hidden">
+            <div key={course.id} className="course-card bg-white dark:bg-gray-900 rounded-lg shadow-lg overflow-hidden">
+              <div className="relative h-56">
                 {course.image_url ? (
                   <Image
                     src={course.image_url}
-                    alt={course.title}
+                    alt={course.image_alt || course.title}
                     fill
                     className="object-cover"
                   />
                 ) : (
-                  <div className="h-full w-full flex items-center justify-center">
-                    <div className="text-center text-gray-500 dark:text-gray-400">
-                      <Camera className="h-12 w-12 mx-auto mb-2 text-brand-yellow" />
-                      <p className="text-sm">Course Image</p>
-                    </div>
-                  </div>
-                )}
-                {course.popular && (
-                  <div className="absolute top-4 right-4">
-                    <span className="bg-brand-yellow text-black px-3 py-1 rounded-full text-sm font-semibold">
-                      Popular
-                    </span>
+                  <div className="bg-gray-200 dark:bg-gray-700 h-full flex items-center justify-center">
+                    <Camera className="h-12 w-12 text-gray-400" />
                   </div>
                 )}
               </div>
-
-              <div className="p-6 flex flex-col justify-between flex-grow">
-                <div>
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 line-clamp-2">
-                    {course.title}
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-3">
-                    {course.description}
-                  </p>
-                  <div className="flex items-center justify-between mb-4 text-sm">
-                    <div className="flex items-center space-x-1 text-gray-500 dark:text-gray-400">
-                      <Clock className="h-4 w-4" />
-                      <span>{course.duration}</span>
-                    </div>
-                    <div className="flex items-center space-x-1 text-gray-500 dark:text-gray-400">
-                      <Users className="h-4 w-4" />
-                      <span>{course.audience}</span>
-                    </div>
-                  </div>
-                  <div className="mb-6">
-                    <h4 className="font-semibold text-gray-900 dark:text-white mb-2 text-sm">What You&apos;ll Learn:</h4>
-                    <ul className="space-y-1">
-                      {course.features.slice(0, 3).map((objective, index) => (
-                        <li key={index} className="flex items-start space-x-2 text-sm text-gray-600 dark:text-gray-400">
-                          <Award className="h-3 w-3 text-brand-yellow mt-1 flex-shrink-0" />
-                          <span>{objective.feature}</span>
-                        </li>
-                      ))}
-                      {course.features.length > 3 && (
-                        <li className="text-sm text-gray-500 dark:text-gray-500 italic">
-                          +{course.features.length - 3} more objectives
-                        </li>
-                      )}
-                    </ul>
-                  </div>
+              <div className="p-6">
+                <h3 className="text-2xl font-semibold mb-3 text-gray-900 dark:text-white">{course.title}</h3>
+                <p className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-3">{course.description}</p>
+                <div className="flex justify-between items-center text-sm text-gray-500 dark:text-gray-400 mb-6">
+                  <div className="flex items-center"><Clock className="h-4 w-4 mr-1" /> {course.duration}</div>
+                  <div className="flex items-center"><Users className="h-4 w-4 mr-1" /> {course.audience}</div>
                 </div>
-                <Link
-                  href={`/courses/${course.slug}`}
-                  className="inline-flex items-center justify-center space-x-2 bg-transparent border-2 border-amber-400 hover:bg-amber-400 hover:text-black text-white px-6 py-2 rounded-lg font-semibold text-base transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg"
-                >
-                  <span>Learn More</span>
-                  <ArrowRight className="h-4 w-4" />
+                <Link href={`/courses/${course.slug}`} className="inline-flex items-center text-yellow-500 hover:text-yellow-600 font-semibold">
+                  Learn More <ArrowRight className="h-4 w-4 ml-2" />
                 </Link>
               </div>
             </div>
           ))}
         </div>
 
-        <div className="text-center">
-          <Link
-            href="/courses"
-            className="inline-flex items-center justify-center space-x-2 bg-transparent border-2 border-amber-400 hover:bg-amber-400 hover:text-black text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg"
-           >
-            <span>View All 14 Courses</span>
-            <ArrowRight className="h-5 w-5" />
+        <div className="text-center mt-12">
+          <Link href="/courses" className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-4 px-8 rounded-lg transition duration-300 transform hover:scale-105 shadow-lg">
+            View All Courses
           </Link>
         </div>
       </div>

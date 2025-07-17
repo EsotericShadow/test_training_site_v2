@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Save, Building2, Users } from 'lucide-react';
 import { ShieldCheckIcon } from '@heroicons/react/24/outline';
+import IconPicker from '../../components/admin/IconPicker';
 
 interface CompanyInfo {
   id?: number | undefined;
@@ -419,12 +420,9 @@ export default function CompanyInfoEditor() {
                     <label className="text-base font-semibold text-foreground">
                       Icon (Optional)
                     </label>
-                    <input
-                      type="text"
+                    <IconPicker
                       value={value.icon || ''}
-                      onChange={(e) => updateCompanyValue(index, 'icon', e.target.value)}
-                      className="w-full px-4 py-4 bg-card border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all duration-200 text-base"
-                      placeholder="e.g., shield-check"
+                      onChange={(icon) => updateCompanyValue(index, 'icon', icon)}
                     />
                   </div>
                   <div className="md:col-span-2 space-y-3">

@@ -1,7 +1,7 @@
-// Fixed version of src/app/about/page.tsx
-
 import { Metadata } from 'next';
 import AboutPageClient from './AboutPageClient';
+
+export const dynamic = 'force-dynamic';
 
 // Generate metadata for SEO (replaces NextSeo)
 export async function generateMetadata(): Promise<Metadata> {
@@ -61,11 +61,25 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+import { type TeamMember } from '../../../types/database';
+
 // Server component wrapper
-export default function AboutPage() {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://test-training-site-v2-xjey.vercel.app';
+export default async function AboutPage() {
+  const teamMembersRes = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/team-members`, { cache: 'no-store' });
+  if (!teamMembersRes.ok) {
+    console.error('Failed to fetch team members:', await teamMembersRes.text());
+    // Continue with empty array instead of throwing
+    return <AboutPageClient teamMembers={[]} />;
+  }
+  const { teamMembers: rawTeamMembers } = await teamMembersRes.json();
+
+  const teamMembers = rawTeamMembers.map((member: TeamMember) => ({
+    ...member,
+    specializations: Array.isArray(member.specializations) ? member.specializations : [],
+  }));
 
   // JSON-LD structured data for about page
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://test-training-site-v2-xjey.vercel.app';
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'EducationalOrganization',
@@ -161,8 +175,7 @@ export default function AboutPage() {
       />
       
       {/* Client component for interactive functionality */}
-      <AboutPageClient />
+      <AboutPageClient teamMembers={teamMembers} />
     </>
   );
 }
-

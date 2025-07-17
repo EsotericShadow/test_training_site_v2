@@ -8,15 +8,6 @@ const nextConfig: NextConfig = {
     optimizeCss: false,
     optimizePackageImports: ['lucide-react', '@radix-ui/react-dialog'],
   },
-
-  webpack: (config: any) => {
-    // Remove Critters plugin if it exists
-    config.plugins = config.plugins.filter(
-      (plugin: { constructor: { name: string } }) => (plugin.constructor.name as string) !== 'Critters'
-    );
-
-    return config;
-  },
   
   // Image optimization - FIXED: Removed deprecated 'domains' property
   images: {

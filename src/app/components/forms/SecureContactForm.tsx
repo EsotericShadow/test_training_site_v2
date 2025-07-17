@@ -29,10 +29,10 @@ interface SecurityState {
   sessionId: string;
 }
 
-export default function SecureContactForm({ 
-  onSuccess, 
-  onError, 
-  className = '' 
+export default function SecureContactForm({
+  onSuccess,
+  onError,
+  className = ''
 }: SecureContactFormProps) {
   // Form state
   const [formData, setFormData] = useState<FormData>({
@@ -67,38 +67,49 @@ export default function SecureContactForm({
   // Calculate security score based on various factors
   const calculateSecurityScore = useCallback(() => {
     let score = 0;
-    
+
     // Check for HTTPS or development
     if (window.location.protocol === 'https:' || process.env.NODE_ENV === 'development') score += 20;
-    
+
     // Check for modern browser features
     if (window.crypto && typeof window.crypto.getRandomValues === 'function') score += 20;
     if (typeof window.fetch === 'function') score += 10;
     if (document.referrer.includes(window.location.hostname) || !document.referrer) score += 10;
-    
+
     // Check form completion time
     const timeSpent = Date.now() - startTimeRef.current;
     if (timeSpent > 3000) score += 20; // At least 3 seconds
     if (timeSpent < 60000) score += 20; // Less than 1 minute
-    
+
     setSecurityScore(score);
   }, []);
 
   // Initialize security tokens and measures
   const initializeSecurity = useCallback(async () => {
     try {
+      // Use a GET request as defined in the new endpoint
       const response = await fetch('/api/contact/security-init', {
-        method: 'POST',
+        method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
-        credentials: 'same-origin'
       });
 
       if (response.ok) {
         const securityData = await response.json();
-        setSecurity(securityData);
-        calculateSecurityScore();
+        if (securityData.success) {
+          setSecurity({
+            csrfToken: securityData.csrfToken,
+            sessionId: securityData.sessionId,
+            honeypotField: 'website', // Keep honeypot logic, but simplified
+            honeypotValue: '',
+          });
+          calculateSecurityScore();
+        } else {
+          throw new Error(securityData.error || 'Failed to get security tokens.');
+        }
+      } else {
+        throw new Error('Failed to initialize security context from server.');
       }
     } catch (error) {
       console.error('Failed to initialize security:', error);
@@ -111,7 +122,7 @@ export default function SecureContactForm({
   // Initialize security measures
   useEffect(() => {
     initializeSecurity();
-    
+
     // Cleanup function
     return () => {
       setSecurity({
@@ -160,14 +171,14 @@ export default function SecureContactForm({
 
       case 'company':
         if (value && value.length > 200) return 'Company name must be less than 200 characters';
-        if (value && !/^[a-zA-Z0-9\s\.\,\&\-\']+$/.test(value)) return 'Company name contains invalid characters';
+        if (value && !/^[a-zA-Z0-9\s\.\,\&\-\'\.]+$/.test(value)) return 'Company name contains invalid characters';
         return '';
 
       case 'message':
         if (!value.trim()) return 'Message is required';
         if (value.length < 10) return 'Message must be at least 10 characters';
         if (value.length > 5000) return 'Message must be less than 5000 characters';
-        
+
         // Check for spam patterns
         const spamPatterns = [
           /\b(viagra|cialis|casino|lottery|winner|congratulations)\b/i,
@@ -175,7 +186,7 @@ export default function SecureContactForm({
           /(http|https|www\.)/i,
           /\b\d{4}[\s\-]?\d{4}[\s\-]?\d{4}[\s\-]?\d{4}\b/
         ];
-        
+
         for (const pattern of spamPatterns) {
           if (pattern.test(value)) {
             return 'Message contains prohibited content';
@@ -191,15 +202,15 @@ export default function SecureContactForm({
   // Handle input changes with real-time validation
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    
+
     // Sanitize input
     let sanitizedValue = value;
-    
+
     // Basic sanitization based on field type
     switch (name) {
       case 'name':
       case 'company':
-        sanitizedValue = value.replace(/[<>\"'%;()&+]/g, '');
+        sanitizedValue = value.replace(/[<>"\'%;()&+]/g, '');
         break;
       case 'email':
         sanitizedValue = value.toLowerCase().replace(/[^a-z0-9@._-]/g, '');
@@ -208,7 +219,7 @@ export default function SecureContactForm({
         sanitizedValue = value.replace(/[^0-9\s\-\(\)\+\.]/g, '');
         break;
       case 'message':
-        sanitizedValue = value.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+        sanitizedValue = value.replace(/<script\b[^<]*(?:(?!<\/script>)[^<]*)*<\/script>/gi, '');
         break;
     }
 
@@ -240,7 +251,7 @@ export default function SecureContactForm({
   // Validate entire form
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
-    
+
     // Validate all required fields
     Object.keys(formData).forEach(key => {
       const error = validateField(key, formData[key as keyof FormData]);
@@ -275,7 +286,7 @@ export default function SecureContactForm({
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Check if blocked
     if (isBlocked) {
       if (onError) {
@@ -286,7 +297,7 @@ export default function SecureContactForm({
 
     // Increment submit attempts
     setSubmitAttempts(prev => prev + 1);
-    
+
     // Block after 3 failed attempts
     if (submitAttempts >= 3) {
       setIsBlocked(true);
@@ -327,9 +338,7 @@ export default function SecureContactForm({
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-CSRF-Token': security.csrfToken,
         },
-        credentials: 'same-origin',
         body: JSON.stringify({ ...payload, ...honeypotData })
       });
 
@@ -340,7 +349,7 @@ export default function SecureContactForm({
         if (onSuccess) {
           onSuccess();
         }
-        
+
         // Reset form
         setFormData({
           name: '',
@@ -452,7 +461,7 @@ export default function SecureContactForm({
             />
             {errors.name && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.name}</p>}
           </div>
-          
+
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Email Address *
@@ -474,7 +483,7 @@ export default function SecureContactForm({
             {errors.email && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.email}</p>}
           </div>
         </div>
-        
+
         {/* Company and Phone row */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
@@ -496,7 +505,7 @@ export default function SecureContactForm({
             />
             {errors.company && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.company}</p>}
           </div>
-          
+
           <div>
             <label htmlFor="phone" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Phone Number
@@ -572,7 +581,7 @@ export default function SecureContactForm({
             <Shield className="h-4 w-4" />
             <span>Your information is secure and encrypted</span>
           </div>
-          
+
           <button
             type="submit"
             disabled={isSubmitting || isBlocked}

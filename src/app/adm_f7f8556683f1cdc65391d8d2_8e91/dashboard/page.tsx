@@ -96,8 +96,8 @@ export default function AdminDashboard() {
   const loadStats = useCallback(async () => {
     try {
       const [coursesRes, teamRes] = await Promise.all([
-        fetch('/api/courses'),
-        fetch('/api/team-members'),
+        fetch('/api/adm_f7f8556683f1cdc65391d8d2_8e91/courses'),
+        fetch('/api/adm_f7f8556683f1cdc65391d8d2_8e91/team-members'),
       ]);
 
       const [courses, team] = await Promise.all([
@@ -153,22 +153,8 @@ export default function AdminDashboard() {
 
   const handleLogout = async () => {
     try {
-      const csrfResponse = await fetch('/api/adm_f7f8556683f1cdc65391d8d2_8e91/csrf-token');
-      const csrfData = await csrfResponse.json();
-      
-      if (!csrfResponse.ok) {
-        console.error('Failed to get CSRF token:', csrfData.error);
-        return;
-      }
-      
       const logoutResponse = await fetch('/api/adm_f7f8556683f1cdc65391d8d2_8e91/logout', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          csrfToken: csrfData.csrfToken
-        }),
       });
       
       if (logoutResponse.ok) {

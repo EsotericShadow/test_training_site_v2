@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Clock, Users, Award, ArrowRight, Shield, Camera } from 'lucide-react';
+import { useGsap } from '@/app/hooks/useGsap';
+import { gsap } from 'gsap';
 
 interface Course {
   id: number;
@@ -24,10 +26,62 @@ export default function CoursesPageClient() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const sectionRef = useGsap((ref) => {
+    if (!ref.current) return;
+    gsap.from(ref.current.querySelectorAll('.course-card'), {
+      opacity: 0,
+      y: 50,
+      duration: 0.8,
+      ease: 'power3.out',
+      stagger: 0.2,
+      scrollTrigger: {
+        trigger: ref.current,
+        start: 'top 80%',
+      },
+    });
+
+    const iconContainers = ref.current.querySelectorAll('.icon-container');
+    iconContainers.forEach(container => {
+      const icon = container.querySelector('.icon');
+      container.addEventListener('mouseenter', () => {
+        gsap.to(icon, {
+          rotation: 360,
+          duration: 1,
+          ease: 'power3.out'
+        });
+      });
+      container.addEventListener('mouseleave', () => {
+        gsap.to(icon, {
+          rotation: 0,
+          duration: 1,
+          ease: 'power3.out'
+        });
+      });
+    });
+
+    const courseCards = ref.current.querySelectorAll('.course-card');
+    courseCards.forEach(card => {
+      card.addEventListener('mouseenter', () => {
+        gsap.to(card, {
+          scale: 1.05,
+          duration: 0.3,
+          ease: 'power3.out'
+        });
+      });
+      card.addEventListener('mouseleave', () => {
+        gsap.to(card, {
+          scale: 1,
+          duration: 0.3,
+          ease: 'power3.out'
+        });
+      });
+    });
+  });
+
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await fetch('/api/courses?all=true');
+        const response = await fetch('/api/adm_f7f8556683f1cdc65391d8d2_8e91/courses');
         if (response.ok) {
           const { courses } = await response.json();
           setCourses(courses);
@@ -74,71 +128,50 @@ export default function CoursesPageClient() {
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
-      {/* Hero Section */}
-      <section className="bg-gradient-to-br from-gray-900 to-black dark:from-black dark:to-gray-900 text-white py-20">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-5xl font-bold mb-6">Safety Training Courses</h1>
-            <p className="text-xl text-gray-300 leading-relaxed mb-8">
-              Comprehensive safety training programs designed for Northwestern BC industries.
-              All courses provide official certification and are based on WorkSafeBC regulations.
-            </p>
-            <div className="mb-8">
-              <p className="text-yellow-500 font-medium text-lg italic">
-                &quot;We believe the choices you make today will define your tomorrow&quot;
-              </p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-2xl mx-auto">
-              <div className="text-center">
-                <div className="text-3xl font-bold text-yellow-500 mb-2">{courses.length}</div>
-                <div className="text-gray-300">Safety Courses</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-yellow-500 mb-2">70+</div>
-                <div className="text-gray-300">Years Experience</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-yellow-500 mb-2">2000+</div>
-                <div className="text-gray-300">Students Trained</div>
-              </div>
-            </div>
-          </div>
+    <div ref={sectionRef} className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
+      <section className="relative bg-gray-900 text-white py-32">
+        <div className="absolute inset-0">
+          <Image
+            src="https://bluvpssu00ym8qv7.public.blob.vercel-storage.com/other/1750011620811-IMG_8439.JPG"
+            alt="Safety training in action"
+            fill
+            className="object-cover opacity-30"
+          />
+        </div>
+        <div className="relative container mx-auto px-4 text-center">
+          <h1 className="text-5xl md:text-7xl font-extrabold mb-4">Our Courses</h1>
+          <p className="text-xl md:text-2xl text-yellow-400 font-semibold">Comprehensive Safety Training for a Secure Workplace</p>
         </div>
       </section>
 
-      {/* Course Standards */}
       <section className="py-12 bg-yellow-500/5 dark:bg-gray-800 border-b border-yellow-500/20">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-center">
-            <div className="flex items-center justify-center space-x-3">
-              <Shield className="h-8 w-8 text-yellow-500" />
+            <div className="flex items-center justify-center space-x-3 icon-container">
+              <Shield className="h-8 w-8 text-yellow-500 icon" />
               <span className="font-semibold text-gray-900 dark:text-white">WorkSafeBC Compliant</span>
             </div>
-            <div className="flex items-center justify-center space-x-3">
-              <Award className="h-8 w-8 text-yellow-500" />
+            <div className="flex items-center justify-center space-x-3 icon-container">
+              <Award className="h-8 w-8 text-yellow-500 icon" />
               <span className="font-semibold text-gray-900 dark:text-white">Official Certification</span>
             </div>
-            <div className="flex items-center justify-center space-x-3">
-              <Users className="h-8 w-8 text-yellow-500" />
+            <div className="flex items-center justify-center space-x-3 icon-container">
+              <Users className="h-8 w-8 text-yellow-500 icon" />
               <span className="font-semibold text-gray-900 dark:text-white">Expert Instructors</span>
             </div>
-            <div className="flex items-center justify-center space-x-3">
-              <Clock className="h-8 w-8 text-yellow-500" />
+            <div className="flex items-center justify-center space-x-3 icon-container">
+              <Clock className="h-8 w-8 text-yellow-500 icon" />
               <span className="font-semibold text-gray-900 dark:text-white">Flexible Scheduling</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Courses Grid */}
-      <section className="py-20 bg-white dark:bg-gray-900">
+      <section className="py-20 bg-white dark:bg-gray-800">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-              Complete Course Catalog
-            </h2>
-            <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+            <h2 className="text-4xl font-bold text-gray-900 dark:text-white">Complete Course Catalog</h2>
+            <p className="text-xl text-gray-600 dark:text-gray-400 mt-4 max-w-2xl mx-auto">
               Choose from our comprehensive selection of safety training courses,
               each designed to meet industry standards and regulatory requirements.
             </p>
@@ -159,16 +192,9 @@ export default function CoursesPageClient() {
               {courses.map((course) => (
                 <div
                   key={course.id}
-                  className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden h-full flex flex-col"
+                  className="course-card bg-white dark:bg-gray-900 rounded-lg shadow-lg overflow-hidden"
                 >
-                  {course.popular && (
-                    <div className="bg-yellow-500 text-black text-center py-2 text-sm font-semibold">
-                      Popular Course
-                    </div>
-                  )}
-
-                  {/* Course Image */}
-                  <div className="relative h-48 bg-gray-200 dark:bg-gray-700">
+                  <div className="relative h-56">
                     {course.image_url ? (
                       <Image
                         src={course.image_url}
@@ -178,7 +204,7 @@ export default function CoursesPageClient() {
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       />
                     ) : (
-                      <div className="h-full flex items-center justify-center text-gray-500 dark:text-gray-400">
+                      <div className="bg-gray-200 dark:bg-gray-700 h-full flex items-center justify-center text-gray-500 dark:text-gray-400">
                         <div className="text-center">
                           <Camera className="h-8 w-8 mx-auto mb-2 text-yellow-500" />
                           <p className="font-medium text-sm">{course.title}</p>
@@ -209,29 +235,6 @@ export default function CoursesPageClient() {
                       {course.description}
                     </p>
 
-                    {/* Course Features */}
-                    {course.features && course.features.length > 0 && (
-                      <div className="space-y-2 mb-6">
-                        <h4 className="text-sm font-semibold text-gray-900 dark:text-white">Key Learning Points:</h4>
-                        <div className="space-y-1">
-                          {course.features.slice(0, 3).map((feature, index) => (
-                            <div
-                              key={index}
-                              className="flex items-center space-x-2 text-sm text-gray-700 dark:text-gray-300"
-                            >
-                              <Award className="h-3 w-3 text-yellow-500 flex-shrink-0" />
-                              <span className="line-clamp-1">{feature.feature}</span>
-                            </div>
-                          ))}
-                          {course.features.length > 3 && (
-                            <div className="text-xs text-gray-500 dark:text-gray-400 ml-5">
-                              +{course.features.length - 3} more learning objectives
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    )}
-
                     <div className="flex flex-col sm:flex-row gap-3 mt-auto mb-4">
                       <Link
                         href={`/courses/${course.slug}`}
@@ -255,7 +258,6 @@ export default function CoursesPageClient() {
         </div>
       </section>
 
-      {/* CTA Section */}
       <section className="py-20 bg-gray-900 dark:bg-black text-white">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold mb-4">Ready to Get Started?</h2>
@@ -281,4 +283,3 @@ export default function CoursesPageClient() {
     </div>
   );
 }
-

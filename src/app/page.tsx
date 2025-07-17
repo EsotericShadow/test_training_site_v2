@@ -1,9 +1,8 @@
-// Optimized version of src/app/page.tsx with server-side hero data fetching
-
 import { Metadata } from 'next';
 import HeroSection from '@/app/components/home/hero-section';
 import FeaturedCourses from '@/app/components/home/featured-courses';
 import AboutSnippet from '@/app/components/home/about-snippet';
+
 
 interface HeroSection {
   slogan?: string;
@@ -18,16 +17,12 @@ interface HeroSection {
   secondary_button_link?: string;
 }
 
-
+export const dynamic = 'force-dynamic';
 
 // Fetch hero data server-side for better performance
 async function getHeroData() {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://test-training-site-v2-xjey.vercel.app';
-    const response = await fetch(`${baseUrl}/api/hero-section`, {
-      cache: 'force-cache', // Cache for better performance
-      next: { revalidate: 3600 } // Revalidate every hour
-    });
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/adm_f7f8556683f1cdc65391d8d2_8e91/hero-section`, { cache: 'no-store' });
     
     if (response.ok) {
       const data = await response.json();
@@ -124,6 +119,8 @@ export default async function Home() {
   
   // Fetch hero data server-side
   const heroData = await getHeroData();
+  const teamMembersRes = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/team-members`, { cache: 'no-store' });
+  const { teamMembers } = await teamMembersRes.json();
 
   // JSON-LD structured data
   const jsonLd = {
@@ -176,9 +173,8 @@ export default async function Home() {
       <div>
         <HeroSection initialData={heroData} />
         <FeaturedCourses />
-        <AboutSnippet />
+        <AboutSnippet teamMembers={teamMembers} />
       </div>
     </>
   );
 }
-

@@ -1,8 +1,7 @@
-// Fixed version of src/app/courses/[courseid]/page.tsx
-
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import CoursePageClient from './CoursePageClient';
+import ExpandedCoursePageClient from './ExpandedCoursePageClient';
 
 interface Course {
   id: number;
@@ -215,8 +214,11 @@ export default async function CoursePage({ params }: PageProps) {
         }}
       />
       
-      {/* Client component with course data pre-loaded */}
-      <CoursePageClient course={course} />
+      {course.slug === 'operator-equipment' ? (
+        <ExpandedCoursePageClient course={course} />
+      ) : (
+        <CoursePageClient course={course} />
+      )}
     </>
   );
 }

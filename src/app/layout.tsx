@@ -51,15 +51,19 @@ export default function RootLayout({
         <ThemeProvider>
           <div className="min-h-screen flex flex-col bg-white dark:bg-black text-black dark:text-white transition-colors duration-300">
             <Header />
-            <main className="flex-grow pt-64 md:pt-54">
+            <main className="flex-grow pt-24">
               {children}
             </main>
             <Footer />
           </div>
         </ThemeProvider>
         {/* Keep Vercel Analytics too - they work great together */}
-        <Analytics />
-        <SpeedInsights />
+        {process.env.NODE_ENV === 'production' && (
+          <>
+            <Analytics />
+            <SpeedInsights />
+          </>
+        )}
       </body>
     </html>
   );

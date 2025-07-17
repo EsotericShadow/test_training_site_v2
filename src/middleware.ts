@@ -1,26 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { validateSession } from '../lib/session-manager';
+import { validateSession, SessionValidationResult } from '../lib/session-manager';
 import { logger } from '../lib/logger';
 
-// Type definitions for session validation result
-interface SessionValidationResult {
-  valid: boolean;
-  reason?: string;
-  session?: {
-    id: string;
-    user_id: number;
-    username?: string;
-    email?: string;
-    expires_at: string;
-    created_at: string;
-    last_activity: string;
-    ip_address: string;
-    user_agent: string;
-  };
-  needsRenewal?: boolean;
-  timeLeft?: number;
-  securityLevel?: string;
-}
 
 export async function middleware(request: NextRequest) {
   const url = request.nextUrl.clone();
@@ -71,7 +52,7 @@ export async function middleware(request: NextRequest) {
       logger.info('Middleware: Session valid', { 
         path: url.pathname, 
         ip, 
-        userId: sessionResult.session?.user_id,
+        userId: sessionResult.session?.user_id || 'anonymous',
         securityLevel: sessionResult.securityLevel 
       });
 
@@ -82,10 +63,15 @@ export async function middleware(request: NextRequest) {
       response.headers.set('X-Content-Type-Options', 'nosniff');
       response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
       response.headers.set('X-XSS-Protection', '1; mode=block');
-      response.headers.set(
-        'Content-Security-Policy',
-        "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self';"
-      );
+      // Define Content Security Policy based on environment
+      let csp = "default-src 'self'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://www.google-analytics.com;";
+      if (process.env.NODE_ENV === 'production') {
+        csp += " script-src 'self' https://www.googletagmanager.com https://va.vercel-scripts.com; style-src 'self' 'sha256-zlqnbDt84zf1iSefLU/ImC54isoprH/MRiVZGskwexk=';";
+      } else {
+        csp += " script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://va.vercel-scripts.com; style-src 'self' 'unsafe-inline';";
+      }
+
+      response.headers.set('Content-Security-Policy', csp);
 
       // Add session renewal headers if needed
       if (sessionResult.needsRenewal) {
@@ -118,8 +104,14 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // Only match admin paths to reduce unnecessary processing
-    '/adm_f7f8556683f1cdc65391d8d2_8e91/:path*',
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     */
+    '/((?!api|_next/static|_next/image|favicon.ico).*)',
   ],
 };
 

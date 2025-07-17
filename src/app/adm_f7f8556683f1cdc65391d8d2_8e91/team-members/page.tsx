@@ -138,11 +138,12 @@ export default function TeamMemberManagement() {
   const handleEdit = (teamMember: TeamMember) => {
     let specializations: string[] = [''];
     if (teamMember.specializations) {
-      specializations = Array.isArray(teamMember.specializations)
-        ? teamMember.specializations.length > 0
-          ? teamMember.specializations
-          : ['']
-        : [''];
+      specializations = typeof teamMember.specializations === 'string'
+        ? JSON.parse(teamMember.specializations)
+        : teamMember.specializations;
+      if (specializations.length === 0) {
+        specializations = [''];
+      }
     }
 
     setFormData({

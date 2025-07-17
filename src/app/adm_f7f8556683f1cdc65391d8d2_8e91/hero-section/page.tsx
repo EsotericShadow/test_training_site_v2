@@ -87,7 +87,7 @@ export default function HeroSectionEditor() {
 
   const loadHeroData = useCallback(async () => {
     try {
-      const response = await fetch('/api/adm_f7f8556683f1cdc65391d8d2_8e91/hero-section', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/adm_f7f8556683f1cdc65391d8d2_8e91/hero-section`, {
         credentials: 'include'
       });
       
@@ -171,7 +171,7 @@ export default function HeroSectionEditor() {
     setMessage('');
 
     try {
-      const response = await fetch('/api/adm_f7f8556683f1cdc65391d8d2_8e91/hero-section', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/adm_f7f8556683f1cdc65391d8d2_8e91/hero-section`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

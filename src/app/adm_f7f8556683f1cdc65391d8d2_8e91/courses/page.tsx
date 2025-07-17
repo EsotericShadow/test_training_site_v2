@@ -74,6 +74,7 @@ export default function CourseManagement() {
   const [editingCourse, setEditingCourse] = useState<Course | null>(null);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
+  const [csrfToken, setCsrfToken] = useState('');
 
   // Add ref for scrolling to the top of the main content
   const mainRef = useRef<HTMLElement>(null);
@@ -140,6 +141,16 @@ export default function CourseManagement() {
 
   useEffect(() => {
     checkAuth();
+    const fetchCsrfToken = async () => {
+      try {
+        const response = await fetch('/api/adm_f7f8556683f1cdc65391d8d2_8e91/csrf-token');
+        const data = await response.json();
+        setCsrfToken(data.csrfToken);
+      } catch (error) {
+        console.error('Error fetching CSRF token:', error);
+      }
+    };
+    fetchCsrfToken();
   }, [checkAuth]);
 
   const resetForm = () => {
@@ -235,7 +246,7 @@ export default function CourseManagement() {
       const courseData = {
         ...formData,
         category_id: formData.category_id ? parseInt(formData.category_id) : null,
-        features: formData.features.filter(f => f.trim() !== '')
+        features: formData.features.filter(f => typeof f === 'string' && f.trim() !== '')
       };
 
       const url = editingCourse 
@@ -248,6 +259,7 @@ export default function CourseManagement() {
         method,
         headers: {
           'Content-Type': 'application/json',
+          'x-csrf-token': csrfToken,
         },
         credentials: 'include',
         body: JSON.stringify(courseData),
