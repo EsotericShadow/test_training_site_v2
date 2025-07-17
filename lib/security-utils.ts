@@ -1,5 +1,4 @@
 
-'use client';
 // lib/security-utils.ts
 import DOMPurify from 'isomorphic-dompurify';
 import validator from 'validator';

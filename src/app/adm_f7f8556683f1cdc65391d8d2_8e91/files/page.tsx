@@ -588,7 +588,7 @@ export default function FileManagement() {
                     placeholder="Search files by name, alt text, title, or tags..."
                     value={filters.search}
                     onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
-                    className="w-full pl-10 pr-4 py-3 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
+                    className="w-full pl-10 pr-4 py-3 bg-background border border-gray-300 dark:border-gray-600 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
                   />
                 </div>
               </div>
@@ -596,7 +596,7 @@ export default function FileManagement() {
               {/* Filters Toggle */}
               <button
                 onClick={() => setShowFilters(!showFilters)}
-                className="flex items-center space-x-2 px-4 py-3 bg-background border border-input rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+                className="flex items-center space-x-2 px-4 py-3 bg-background border border-gray-300 dark:border-gray-600 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
               >
                 <Filter className="h-5 w-5" />
                 <span className="font-medium">Filters</span>
@@ -612,7 +612,7 @@ export default function FileManagement() {
                     <select
                       value={filters.category}
                       onChange={(e) => setFilters(prev => ({ ...prev, category: e.target.value }))}
-                      className="w-full px-3 py-2 bg-background border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                      className="w-full px-3 py-2 bg-background border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
                     >
                       <option value="all">All Categories</option>
                       {Object.entries(categoryStats).map(([category, count]) => (
@@ -628,7 +628,7 @@ export default function FileManagement() {
                     <select
                       value={sortBy}
                       onChange={(e) => setSortBy(e.target.value)}
-                      className="w-full px-3 py-2 bg-background border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                      className="w-full px-3 py-2 bg-background border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
                     >
                       <option value="uploaded_at">Upload Date</option>
                       <option value="original_name">Name</option>
@@ -641,7 +641,7 @@ export default function FileManagement() {
                     <label className="block text-sm font-medium text-foreground mb-2">Order</label>
                     <button
                       onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-                      className="w-full flex items-center justify-center space-x-2 px-3 py-2 bg-background border border-input rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+                      className="w-full flex items-center justify-center space-x-2 px-3 py-2 bg-background border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
                     >
                       {sortOrder === 'asc' ? <SortAsc className="h-4 w-4" /> : <SortDesc className="h-4 w-4" />}
                       <span>{sortOrder === 'asc' ? 'Ascending' : 'Descending'}</span>
@@ -656,7 +656,7 @@ export default function FileManagement() {
                         id="featured-filter"
                         checked={filters.featured}
                         onChange={(e) => setFilters(prev => ({ ...prev, featured: e.target.checked }))}
-                        className="rounded border-input text-teal-600 focus:ring-teal-500"
+                        className="rounded border-gray-300 dark:border-gray-600 text-teal-600 focus:ring-teal-500"
                       />
                       <label htmlFor="featured-filter" className="text-sm text-foreground">
                         Featured files only
@@ -933,7 +933,7 @@ export default function FileManagement() {
                     type="text"
                     value={uploadFormData.alt_text}
                     onChange={(e) => setUploadFormData(prev => ({ ...prev, alt_text: e.target.value }))}
-                    className="w-full px-4 py-3 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
+                    className="w-full px-4 py-3 bg-background border border-gray-300 dark:border-gray-600 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
                     placeholder="Enter descriptive text for the file"
                   />
                 </div>
@@ -946,7 +946,7 @@ export default function FileManagement() {
                     type="text"
                     value={uploadFormData.title}
                     onChange={(e) => setUploadFormData(prev => ({ ...prev, title: e.target.value }))}
-                    className="w-full px-4 py-3 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
+                    className="w-full px-4 py-3 bg-background border border-gray-300 dark:border-gray-600 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
                     placeholder="Optional display title"
                   />
                 </div>
@@ -958,7 +958,7 @@ export default function FileManagement() {
                   <select
                     value={uploadFormData.category}
                     onChange={(e) => setUploadFormData(prev => ({ ...prev, category: e.target.value }))}
-                    className="w-full px-4 py-3 bg-background border border-input rounded-xl text-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
+                    className="w-full px-4 py-3 bg-background border border-gray-300 dark:border-gray-600 rounded-xl text-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
                   >
                     <option value="general">General</option>
                     <option value="team-photos">Team Photos</option>
@@ -977,7 +977,7 @@ export default function FileManagement() {
                     value={uploadFormData.description}
                     onChange={(e) => setUploadFormData(prev => ({ ...prev, description: e.target.value }))}
                     rows={3}
-                    className="w-full px-4 py-3 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 resize-none"
+                    className="w-full px-4 py-3 bg-background border border-gray-300 dark:border-gray-600 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 resize-none"
                     placeholder="Optional description"
                   />
                 </div>
@@ -990,7 +990,7 @@ export default function FileManagement() {
                     type="text"
                     value={uploadFormData.tags}
                     onChange={(e) => setUploadFormData(prev => ({ ...prev, tags: e.target.value }))}
-                    className="w-full px-4 py-3 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
+                    className="w-full px-4 py-3 bg-background border border-gray-300 dark:border-gray-600 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
                     placeholder="Comma-separated tags"
                   />
                 </div>
@@ -1002,7 +1002,7 @@ export default function FileManagement() {
                       id="upload-featured"
                       checked={uploadFormData.is_featured}
                       onChange={(e) => setUploadFormData(prev => ({ ...prev, is_featured: e.target.checked }))}
-                      className="rounded border-input text-teal-600 focus:ring-teal-500"
+                      className="rounded border-gray-300 dark:border-gray-600 text-teal-600 focus:ring-teal-500"
                     />
                     <label htmlFor="upload-featured" className="text-sm font-medium text-foreground">
                       Mark as featured
@@ -1047,7 +1047,7 @@ export default function FileManagement() {
       {/* Edit Form Modal */}
       {showEditForm && editingFile && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-card border border-border rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+          <div className="bg-white dark:bg-gray-800 border border-border rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-card border-b border-border px-6 py-4 flex items-center justify-between rounded-t-2xl">
               <h2 className="text-xl font-bold text-foreground">Edit File</h2>
               <button
@@ -1094,7 +1094,7 @@ export default function FileManagement() {
                     type="text"
                     value={editFormData.alt_text}
                     onChange={(e) => setEditFormData(prev => ({ ...prev, alt_text: e.target.value }))}
-                    className="w-full px-4 py-3 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
+                    className="w-full px-4 py-3 bg-background border border-gray-300 dark:border-gray-600 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
                     placeholder="Enter descriptive text for the file"
                   />
                 </div>
@@ -1107,7 +1107,7 @@ export default function FileManagement() {
                     type="text"
                     value={editFormData.title}
                     onChange={(e) => setEditFormData(prev => ({ ...prev, title: e.target.value }))}
-                    className="w-full px-4 py-3 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
+                    className="w-full px-4 py-3 bg-background border border-gray-300 dark:border-gray-600 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
                     placeholder="Optional display title"
                   />
                 </div>
@@ -1119,7 +1119,7 @@ export default function FileManagement() {
                   <select
                     value={editFormData.category}
                     onChange={(e) => setEditFormData(prev => ({ ...prev, category: e.target.value }))}
-                    className="w-full px-4 py-3 bg-background border border-input rounded-xl text-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
+                    className="w-full px-4 py-3 bg-background border border-gray-300 dark:border-gray-600 rounded-xl text-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
                   >
                     <option value="general">General</option>
                     <option value="team-photos">Team Photos</option>
@@ -1138,7 +1138,7 @@ export default function FileManagement() {
                     value={editFormData.description}
                     onChange={(e) => setEditFormData(prev => ({ ...prev, description: e.target.value }))}
                     rows={3}
-                    className="w-full px-4 py-3 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 resize-none"
+                    className="w-full px-4 py-3 bg-background border border-gray-300 dark:border-gray-600 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 resize-none"
                     placeholder="Optional description"
                   />
                 </div>
@@ -1151,7 +1151,7 @@ export default function FileManagement() {
                     type="text"
                     value={editFormData.tags}
                     onChange={(e) => setEditFormData(prev => ({ ...prev, tags: e.target.value }))}
-                    className="w-full px-4 py-3 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
+                    className="w-full px-4 py-3 bg-background border border-gray-300 dark:border-gray-600 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
                     placeholder="Comma-separated tags"
                   />
                 </div>
@@ -1163,7 +1163,7 @@ export default function FileManagement() {
                       id="edit-featured"
                       checked={editFormData.is_featured}
                       onChange={(e) => setEditFormData(prev => ({ ...prev, is_featured: e.target.checked }))}
-                      className="rounded border-input text-teal-600 focus:ring-teal-500"
+                      className="rounded border-gray-300 dark:border-gray-600 text-teal-600 focus:ring-teal-500"
                     />
                     <label htmlFor="edit-featured" className="text-sm font-medium text-foreground">
                       Mark as featured

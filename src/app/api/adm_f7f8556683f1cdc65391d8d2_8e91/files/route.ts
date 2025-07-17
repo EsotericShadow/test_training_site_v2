@@ -1,34 +1,29 @@
-import { NextRequest, NextResponse } from 'next/server';
-
-export const runtime = 'nodejs';
-import { withSecureAuth } from '../../../../../lib/secure-jwt';
+// src/app/api/adm_f7f8556683f1cdc65391d8d2_8e91/files/route.ts
+import { NextResponse, NextRequest } from 'next/server';
 import { filesOps } from '../../../../../lib/database';
+import { validateSession } from '../../../../../lib/session-manager';
 
-// Define the expected signature for a Next.js App Router API Handler.
-type AppRouteHandlerFn = (
-  req: NextRequest,
-  context: { params: Promise<string> }
-) => Promise<NextResponse>;
+export async function GET(request: NextRequest) {
+  const token = request.cookies.get('admin_token')?.value;
+  if (!token) {
+    return NextResponse.json({ error: 'Unauthorized: No session token' }, { status: 401 });
+  }
+  const authResult = await validateSession(token, request);
+  if (!authResult.valid) {
+    return NextResponse.json(
+      { error: `Unauthorized: ${authResult.reason}` },
+      { status: 401 }
+    );
+  }
 
-// GET - Get all files for admin management
-async function getAllFiles(
-  _request: NextRequest,
-  _context: { params: unknown }
-): Promise<NextResponse> {
   try {
     const files = await filesOps.getAll();
-    
-    return NextResponse.json({
-      files: files
-    });
+    return NextResponse.json({ files });
   } catch (error) {
-    console.error('Error fetching files for admin:', error);
+    console.error('Error fetching files:', error);
     return NextResponse.json(
       { error: 'Failed to fetch files' },
       { status: 500 }
     );
   }
 }
-
-// Export secured routes
-export const GET: AppRouteHandlerFn = withSecureAuth(getAllFiles);
