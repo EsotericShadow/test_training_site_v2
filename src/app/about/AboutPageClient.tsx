@@ -213,7 +213,7 @@ export default function AboutPageClient({ teamMembers }: AboutPageClientProps) {
       <section className="bg-yellow-500 text-black py-20">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-4xl font-bold mb-4">Ready to Improve Your Workplace Safety?</h2>
-          <p className="text-xl mb-8">Let's work together to create a safer, more productive environment for your team.</p>
+          <p className="text-xl mb-8">Let&apos;s work together to create a safer, more productive environment for your team.</p>
           <Link href="/contact" className="bg-black text-white font-bold py-4 px-8 rounded-lg hover:bg-gray-800 transition-colors">
             Get in Touch
           </Link>
