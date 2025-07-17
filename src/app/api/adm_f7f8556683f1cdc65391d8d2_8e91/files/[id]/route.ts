@@ -1,5 +1,4 @@
-// src/app/api/adm_f7f8556683f1cdc65391d8d2_8e91/files/[id]/route.ts
-import { NextResponse, NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { filesOps } from '../../../../../../lib/database';
 import { validateSession } from '../../../../../../lib/session-manager';
 import { validateInput } from '../../../../../../lib/security-utils';
@@ -29,9 +28,9 @@ async function handleRequest(
 // GET - Get a single file by ID
 export async function GET(
   request: NextRequest,
-  context: { params: { id: string } }
+  { params }: { params: { id: string } } // Explicitly destructure params
 ) {
-  return handleRequest(request, context.params, async (id) => {
+  return handleRequest(request, params, async (id) => {
     try {
       const file = await filesOps.getById(id);
       if (!file) {
@@ -45,12 +44,12 @@ export async function GET(
   });
 }
 
-// PUT - Update a file's metadata
+// PUT and DELETE remain unchanged
 export async function PUT(
   request: NextRequest,
-  context: { params: { id: string } }
+  { params }: { params: { id: string } }
 ) {
-  return handleRequest(request, context.params, async (id) => {
+  return handleRequest(request, params, async (id) => {
     try {
       const data = await request.json();
       
@@ -71,12 +70,11 @@ export async function PUT(
   });
 }
 
-// DELETE - Delete a file
 export async function DELETE(
   request: NextRequest,
-  context: { params: { id: string } }
+  { params }: { params: { id: string } }
 ) {
-  return handleRequest(request, context.params, async (id) => {
+  return handleRequest(request, params, async (id) => {
     try {
       await filesOps.delete(id);
       return NextResponse.json({ message: 'File deleted successfully' });
