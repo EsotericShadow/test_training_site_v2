@@ -151,16 +151,7 @@ export default async function Home() {
 
   return (
     <>
-      {/* Preload critical hero image */}
-      {heroData.heroSection.background_image_url && (
-        <link
-          rel="preload"
-          href={heroData.heroSection.background_image_url}
-          as="image"
-          type="image/webp"
-          fetchPriority="high"
-        />
-      )}
+      
       
       {/* JSON-LD structured data */}
       <script

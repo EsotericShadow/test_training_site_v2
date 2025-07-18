@@ -34,9 +34,11 @@ async function getHeroSection(request: NextRequest) {
   }
 
   try {
-    const heroSection = await heroSectionOps.get();
-    const heroStats = await heroStatsOps.getAll();
-    const heroFeatures = await heroFeaturesOps.getAll();
+    const [heroSection, heroStats, heroFeatures] = await Promise.all([
+      heroSectionOps.get(),
+      heroStatsOps.getAll(),
+      heroFeaturesOps.getAll(),
+    ]);
 
     return NextResponse.json({
       heroSection,
