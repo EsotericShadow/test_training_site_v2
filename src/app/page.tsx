@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import Image from 'next/image';
 import HeroSection from '@/app/components/home/hero-section';
 import FeaturedCourses from '@/app/components/home/featured-courses';
 import AboutSnippet from '@/app/components/home/about-snippet';
@@ -161,11 +162,22 @@ export default async function Home() {
         }}
       />
       
-      <div>
+      <div className="relative text-white">
+        {heroData.heroSection.background_image_url && (
+          <Image
+            src={heroData.heroSection.background_image_url}
+            alt={heroData.heroSection.background_image_alt || 'Safety training session'}
+            fill
+            className="object-cover"
+            priority
+            fetchPriority="high"
+          />
+        )}
+        <div className="absolute inset-0 bg-black opacity-60"></div>
         <HeroSection initialData={heroData} />
+      </div>
         <FeaturedCourses />
         <AboutSnippet teamMembers={teamMembers} />
-      </div>
     </>
   );
 }

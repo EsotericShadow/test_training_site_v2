@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
-import HeroImage from './HeroImage';
+
 import { useGsap } from '@/app/hooks/useGsap';
 import { gsap } from 'gsap';
 
@@ -72,15 +72,6 @@ export default function HeroSection({ initialData }: HeroSectionProps) {
 
   return (
     <section ref={sectionRef} className="relative text-white">
-      <div className="absolute inset-0">
-        {heroSection?.background_image_url && (
-          <HeroImage
-            src={heroSection.background_image_url}
-            alt={heroSection.background_image_alt || 'Safety training session'}
-          />
-        )}
-        <div className="absolute inset-0 bg-black opacity-60"></div>
-      </div>
 
       <div className="relative container mx-auto px-4 py-48 text-center">
         <p className="slogan text-yellow-400 font-semibold text-lg mb-4 opacity-0 translate-y-[50px]">{heroSection?.slogan}</p>

@@ -5,7 +5,12 @@ import './globals.css';
 import Header from '@/app/components/layout/header';
 import Footer from '@/app/components/layout/footer';
 import { ThemeProvider } from './components/theme/smart-theme-provider';
-import Silk from '@/app/components/ui/Silk';
+import dynamic from 'next/dynamic';
+
+const DynamicSilk = dynamic(() => import('@/app/components/ui/Silk'), {
+  loading: () => null,
+});
+
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 
@@ -52,7 +57,7 @@ export default function RootLayout({
         <ThemeProvider>
           <div className="min-h-screen flex flex-col text-black dark:text-white transition-colors duration-300 relative z-0">
             <div className="fixed inset-0 z-[-1]">
-              <Silk color="#303E5A" />
+              <DynamicSilk color="#303E5A" />
             </div>
             <Header />
             <main className="flex-grow pt-24 relative z-10">
