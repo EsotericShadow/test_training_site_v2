@@ -83,11 +83,11 @@ export default function AboutPageClient({ teamMembers }: AboutPageClientProps) {
   }, []);
 
   if (loading) {
-    return <div className="h-screen bg-gray-900 flex items-center justify-center"><div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-yellow-400"></div></div>;
+    return <div className="h-screen  flex items-center justify-center"><div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-yellow-400"></div></div>;
   }
 
   return (
-    <div ref={sectionRefs} className="bg-white dark:bg-gray-900">
+    <div ref={sectionRefs} className="">
       <section className="relative bg-gray-900 text-white py-24">
         <div className="absolute inset-0">
           <Image
