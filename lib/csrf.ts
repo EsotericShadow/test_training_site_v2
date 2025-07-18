@@ -21,10 +21,12 @@ export async function generateToken(sessionId: number): Promise<string> {
 }
 
 export async function validateToken(sessionId: number, token: string): Promise<boolean> {
-  // 1. Fetch the stored token data using only the session ID.
+  // 1. Fetch the most recent stored token data using the session ID.
   const result = await sql<CsrfToken>`
     SELECT id, token, created_at FROM csrf_tokens
     WHERE session_id = ${sessionId}
+    ORDER BY created_at DESC
+    LIMIT 1
   `;
   const storedData = result.rows[0];
 

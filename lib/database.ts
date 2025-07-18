@@ -179,6 +179,7 @@ export const coursesOps = {
     const result = await sql`
       UPDATE courses SET 
       slug = ${data.slug}, title = ${data.title}, description = ${data.description}, 
+      what_youll_learn = ${data.what_youll_learn},
       duration = ${data.duration}, audience = ${data.audience}, 
       category_id = ${data.category_id}, popular = ${data.popular ? true : false}, 
       image_url = ${data.image_url}, image_alt = ${data.image_alt}, updated_at = CURRENT_TIMESTAMP

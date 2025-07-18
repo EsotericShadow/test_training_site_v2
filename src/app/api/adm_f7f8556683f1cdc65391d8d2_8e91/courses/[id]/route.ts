@@ -55,9 +55,9 @@ async function updateCourse(request: NextRequest, context: RouteContext): Promis
 
     const { features, ...courseData }: { features: string[] } & Partial<Course> = await request.json();
 
-    if (!courseData.title || !courseData.description || !courseData.duration || !courseData.audience) {
+    if (!courseData.title || !courseData.description || !courseData.duration || !courseData.audience || !courseData.what_youll_learn) {
       return NextResponse.json(
-        { error: 'Missing required fields: title, description, duration, audience' },
+        { error: 'Missing required fields: title, description, what_youll_learn, duration, audience' },
         { status: 400 }
       );
     }

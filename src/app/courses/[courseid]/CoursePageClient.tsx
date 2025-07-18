@@ -13,6 +13,7 @@ interface Course {
   duration: string;
   audience: string;
   description: string;
+  what_youll_learn: string;
   overview?: string;
   includes?: string;
   format?: string;
@@ -67,7 +68,7 @@ export default function CoursePageClient({ course }: CoursePageClientProps) {
             <h1 className="text-4xl md:text-6xl font-extrabold my-6 text-white drop-shadow-lg">{course.title}</h1>
             <div className="text-xl text-gray-200 max-w-3xl leading-relaxed">
               <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                {course.description}
+                {course.overview || course.description}
               </ReactMarkdown>
             </div>
           </div>
@@ -82,7 +83,7 @@ export default function CoursePageClient({ course }: CoursePageClientProps) {
                 <h2 className="animate-in text-3xl font-bold text-gray-900 dark:text-white mt-12 mb-6">What You&apos;ll Learn</h2>
                 <div className="prose prose-lg dark:prose-invert max-w-none text-gray-600 dark:text-gray-300">
                   <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                    {course.overview || course.description}
+                    {course.what_youll_learn}
                   </ReactMarkdown>
                 </div>
               </div>

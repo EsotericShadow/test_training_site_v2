@@ -10,6 +10,7 @@ interface Course {
   duration: string;
   audience: string;
   description: string;
+  what_youll_learn: string;
   overview?: string;
   includes?: string;
   format?: string;

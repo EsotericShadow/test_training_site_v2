@@ -126,23 +126,25 @@ export default function Header() {
               <button
                 onClick={() => setIsCoursesOpen(!isCoursesOpen)}
                 className="flex items-center space-x-1 text-gray-700 dark:text-gray-200 hover:text-yellow-500 font-medium transition-colors"
+                aria-haspopup="true"
+                aria-expanded={isCoursesOpen}
               >
                 <span>Courses</span>
                 <ChevronDown className={`h-5 w-5 transition-transform ${isCoursesOpen ? 'rotate-180' : ''}`} />
               </button>
               {isCoursesOpen && (
-                <div ref={dropdownRef} className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
-                  <div className="max-h-96 overflow-y-auto">
-                    <Link href="/courses" onClick={handleNavigation} className="block px-4 py-3 bg-gray-50 dark:bg-gray-700 font-semibold hover:bg-yellow-400 hover:text-black transition-colors">View All Courses</Link>
+                <div ref={dropdownRef} className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-80 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+                  <div className="max-h-96 overflow-y-auto py-2">
+                    <Link href="/courses" onClick={handleNavigation} className="block px-5 py-3 bg-gray-50 dark:bg-gray-700 font-semibold hover:bg-yellow-400 hover:text-black transition-colors rounded-md mx-2 my-1">View All Courses</Link>
                     {isLoading && <p className="p-4 text-center">Loading...</p>}
                     {error && <p className="p-4 text-center text-red-500">{error}</p>}
                     {!isLoading && !error && Object.entries(courseCategories).map(([category, courses]) => (
-                      <div key={category}>
-                        <h3 className="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-yellow-600 dark:text-yellow-400 font-semibold">{category}</h3>
+                      <div key={category} className="mt-2">
+                        <h3 className="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-yellow-600 dark:text-yellow-400 font-semibold mb-1">{category}</h3>
                         <ul>
                           {courses.map(course => (
                             <li key={course.slug}>
-                              <Link href={`/courses/${course.slug}`} onClick={handleNavigation} className="block px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">{course.name}</Link>
+                              <Link href={`/courses/${course.slug}`} onClick={handleNavigation} className="block px-5 py-3 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors rounded-md mx-2 my-1">{course.name}</Link>
                             </li>
                           ))}
                         </ul>
@@ -173,21 +175,27 @@ export default function Header() {
             <Link href="/" onClick={handleNavigation} className="block text-lg font-medium hover:text-yellow-500">Home</Link>
             <Link href="/about" onClick={handleNavigation} className="block text-lg font-medium hover:text-yellow-500">About</Link>
             <div>
-              <button onClick={() => setIsCoursesOpen(!isCoursesOpen)} className="w-full flex justify-between items-center text-lg font-medium hover:text-yellow-500">
+              <button
+                onClick={() => setIsCoursesOpen(!isCoursesOpen)}
+                className="w-full flex justify-between items-center text-lg font-medium hover:text-yellow-500 py-2"
+                aria-haspopup="true"
+                aria-expanded={isCoursesOpen}
+              >
                 <span>Courses</span>
                 <ChevronDown className={`h-5 w-5 transition-transform ${isCoursesOpen ? 'rotate-180' : ''}`} />
               </button>
               {isCoursesOpen && (
                 <div className="mt-2 pl-4 space-y-2">
-                  {isLoading && <p>Loading...</p>}
-                  {error && <p className="text-red-500">{error}</p>}
+                  <Link href="/courses" onClick={handleNavigation} className="block px-4 py-2 font-semibold hover:text-yellow-500">View All Courses</Link>
+                  {isLoading && <p className="p-4 text-center">Loading...</p>}
+                  {error && <p className="p-4 text-center text-red-500">{error}</p>}
                   {!isLoading && !error && Object.entries(courseCategories).map(([category, courses]) => (
-                    <div key={category}>
-                      <h3 className="text-yellow-500 font-semibold mt-2">{category}</h3>
+                    <div key={category} className="mt-3">
+                      <h3 className="text-yellow-500 font-semibold mb-1">{category}</h3>
                       <ul className="pl-2 space-y-1">
                         {courses.map(course => (
                           <li key={course.slug}>
-                            <Link href={`/courses/${course.slug}`} onClick={handleNavigation} className="block hover:text-yellow-500">{course.name}</Link>
+                            <Link href={`/courses/${course.slug}`} onClick={handleNavigation} className="block py-2 hover:text-yellow-500">{course.name}</Link>
                           </li>
                         ))}
                       </ul>

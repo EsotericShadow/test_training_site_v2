@@ -100,14 +100,12 @@ export default function AdminDashboard() {
         fetch('/api/adm_f7f8556683f1cdc65391d8d2_8e91/team-members'),
       ]);
 
-      const [courses, team] = await Promise.all([
-        coursesRes.json(),
-        teamRes.json(),
-      ]);
+      const coursesData = await coursesRes.json();
+      const teamData = await teamRes.json();
 
       setStats({
-        courses: Array.isArray(courses) ? courses.length : 0,
-        teamMembers: Array.isArray(team) ? team.length : 0,
+        courses: coursesData.courses?.length || 0,
+        teamMembers: teamData.teamMembers?.length || 0,
       });
     } catch (error) {
       console.error('Error loading stats:', error);
@@ -153,8 +151,19 @@ export default function AdminDashboard() {
 
   const handleLogout = async () => {
     try {
+      // Fetch a fresh CSRF token right before logging out
+      const csrfRes = await fetch('/api/adm_f7f8556683f1cdc65391d8d2_8e91/csrf-token');
+      if (!csrfRes.ok) {
+        throw new Error('Failed to fetch CSRF token');
+      }
+      const csrfData = await csrfRes.json();
+      const token = csrfData.csrfToken;
+
       const logoutResponse = await fetch('/api/adm_f7f8556683f1cdc65391d8d2_8e91/logout', {
         method: 'POST',
+        headers: {
+          'x-csrf-token': token,
+        },
       });
       
       if (logoutResponse.ok) {

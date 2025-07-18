@@ -48,6 +48,7 @@ export interface Course {
     slug: string;
     title: string;
     description: string;
+    what_youll_learn?: string;
     duration: string;
     audience: string;
     category_id: number | null;

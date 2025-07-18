@@ -13,6 +13,7 @@ interface Course {
   duration: string;
   audience: string;
   description: string;
+  what_youll_learn: string;
   overview?: string;
   includes?: string;
   format?: string;
@@ -82,7 +83,7 @@ export default function ExpandedCoursePageClient({ course }: ExpandedCoursePageC
             </span>
             <h1 className="text-4xl md:text-6xl font-extrabold my-6 text-white drop-shadow-lg">{course.title}</h1>
             <p className="text-xl text-gray-200 max-w-3xl leading-relaxed">
-              {course.description}
+              {course.overview}
             </p>
           </div>
         </div>
@@ -91,10 +92,10 @@ export default function ExpandedCoursePageClient({ course }: ExpandedCoursePageC
       <section className="py-20 bg-white dark:bg-gray-800">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-gray-900 dark:text-white">On-Site Operator Qualification</h2>
+            <h2 className="text-4xl font-bold text-gray-900 dark:text-white">What You&apos;ll Learn</h2>
             <div className="text-xl text-gray-600 dark:text-gray-400 mt-4 max-w-3xl mx-auto prose lg:prose-xl">
               <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                {course.overview}
+                {course.what_youll_learn}
               </ReactMarkdown>
             </div>
           </div>

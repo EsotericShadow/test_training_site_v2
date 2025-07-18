@@ -26,6 +26,7 @@ interface Course {
   slug: string;
   title: string;
   description: string;
+  what_youll_learn: string;
   duration: string;
   audience: string;
   category_id?: number;
@@ -83,6 +84,7 @@ export default function CourseManagement() {
     slug: '',
     title: '',
     description: '',
+    what_youll_learn: '',
     duration: '',
     audience: '',
     category_id: '',
@@ -158,6 +160,7 @@ export default function CourseManagement() {
       slug: '',
       title: '',
       description: '',
+      what_youll_learn: '',
       duration: '',
       audience: '',
       category_id: '',
@@ -175,6 +178,7 @@ export default function CourseManagement() {
       slug: course.slug || '',
       title: course.title || '',
       description: course.description || '',
+      what_youll_learn: course.what_youll_learn || '',
       duration: course.duration || '',
       audience: course.audience || '',
       category_id: course.category_id?.toString() || '',
@@ -492,14 +496,27 @@ export default function CourseManagement() {
               </div>
               <div className="space-y-3">
                 <label className="text-base font-semibold text-foreground">
-                  Description *
+                  Overview/Description *
                 </label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                   rows={6}
                   className="w-full px-4 py-4 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200 text-base"
-                  placeholder="Enter course description"
+                  placeholder="Enter course overview/description"
+                  required
+                />
+              </div>
+              <div className="space-y-3">
+                <label className="text-base font-semibold text-foreground">
+                  What You&apos;ll Learn *
+                </label>
+                <textarea
+                  value={formData.what_youll_learn}
+                  onChange={(e) => setFormData(prev => ({ ...prev, what_youll_learn: e.target.value }))}
+                  rows={6}
+                  className="w-full px-4 py-4 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200 text-base"
+                  placeholder="Enter what students will learn in this course. Use Markdown for formatting."
                   required
                 />
               </div>
