@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+
 import HeroImage from './HeroImage';
 import { useGsap } from '@/app/hooks/useGsap';
 import { gsap } from 'gsap';
