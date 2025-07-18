@@ -55,8 +55,8 @@ export default function WhyChooseUsBento({ items }: WhyChooseUsBentoProps) {
     };
 
     // Prepare preferred and fallback for originals (for text slots)
-    let preferredOriginals = originals.filter(item => item.image_url && !recentImages.has(item.image_url));
-    let fallbackOriginals = originals.filter(item => item.image_url && recentImages.has(item.image_url));
+    const preferredOriginals = originals.filter(item => item.image_url && !recentImages.has(item.image_url));
+    const fallbackOriginals = originals.filter(item => item.image_url && recentImages.has(item.image_url));
 
     // Select 2 items for text slots: Prioritize originals not in recent
     for (let i = 0; i < 2; i++) {
@@ -85,8 +85,8 @@ export default function WhyChooseUsBento({ items }: WhyChooseUsBentoProps) {
     }
 
     // Prepare preferred and fallback for generics (for image slots)
-    let preferredGenerics = generics.filter(item => item.image_url && !recentImages.has(item.image_url));
-    let fallbackGenerics = generics.filter(item => item.image_url && recentImages.has(item.image_url));
+    const preferredGenerics = generics.filter(item => item.image_url && !recentImages.has(item.image_url));
+    const fallbackGenerics = generics.filter(item => item.image_url && recentImages.has(item.image_url));
 
     // Select 4 items for image slots: Prioritize generics not in recent
     for (let i = 0; i < 4; i++) {
