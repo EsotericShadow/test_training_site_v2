@@ -5,7 +5,8 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Save, Building2, Users } from 'lucide-react';
 import { ShieldCheckIcon } from '@heroicons/react/24/outline';
-import IconPicker from '../../components/admin/IconPicker';
+import dynamic from 'next/dynamic';
+const IconPicker = dynamic(() => import('../../components/admin/IconPicker'), { ssr: false });
 
 interface CompanyInfo {
   id?: number | undefined;

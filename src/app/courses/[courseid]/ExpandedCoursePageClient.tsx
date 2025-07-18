@@ -3,8 +3,10 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Clock, Users, CheckCircle, ArrowLeft, BookOpen, Phone, Mail } from 'lucide-react';
-import ReactMarkdown from 'react-markdown';
+import dynamic from 'next/dynamic';
 import remarkGfm from 'remark-gfm';
+
+const ReactMarkdown = dynamic(() => import('react-markdown'), { ssr: false });
 
 interface Course {
   id: number;

@@ -4,11 +4,19 @@ import WhyChooseUsBento from '@/app/components/home/WhyChooseUsBento';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Shield, Camera, Briefcase, Calendar, Users, BookOpen } from 'lucide-react';
-import * as LucideIcons from 'lucide-react';
+import { Shield, Camera, Briefcase, Calendar, Users, BookOpen, type LucideIcon } from 'lucide-react';
 import { useGsap } from '@/app/hooks/useGsap';
 import { gsap } from 'gsap';
 import type { TeamMember } from '../../../types/database';
+
+const LucideIconMap: Record<string, LucideIcon> = {
+  Shield,
+  Camera,
+  Briefcase,
+  Calendar,
+  Users,
+  BookOpen,
+};
 
 interface CompanyInfo {
   company_name: string;
@@ -150,7 +158,7 @@ export default function AboutPageClient({ teamMembers }: AboutPageClientProps) {
                   {(() => {
                     console.log('Company Value Icon:', value.icon); // Log the icon name
                     const iconName = toPascalCase(value.icon);
-                    const IconComponent = LucideIcons[iconName as keyof typeof LucideIcons] as React.ComponentType<{ className?: string }> | undefined ?? Shield;
+                    const IconComponent = LucideIconMap[iconName] || Shield;
                     return <IconComponent className="h-10 w-10" />;
                   })()}
                 </div>

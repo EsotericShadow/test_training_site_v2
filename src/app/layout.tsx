@@ -25,11 +25,92 @@ export const metadata: Metadata = {
   keywords: 'safety training, KIST, WHMIS, fall protection, Northwestern BC, workplace safety, certification',
 };
 
-export default function RootLayout({
+interface ApiCourse {
+  title: string;
+  slug: string;
+  category?: {
+    name: string;
+  };
+}
+
+interface Course {
+  name: string;
+  slug: string;
+}
+
+interface CourseCategories {
+  [key: string]: Course[];
+}
+
+interface FooterContent {
+  company_name: string;
+  description: string;
+  phone: string;
+  email: string;
+  location: string;
+  logo_url: string;
+  copyright_text: string;
+}
+
+export interface PopularCourse {
+  title: string;
+  slug: string;
+}
+
+interface FooterData {
+  footerContent: FooterContent | null;
+  popularCourses: PopularCourse[];
+}
+
+async function getCourseCategories(): Promise<CourseCategories> {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://test-training-site-v2-xjey.vercel.app';
+    const response = await fetch(`${baseUrl}/api/adm_f7f8556683f1cdc65391d8d2_8e91/courses`, { cache: 'no-store' });
+    if (!response.ok) throw new Error('Failed to fetch courses');
+    const { courses }: { courses: ApiCourse[] } = await response.json();
+
+    const groupedCourses = courses.reduce((acc: CourseCategories, course: ApiCourse) => {
+      const categoryName = course.category?.name?.trim() || 'Uncategorized';
+      if (!acc[categoryName]) acc[categoryName] = [];
+      acc[categoryName].push({ name: course.title, slug: course.slug });
+      return acc;
+    }, {});
+
+    const sortedCategories = Object.keys(groupedCourses)
+      .sort((a, b) => a.localeCompare(b))
+      .reduce((acc: CourseCategories, key: string) => {
+        acc[key] = (groupedCourses[key] ?? []).sort((a: Course, b: Course) => a.name.localeCompare(b.name));
+        return acc;
+      }, {});
+
+    return sortedCategories;
+  } catch (error) {
+    console.error('Error fetching course categories:', error);
+    return {};
+  }
+}
+
+async function getFooterData(): Promise<FooterData> {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://test-training-site-v2-xjey.vercel.app';
+    const response = await fetch(`${baseUrl}/api/adm_f7f8556683f1cdc65391d8d2_8e91/footer`, { cache: 'no-store' });
+    if (!response.ok) throw new Error('Failed to fetch footer data');
+    const data = await response.json();
+    return { footerContent: data.footerContent, popularCourses: data.popularCourses || [] };
+  } catch (error) {
+    console.error('Error fetching footer data:', error);
+    return { footerContent: null, popularCourses: [] };
+  }
+}
+
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const courseCategories = await getCourseCategories();
+  const footerData = await getFooterData();
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -59,11 +140,11 @@ export default function RootLayout({
             <div className="fixed inset-0 z-[-1]">
               <DynamicSilk color="#303E5A" />
             </div>
-            <Header />
+            <Header courseCategories={courseCategories} />
             <main className="flex-grow pt-24 relative z-10">
               {children}
             </main>
-            <Footer />
+            <Footer footerContent={footerData.footerContent} popularCourses={footerData.popularCourses} />
           </div>
         </ThemeProvider>
         {/* Keep Vercel Analytics too - they work great together */}

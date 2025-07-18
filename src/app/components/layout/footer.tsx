@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Phone, Mail, MapPin, Facebook, Linkedin, Twitter } from 'lucide-react';
+import { PopularCourse } from '../../layout';
 
 interface FooterContent {
   company_name: string;
@@ -15,34 +15,12 @@ interface FooterContent {
   copyright_text: string;
 }
 
-interface Course {
-  slug: string;
-  title: string;
+interface FooterProps {
+  footerContent: FooterContent | null;
+  popularCourses: PopularCourse[];
 }
 
-export default function Footer() {
-  const [footerData, setFooterData] = useState<{
-    footerContent: FooterContent | null;
-    popularCourses: Course[];
-  }>({ footerContent: null, popularCourses: [] });
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch('/api/adm_f7f8556683f1cdc65391d8d2_8e91/footer')
-      .then(res => res.json())
-      .then(data => {
-        setFooterData({
-          footerContent: data.footerContent,
-          popularCourses: data.popularCourses || [],
-        });
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  }, []);
-
-  if (loading) return <footer className="bg-gray-900 text-white py-12"></footer>;
-
-  const { footerContent, popularCourses } = footerData;
+export default function Footer({ footerContent, popularCourses }: FooterProps) {
 
   return (
     <footer className="bg-gray-900 text-white">

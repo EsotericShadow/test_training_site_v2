@@ -57,6 +57,7 @@
     "@types/react": "^19",
     "@types/three": "^0.178.1",
     "@types/validator": "^13.15.2",
+    "cross-env": "^7.0.3",
     "eslint": "^9",
     "eslint-config-next": "15.3.3",
     "jest": "^30.0.3",

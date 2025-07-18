@@ -14,56 +14,18 @@ interface CourseCategories {
   [key: string]: Course[]
 }
 
-interface ApiCourse {
-  title: string
-  slug: string
-  category?: {
-    name: string
-  }
+interface HeaderProps {
+  courseCategories: CourseCategories;
 }
 
-export default function Header() {
+export default function Header({ courseCategories }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isCoursesOpen, setIsCoursesOpen] = useState(false)
   const [isHeaderVisible, setIsHeaderVisible] = useState(true)
   const [lastScrollY, setLastScrollY] = useState(0)
-  const [courseCategories, setCourseCategories] = useState<CourseCategories>({})
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
 
   const dropdownRef = useRef<HTMLDivElement>(null)
   const headerRef = useRef<HTMLElement>(null)
-
-  useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        const response = await fetch('/api/adm_f7f8556683f1cdc65391d8d2_8e91/courses')
-        if (!response.ok) throw new Error('Failed to fetch courses')
-        const { courses }: { courses: ApiCourse[] } = await response.json()
-        
-        const groupedCourses = courses.reduce((acc: CourseCategories, course: ApiCourse) => {
-          const categoryName = course.category?.name?.trim() || 'Uncategorized'
-          if (!acc[categoryName]) acc[categoryName] = []
-          acc[categoryName].push({ name: course.title, slug: course.slug })
-          return acc
-        }, {})
-
-        const sortedCategories = Object.keys(groupedCourses)
-          .sort((a, b) => a.localeCompare(b))
-          .reduce((acc: CourseCategories, key: string) => {
-            acc[key] = (groupedCourses[key] ?? []).sort((a: Course, b: Course) => a.name.localeCompare(b.name))
-            return acc
-          }, {})
-
-        setCourseCategories(sortedCategories)
-      } catch (_err) {
-        setError('Failed to load courses.')
-      } finally {
-        setIsLoading(false)
-      }
-    }
-    fetchCourses()
-  }, [])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -136,9 +98,7 @@ export default function Header() {
                 <div ref={dropdownRef} className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-80 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden">
                   <div className="max-h-96 overflow-y-auto py-2">
                     <Link href="/courses" onClick={handleNavigation} className="block px-5 py-3 bg-gray-50 dark:bg-gray-700 font-semibold hover:bg-yellow-400 hover:text-black transition-colors rounded-md mx-2 my-1">View All Courses</Link>
-                    {isLoading && <p className="p-4 text-center">Loading...</p>}
-                    {error && <p className="p-4 text-center text-red-500">{error}</p>}
-                    {!isLoading && !error && Object.entries(courseCategories).map(([category, courses]) => (
+                    {Object.entries(courseCategories).map(([category, courses]) => (
                       <div key={category} className="mt-2">
                         <h3 className="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-yellow-600 dark:text-yellow-400 font-semibold mb-1">{category}</h3>
                         <ul>
@@ -185,11 +145,9 @@ export default function Header() {
                 <ChevronDown className={`h-5 w-5 transition-transform ${isCoursesOpen ? 'rotate-180' : ''}`} />
               </button>
               {isCoursesOpen && (
-                <div className="mt-2 pl-4 space-y-2">
+                <div className="mt-2 pl-4 space-y-2 max-h-96 overflow-y-auto">
                   <Link href="/courses" onClick={handleNavigation} className="block px-4 py-2 font-semibold hover:text-yellow-500">View All Courses</Link>
-                  {isLoading && <p className="p-4 text-center">Loading...</p>}
-                  {error && <p className="p-4 text-center text-red-500">{error}</p>}
-                  {!isLoading && !error && Object.entries(courseCategories).map(([category, courses]) => (
+                  {Object.entries(courseCategories).map(([category, courses]) => (
                     <div key={category} className="mt-3">
                       <h3 className="text-yellow-500 font-semibold mb-1">{category}</h3>
                       <ul className="pl-2 space-y-1">
