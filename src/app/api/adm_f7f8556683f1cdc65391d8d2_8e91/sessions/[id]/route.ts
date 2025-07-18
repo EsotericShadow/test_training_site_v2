@@ -4,6 +4,7 @@ export const runtime = 'nodejs';
 import { withSecureAuth, AuthResult } from '../../../../../../lib/secure-jwt';
 import { logger, handleApiError } from '../../../../../../lib/logger';
 import { terminateSession } from '../../../../../../lib/session-manager';
+import { validateToken } from '../../../../../../lib/csrf';
 
 // DELETE handler to terminate a specific session
 async function terminateSpecificSession(
@@ -34,6 +35,12 @@ async function terminateSpecificSession(
         { error: 'Unauthorized' },
         { status: 401 }
       );
+    }
+
+    const csrfToken = request.headers.get('x-csrf-token');
+    if (!csrfToken || !auth.session || !await validateToken(auth.session.id, csrfToken)) {
+      logger.warn('Terminate specific session failed: Invalid CSRF token', { ip, userId, sessionId });
+      return NextResponse.json({ error: 'Invalid CSRF token' }, { status: 403 });
     }
     
     // Terminate the specified session

@@ -4,6 +4,7 @@ import { NextResponse, NextRequest } from 'next/server';
 export const runtime = 'nodejs';
 import { validateSession, terminateSession } from '../../../../../lib/session-manager';
 import { logger } from '../../../../../lib/logger';
+import { validateToken } from '../../../../../lib/csrf';
 
 export async function POST(request: NextRequest) {
   const token = request.cookies.get('admin_token')?.value;
@@ -16,13 +17,22 @@ export async function POST(request: NextRequest) {
   try {
     const sessionResult = await validateSession(token, request);
 
-    if (sessionResult.valid && sessionResult.session) {
-      await terminateSession(String(sessionResult.session.id), sessionResult.session.user_id);
-      logger.info('Logout successful', { 
-        ip: request.headers.get('x-forwarded-for') || 'unknown', 
-        userId: sessionResult.session.user_id 
-      });
+    if (!sessionResult.valid || !sessionResult.session) {
+      logger.warn('Logout failed: Invalid session', { ip: request.headers.get('x-forwarded-for') || 'unknown' });
+      return NextResponse.json({ error: 'Invalid session' }, { status: 401 });
     }
+
+    const csrfToken = request.headers.get('x-csrf-token');
+    if (!csrfToken || !await validateToken(sessionResult.session.id, csrfToken)) {
+      logger.warn('Logout failed: Invalid CSRF token', { ip: request.headers.get('x-forwarded-for') || 'unknown', userId: sessionResult.session.user_id });
+      return NextResponse.json({ error: 'Invalid CSRF token' }, { status: 403 });
+    }
+
+    await terminateSession(String(sessionResult.session.id), sessionResult.session.user_id);
+    logger.info('Logout successful', { 
+      ip: request.headers.get('x-forwarded-for') || 'unknown', 
+      userId: sessionResult.session.user_id 
+    });
 
     const response = NextResponse.json({ success: true, message: 'Logged out successfully' });
     response.cookies.set('admin_token', '', {

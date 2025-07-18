@@ -4,6 +4,7 @@ export const runtime = 'nodejs';
 import { withSecureAuth, AuthResult } from '../../../../../lib/secure-jwt';
 import { logger, handleApiError } from '../../../../../lib/logger';
 import { getUserSessions, terminateOtherSessions } from '../../../../../lib/session-manager';
+import { validateToken } from '../../../../../lib/csrf';
 
 // Define the expected signature for a Next.js App Router API Handler.
 type AppRouteHandlerFn = (
@@ -64,6 +65,12 @@ async function terminateOtherUserSessions(
 
     const userId = auth.user.id;
     const currentToken = auth.session.token;
+    const csrfToken = request.headers.get('x-csrf-token');
+    if (!csrfToken || !await validateToken(auth.session.id, csrfToken)) {
+      logger.warn('Terminate other sessions failed: Invalid CSRF token', { ip, userId });
+      return NextResponse.json({ error: 'Invalid CSRF token' }, { status: 403 });
+    }
+
     const count = await terminateOtherSessions(userId, currentToken);
 
     logger.info('Terminate other sessions successful', { ip, userId, terminatedCount: count });

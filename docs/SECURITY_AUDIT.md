@@ -38,7 +38,7 @@ This report details specific, actionable security vulnerabilities and areas for 
 
 **Actionable Items:**
 
-*   **General Action:** For each of the following routes, ensure the `POST`, `PUT`, or `DELETE` handler includes CSRF validation. This typically involves:
+*   **General Action:** For remaining routes, ensure the `POST`, `PUT`, or `DELETE` handler includes CSRF validation. This typically involves:
     1.  Importing `validateToken` from `../../../../../lib/csrf`.
     2.  Extracting `admin_token` from cookies and `x-csrf-token` from request headers.
     3.  Adding a check: `if (!adminToken || !csrfToken || !validateToken(adminToken, csrfToken)) { return NextResponse.json({ error: 'Invalid CSRF token' }, { status: 403 }); }`
@@ -70,11 +70,8 @@ This report details specific, actionable security vulnerabilities and areas for 
 *   **`src/app/api/adm_f7f556683f1cdc65391d8d2_8e91/files/[id]/route.js`**
     *   **Action:** Add CSRF validation to the `PUT` and `DELETE` handlers.
 
-*   **`src/app/api/adm_f7f556683f1cdc65391d8d2_8e91/sessions/route.js`**
-    *   **Action:** Add CSRF validation to the `DELETE` handler.
-
-*   **`src/app/api/adm_f7f556683f1cdc65391d8d2_8e91/sessions/[id]/route.js`**
-    *   **Action:** Add CSRF validation to the `DELETE` handler.
+*   **`src/app/api/adm_f7f556683f1cdc65391d8d2_8e91/logout/route.js`**
+    *   **Action:** Add CSRF validation to the `POST` handler. (This was implicitly covered by the general action, but explicitly adding it for clarity as it was a major point of concern).
 
 ## 3. Rate Limiting
 

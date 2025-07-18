@@ -71,8 +71,6 @@ These actions build upon the foundational fixes, implementing core security mech
     *   `src/app/api/adm_f7f556683f1cdc65391d8d2_8e91/company-info/route.js` (for `PUT` handler)
     *   `src/app/api/adm_f7f556683f1cdc65391d8d2_8e91/files/route.js` (for `POST` handler)
     *   `src/app/api/adm_f7f556683f1cdc65391d8d2_8e91/files/[id]/route.js` (for `PUT` and `DELETE` handlers)
-    *   `src/app/api/adm_f7f556683f1cdc65391d8d2_8e91/sessions/route.js` (for `DELETE` handler)
-    *   `src/app/api/adm_f7f556683f1cdc65391d8d2_8e91/sessions/[id]/route.js` (for `DELETE` handler)
 
 ### 2.2 Rate Limiting
 
