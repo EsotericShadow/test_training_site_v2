@@ -48,6 +48,7 @@ export default function Logo({ size = 'md', className = '', showText = true }: L
               height={getHeight(size, true)}
               className="h-32 w-auto transition-transform duration-300 group-hover:scale-105 md:hidden"
               priority
+              quality={70}
             />
             {/* Desktop logo - 15% smaller */}
             <Image
@@ -57,6 +58,7 @@ export default function Logo({ size = 'md', className = '', showText = true }: L
               height={getHeight(size, false)}
               className="hidden md:block h-30 w-auto transition-transform duration-300 group-hover:scale-105"
               priority
+              quality={70}
             />
           </>
         ) : (
@@ -67,6 +69,7 @@ export default function Logo({ size = 'md', className = '', showText = true }: L
             height={getHeight(size)}
             className={`${sizeClasses[size]} w-auto transition-transform duration-300 group-hover:scale-105`}
             priority
+            quality={70}
           />
         )}
       </div>
