@@ -1173,3 +1173,177 @@ No parameters required.
     "error": "Failed to get upload information"
   }
   ```
+
+## 15. `/api/contact/security-init`
+
+**Purpose:** Initializes a public session and generates a CSRF token for the contact form to enhance security.
+
+**Method:** `GET`
+
+**Request:**
+No parameters required.
+
+**Response:**
+- **Success (200 OK):**
+  ```json
+  {
+    "success": true,
+    "sessionId": "<session_id>",
+    "csrfToken": "<csrf_token_string>"
+  }
+  ```
+- **Error (500 Internal Server Error):**
+  ```json
+  {
+    "success": false,
+    "error": "Failed to initialize security context. Please try refreshing the page."
+  }
+  ```
+
+## 16. `/api/contact/submit`
+
+**Purpose:** Handles the submission of contact form data, including security validations and data storage.
+
+**Method:** `POST`
+
+**Request:**
+A JSON object in the request body with the following properties:
+- `name` (string, required): The sender's name.
+- `email` (string, required): The sender's email address.
+- `phone` (string, optional): The sender's phone number.
+- `company` (string, optional): The sender's company name.
+- `trainingType` (string, optional): The type of training inquired about.
+- `message` (string, required): The message content.
+- `timeSpent` (number, required): Time spent on the form (for bot detection).
+- `securityScore` (number, required): A client-side security score.
+- `sessionId` (string, required): The session ID obtained from `/api/contact/security-init`.
+- `csrfToken` (string, required): The CSRF token obtained from `/api/contact/security-init`.
+
+**Security Features:**
+- Rate limiting (3 submissions per 15 minutes per IP).
+- User-agent analysis to detect bots.
+- Referer header validation (in production).
+- Server-side CSRF token validation.
+- Honeypot fields to detect bots.
+- Submission timing analysis (`timeSpent`).
+- Security score validation.
+- Duplicate submission detection (1 minute cooldown per IP/email).
+- Input validation and sanitization for all fields.
+
+**Response:**
+- **Success (200 OK):**
+  ```json
+  {
+    "success": true,
+    "message": "Message sent successfully",
+    "submissionId": "<submission_id>"
+  }
+  ```
+  - Includes various security headers in the response.
+- **Failure (400 Bad Request):**
+  ```json
+  {
+    "error": "<validation_error_message>" // e.g., "name: Name is required"
+  }
+  ```
+- **Failure (403 Forbidden):**
+  ```json
+  {
+    "error": "Automated requests are not allowed." // or "Invalid request origin.", "Invalid security token. Please refresh the page and try again.", "Form submitted too quickly. Please take your time.", "Session expired. Please refresh the page and try again.", "Security validation failed. Please try again.", "Duplicate submission detected. Please wait before submitting again."
+  }
+  ```
+- **Failure (429 Too Many Requests):**
+  ```json
+  {
+    "error": "Too many submissions. Please wait before trying again."
+  }
+  ```
+- **Error (500 Internal Server Error):**
+  ```json
+  {
+    "error": "An unexpected error occurred. Please try again." // or "Failed to process submission"
+  }
+  ```
+
+## 17. `/api/courses/[slug]`
+
+**Purpose:** Retrieves detailed information about a specific course.
+
+**Method:** `GET`
+
+**Request:**
+- `slug` (path parameter): The unique slug of the course to retrieve.
+
+**Response:**
+- **Success (200 OK):**
+  ```json
+  {
+    "course": {
+      "id": "<course_id>",
+      "slug": "<course_slug>",
+      "title": "<course_title>",
+      "description": "<course_description>",
+      "features": [
+        { "feature": "<feature1>", "display_order": 0 },
+        // ... more features
+      ],
+      "category": {
+        "name": "<category_name>"
+      }
+    }
+  }
+  ```
+- **Failure (400 Bad Request):**
+  ```json
+  {
+    "error": "Course slug is required"
+  }
+  ```
+- **Failure (404 Not Found):**
+  ```json
+  {
+    "error": "Course not found"
+  }
+  ```
+- **Error (500 Internal Server Error):**
+  ```json
+  {
+    "error": "Failed to fetch course"
+  }
+  ```
+
+## 18. `/api/sitemap.xml`
+
+**Purpose:** Dynamically generates an XML sitemap for search engine optimization.
+
+**Method:** `GET`
+
+**Request:**
+No parameters required.
+
+**Response:**
+- **Success (200 OK):**
+  An XML sitemap document containing URLs for static pages and dynamic course pages.
+  ```xml
+  <?xml version="1.0" encoding="UTF-8"?>
+  <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+      <loc>https://example.com/</loc>
+      <lastmod>2023-10-27T12:00:00.000Z</lastmod>
+      <changefreq>daily</changefreq>
+      <priority>1.0</priority>
+    </url>
+    <url>
+      <loc>https://example.com/courses/kist-orientation</loc>
+      <lastmod>2023-10-27T12:00:00.000Z</lastmod>
+      <changefreq>weekly</changefreq>
+      <priority>0.9</priority>
+    </url>
+    <!-- ... more URLs -->
+  </urlset>
+  ```
+- **Error (500 Internal Server Error):**
+  A plain text error message.
+  ```
+  Internal Server Error
+  ```
