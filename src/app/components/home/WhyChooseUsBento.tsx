@@ -182,7 +182,7 @@ export default function WhyChooseUsBento({ items }: WhyChooseUsBentoProps) {
       {bentoSlots.map((slot) => (
         <div
           key={slot.id}
-          className={`relative bg-white dark:bg-gray-900 p-8 rounded-lg shadow-lg flex flex-col justify-between overflow-hidden
+          className={`relative backdrop-blur-md bg-white/10 border border-white/20 p-8 rounded-xl shadow-xl flex flex-col justify-between overflow-hidden
             ${slot.type === 'image' ? 'aspect-square' : ''} // Make image slots square
           `}
         >

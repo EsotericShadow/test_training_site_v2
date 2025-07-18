@@ -88,7 +88,7 @@ export default function AboutPageClient({ teamMembers }: AboutPageClientProps) {
 
   return (
     <div ref={sectionRefs} className="">
-      <section className="relative bg-gray-900 text-white py-24">
+      <section className="relative text-white py-24">
         <div className="absolute inset-0">
           <Image
             src="https://bluvpssu00ym8qv7.public.blob.vercel-storage.com/other/1750011620811-IMG_8439.JPG"
@@ -113,22 +113,22 @@ export default function AboutPageClient({ teamMembers }: AboutPageClientProps) {
               <p>{companyInfo?.description}</p>
             </div>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="bg-gray-100 dark:bg-gray-800 p-6 rounded-lg shadow-md text-center">
+              <div className="backdrop-blur-md bg-white/10 border border-white/20 p-6 rounded-xl shadow-xl text-center">
                 <Calendar className="h-10 w-10 text-yellow-500 mx-auto mb-3" />
                 <p className="text-4xl font-bold text-gray-900 dark:text-white">{companyInfo?.established_year}</p>
                 <p className="text-md text-gray-600 dark:text-gray-400">Established</p>
               </div>
-              <div className="bg-gray-100 dark:bg-gray-800 p-6 rounded-lg shadow-md text-center">
+              <div className="backdrop-blur-md bg-white/10 border border-white/20 p-6 rounded-xl shadow-xl text-center">
                 <Briefcase className="h-10 w-10 text-yellow-500 mx-auto mb-3" />
                 <p className="text-4xl font-bold text-gray-900 dark:text-white">{companyInfo?.total_experience || 'N/A'}</p>
                 <p className="text-md text-gray-600 dark:text-gray-400">Years Experience</p>
               </div>
-              <div className="bg-gray-100 dark:bg-gray-800 p-6 rounded-lg shadow-md text-center">
+              <div className="backdrop-blur-md bg-white/10 border border-white/20 p-6 rounded-xl shadow-xl text-center">
                 <Users className="h-10 w-10 text-yellow-500 mx-auto mb-3" />
                 <p className="text-4xl font-bold text-gray-900 dark:text-white">{companyInfo?.students_trained_count || 'N/A'}</p>
                 <p className="text-md text-gray-600 dark:text-gray-400">Students Trained</p>
               </div>
-              <div className="bg-gray-100 dark:bg-gray-800 p-6 rounded-lg shadow-md text-center">
+              <div className="backdrop-blur-md bg-white/10 border border-white/20 p-6 rounded-xl shadow-xl text-center">
                 <BookOpen className="h-10 w-10 text-yellow-500 mx-auto mb-3" />
                 <p className="text-4xl font-bold text-gray-900 dark:text-white">{companyInfo?.total_courses || 'N/A'}</p>
                 <p className="text-md text-gray-600 dark:text-gray-400">Courses Offered</p>
@@ -138,14 +138,14 @@ export default function AboutPageClient({ teamMembers }: AboutPageClientProps) {
         </div>
       </section>
 
-      <section className="animate-section py-20 bg-gray-50 dark:bg-gray-800">
+      <section className="animate-section py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold text-gray-900 dark:text-white">Our Values</h2>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {companyValues.map(value => (
-              <div key={value.id} className="bg-white dark:bg-gray-900 p-8 rounded-lg shadow-lg text-center">
+              <div key={value.id} className="backdrop-blur-md bg-white/10 border border-white/20 p-8 rounded-xl shadow-xl text-center">
                 <div className="bg-yellow-400 text-white rounded-full p-4 w-20 h-20 mx-auto mb-6 flex items-center justify-center">
                   {(() => {
                     console.log('Company Value Icon:', value.icon); // Log the icon name
@@ -162,7 +162,7 @@ export default function AboutPageClient({ teamMembers }: AboutPageClientProps) {
         </div>
       </section>
 
-      <section className="animate-section py-20 bg-gray-50 dark:bg-gray-800">
+      <section className="animate-section py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold text-gray-900 dark:text-white">Why Choose Us</h2>
@@ -181,7 +181,7 @@ export default function AboutPageClient({ teamMembers }: AboutPageClientProps) {
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {teamMembers.map(member => (
-              <div key={member.id} className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden text-center">
+              <div key={member.id} className="backdrop-blur-md bg-white/10 border border-white/20 rounded-xl shadow-xl overflow-hidden text-center">
                 <div className="relative aspect-[3/4]">
                   {member.photo_url ? (
                     <Image src={member.photo_url} alt={member.name} fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" className="object-cover" />
@@ -207,7 +207,7 @@ export default function AboutPageClient({ teamMembers }: AboutPageClientProps) {
         </div>
       </section>
 
-      <section className="bg-yellow-500 text-black py-20">
+      <section className="text-black py-20">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-4xl font-bold mb-4">Ready to Improve Your Workplace Safety?</h2>
           <p className="text-xl mb-8">Let&apos;s work together to create a safer, more productive environment for your team.</p>

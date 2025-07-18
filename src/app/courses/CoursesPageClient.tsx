@@ -192,7 +192,7 @@ export default function CoursesPageClient() {
               {courses.map((course) => (
                 <div
                   key={course.id}
-                  className="course-card bg-white dark:bg-gray-900 rounded-lg shadow-lg overflow-hidden"
+                  className="course-card backdrop-blur-md bg-white/10 border border-white/20 rounded-xl shadow-xl overflow-hidden"
                 >
                   <div className="relative h-56">
                     {course.image_url ? (
@@ -204,7 +204,7 @@ export default function CoursesPageClient() {
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       />
                     ) : (
-                      <div className="bg-gray-200 dark:bg-gray-700 h-full flex items-center justify-center text-gray-500 dark:text-gray-400">
+                      <div className="h-full flex items-center justify-center text-gray-500 dark:text-gray-400">
                         <div className="text-center">
                           <Camera className="h-8 w-8 mx-auto mb-2 text-yellow-500" />
                           <p className="font-medium text-sm">{course.title}</p>
@@ -258,7 +258,7 @@ export default function CoursesPageClient() {
         </div>
       </section>
 
-      <section className="py-20 bg-gray-900 dark:bg-black text-white">
+      <section className="py-20 text-white">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold mb-4">Ready to Get Started?</h2>
           <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">

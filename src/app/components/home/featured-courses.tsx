@@ -89,7 +89,7 @@ export default function FeaturedCourses() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {courses.map((course) => (
-            <div key={course.id} className="course-card bg-white dark:bg-gray-900 rounded-lg shadow-lg overflow-hidden">
+            <div key={course.id} className="course-card backdrop-blur-md bg-white/10 border border-white/20 rounded-xl shadow-xl overflow-hidden">
               <div className="relative h-56">
                 {course.image_url ? (
                   <Image
@@ -99,7 +99,7 @@ export default function FeaturedCourses() {
                     className="object-cover"
                   />
                 ) : (
-                  <div className="bg-gray-200 dark:bg-gray-700 h-full flex items-center justify-center">
+                  <div className="h-full flex items-center justify-center">
                     <Camera className="h-12 w-12 text-gray-400" />
                   </div>
                 )}
