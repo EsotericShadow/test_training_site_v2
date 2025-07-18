@@ -82,7 +82,7 @@ export default function ContactPageClient() {
             </div>
             <div className="lg:col-span-2 bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg animate-in">
               <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">   </h2>
-              <SecureContactForm onSuccess={() => {}} onError={() => {}} />
+              <SecureContactForm onSuccess={() => {}} onError={() => {}} className="max-w-lg mx-auto" />
             </div>
           </div>
         </div>

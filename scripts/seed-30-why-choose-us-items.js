@@ -65,23 +65,7 @@ async function seedWhyChooseUsItems() {
       displayOrder++;
     }
 
-    // Generate remaining items up to 30
-    const remainingCount = 30 - originalWhyChooseUs.length;
-    for (let i = 0; i < remainingCount; i++) {
-      const image = shuffledImages[imageIndex];
-      const pointText = `Discover More About Us - ${displayOrder + 1}`;
-
-      const result = await sql`
-        INSERT INTO company_why_choose_us (point, display_order, image_url, image_alt) 
-        VALUES (${pointText}, ${displayOrder}, ${image.blob_url}, ${image.alt_text})
-        RETURNING id;
-      `;
-      createdItems.push(result.rows[0].id);
-      console.log(`Created additional item ${displayOrder + 1}: ${pointText} with image ${image.blob_url}`);
-
-      imageIndex = (imageIndex + 1) % shuffledImages.length;
-      displayOrder++;
-    }
+    
 
     console.log(`Successfully seeded ${createdItems.length} Why Choose Us items.`);
   } catch (error) {

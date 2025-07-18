@@ -184,7 +184,7 @@ export default function AboutPageClient({ teamMembers }: AboutPageClientProps) {
               <div key={member.id} className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden text-center">
                 <div className="relative aspect-[3/4]">
                   {member.photo_url ? (
-                    <Image src={member.photo_url} alt={member.name} fill className="object-cover" />
+                    <Image src={member.photo_url} alt={member.name} fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" className="object-cover" />
                   ) : (
                     <div className="bg-gray-200 dark:bg-gray-700 h-full flex items-center justify-center">
                       <Camera className="h-12 w-12 text-gray-400" />

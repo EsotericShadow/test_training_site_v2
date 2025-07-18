@@ -24,7 +24,7 @@ interface WhyChooseUsBentoProps {
   items: WhyChooseUsItem[];
 }
 
-const FALLBACK_IMAGE = 'https://bluvpssu00ym8qv7.public.blob.vercel-storage.com/other/placeholder-image.webp'; // Placeholder image URL
+const FALLBACK_IMAGE = '/assets/logos/logo.png'; // Placeholder image URL
 const FALLBACK_ALT = 'Placeholder image';
 
 export default function WhyChooseUsBento({ items }: WhyChooseUsBentoProps) {
@@ -37,34 +37,41 @@ export default function WhyChooseUsBento({ items }: WhyChooseUsBentoProps) {
     console.log("WhyChooseUsBento received items:", items);
   }, [items]);
 
-  const originals = items.filter(item => item.point && !item.point.startsWith('Discover More About Us -'));
-  const generics = items.filter(item => item.point && item.point.startsWith('Discover More About Us -'));
-
   const getSlots = useCallback(() => {
+    console.log("Current historyRef:", historyRef.current);
+    console.log("Available items:", items);
+
     const newSlots: BentoSlot[] = [];
-    const usedItemIds = new Set<number | undefined>();
+    let availableItemsForThisCycle = [...items]; // Create a mutable copy for this cycle
     const recentImages = new Set<string>(historyRef.current.flatMap(set => [...set]));
 
-    // Helper to randomly select from an array
-    const pickRandom = (arr: WhyChooseUsItem[]): WhyChooseUsItem | undefined => {
-      if (arr.length === 0) return undefined;
-      const randIdx = Math.floor(Math.random() * arr.length);
-      const selected = arr[randIdx];
-      arr.splice(randIdx, 1);
-      return selected;
+    // Helper to pick a random item from a given array and return the selected item and the remaining items
+    const pickAndReturnRemaining = (pool: WhyChooseUsItem[], filterFn: (item: WhyChooseUsItem) => boolean): { selected: WhyChooseUsItem | undefined, remaining: WhyChooseUsItem[] } => {
+      const filteredPool = pool.filter(filterFn);
+      if (filteredPool.length === 0) return { selected: undefined, remaining: pool };
+
+      const randIdx = Math.floor(Math.random() * filteredPool.length);
+      const selected = filteredPool[randIdx];
+
+      // Ensure selected is not undefined before accessing its properties
+      const remaining = selected ? pool.filter(item => item.id !== selected.id) : pool;
+      return { selected, remaining };
     };
 
-    // Prepare preferred and fallback for originals (for text slots)
-    const preferredOriginals = originals.filter(item => item.image_url && !recentImages.has(item.image_url));
-    const fallbackOriginals = originals.filter(item => item.image_url && recentImages.has(item.image_url));
+    console.log("Unique image URLs count:", new Set(items.map(item => item.image_url).filter(Boolean)).size);
 
-    // Select 2 items for text slots: Prioritize originals not in recent
+    // Select 2 items for text slots
     for (let i = 0; i < 2; i++) {
-      let selectedItem: WhyChooseUsItem | undefined;
+      // Prefer items with point but no image_url
+      let result = pickAndReturnRemaining(availableItemsForThisCycle, item => !!item.point && !item.image_url);
+      let selectedItem = result.selected;
+      availableItemsForThisCycle = result.remaining;
 
-      selectedItem = pickRandom(preferredOriginals);
+      // If none, pick any with point
       if (!selectedItem) {
-        selectedItem = pickRandom(fallbackOriginals);
+        result = pickAndReturnRemaining(availableItemsForThisCycle, item => !!item.point);
+        selectedItem = result.selected;
+        availableItemsForThisCycle = result.remaining;
       }
 
       if (!selectedItem) {
@@ -81,20 +88,28 @@ export default function WhyChooseUsBento({ items }: WhyChooseUsBentoProps) {
         type: 'text',
         item: selectedItem,
       });
-      usedItemIds.add(selectedItem.id);
     }
 
-    // Prepare preferred and fallback for generics (for image slots)
-    const preferredGenerics = generics.filter(item => item.image_url && !recentImages.has(item.image_url));
-    const fallbackGenerics = generics.filter(item => item.image_url && recentImages.has(item.image_url));
+    console.log("Before image slot selection, availableItemsForThisCycle:", availableItemsForThisCycle);
 
-    // Select 4 items for image slots: Prioritize generics not in recent
+    // Select 4 items for image slots
     for (let i = 0; i < 4; i++) {
       let selectedItem: WhyChooseUsItem | undefined;
 
-      selectedItem = pickRandom(preferredGenerics);
+      // Log available non-recent images
+      const availableNonRecent = availableItemsForThisCycle.filter(item => !!item.image_url && !recentImages.has(item.image_url || '')).length;
+      console.log(`Available non-recent images for image slot ${i}:`, availableNonRecent);
+
+      // Try to pick an image not in recent history
+      let result = pickAndReturnRemaining(availableItemsForThisCycle, item => !!item.image_url && !recentImages.has(item.image_url || ''));
+      selectedItem = result.selected;
+      availableItemsForThisCycle = result.remaining;
+
       if (!selectedItem) {
-        selectedItem = pickRandom(fallbackGenerics);
+        // If no non-recent image, pick any available image
+        result = pickAndReturnRemaining(availableItemsForThisCycle, item => !!item.image_url);
+        selectedItem = result.selected;
+        availableItemsForThisCycle = result.remaining;
       }
 
       if (!selectedItem) {
@@ -111,7 +126,6 @@ export default function WhyChooseUsBento({ items }: WhyChooseUsBentoProps) {
         type: 'image',
         item: selectedItem,
       });
-      usedItemIds.add(selectedItem.id);
     }
 
     // Shuffle the final slots to randomize their positions in the grid
@@ -127,16 +141,17 @@ export default function WhyChooseUsBento({ items }: WhyChooseUsBentoProps) {
 
     console.log("Generated Slots:", newSlots);
     return shuffleArray(newSlots);
-  }, [items]); // Depend on items, but since static, fine
+  }, [items]);
 
   useEffect(() => {
     const regenerate = () => {
       const newSlots = getSlots();
       setBentoSlots(newSlots);
 
-      // Update history with displayed image_urls
+      // Update history with displayed image_urls, keeping only last 3 cycles
       const displayedImages = new Set(newSlots.map(slot => slot.item.image_url).filter(Boolean) as string[]);
       historyRef.current = [...historyRef.current, displayedImages].slice(-3);
+      console.log("Updated historyRef:", historyRef.current);
     };
 
     regenerate(); // Initial
@@ -187,9 +202,18 @@ export default function WhyChooseUsBento({ items }: WhyChooseUsBentoProps) {
               )}
             </div>
           )}
-          {(!slot.item.image_url || (slot.type === 'text' && !slot.item.image_url)) && (
+          {(!slot.item.image_url) && (
             <div className="relative z-10 flex flex-col justify-center items-center h-full text-center">
-              <h3 className="text-2xl font-semibold mb-3 text-gray-900 dark:text-white">{slot.item.point || 'No content'}</h3>
+              <Image
+                src={FALLBACK_IMAGE}
+                alt={FALLBACK_ALT}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                className="object-cover"
+              />
+              <div className="absolute inset-0 bg-gray-900 bg-opacity-70 flex items-center justify-center p-4">
+                <h3 className="text-2xl font-semibold text-white text-center">{slot.item.point || 'No content'}</h3>
+              </div>
             </div>
           )}
         </div>
