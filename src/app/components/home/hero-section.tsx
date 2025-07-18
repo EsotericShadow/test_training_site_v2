@@ -70,7 +70,7 @@ export default function HeroSection({ initialData }: HeroSectionProps) {
   const { heroSection, heroStats } = heroData || {};
 
   return (
-    <section ref={sectionRef} className="relative text-white bg-gray-900">
+    <section ref={sectionRef} className="relative text-white">
       <div className="absolute inset-0">
         {heroSection?.background_image_url && (
           <Image

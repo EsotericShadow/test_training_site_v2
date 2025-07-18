@@ -59,7 +59,7 @@ export default function FeaturedCourses() {
 
   if (loading) {
     return (
-      <section className="py-20 bg-gray-50 dark:bg-gray-900">
+      <section className="py-20">
         <div className="container mx-auto px-4 text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-500 mx-auto"></div>
         </div>
@@ -69,7 +69,7 @@ export default function FeaturedCourses() {
 
   if (error) {
     return (
-      <section className="py-20 bg-gray-50 dark:bg-gray-900">
+      <section className="py-20">
         <div className="container mx-auto px-4 text-center">
           <p className="text-red-500">{error}</p>
         </div>
@@ -78,7 +78,7 @@ export default function FeaturedCourses() {
   }
 
   return (
-    <section ref={sectionRef} className="py-20 bg-white dark:bg-gray-800">
+    <section ref={sectionRef} className="py-20">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-gray-900 dark:text-white">Featured Courses</h2>
