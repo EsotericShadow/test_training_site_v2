@@ -49,8 +49,8 @@ export default function ContactPageClient() {
   ];
 
   return (
-    <div ref={sectionRef} className="bg-gray-50 dark:bg-gray-900">
-      <section className="bg-gray-900 text-white py-24">
+    <div ref={sectionRef} className="">
+      <section className="py-24">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-5xl md:text-7xl font-extrabold mb-4">Get in Touch</h1>
           <p className="text-xl md:text-2xl text-yellow-400">We&apos;re here to help you build a safer workplace.</p>
@@ -80,9 +80,10 @@ export default function ContactPageClient() {
                 ))}
               </div>
             </div>
-            <div className="lg:col-span-2 bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg animate-in">
-              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">   </h2>
-              <SecureContactForm onSuccess={() => {}} onError={() => {}} className="max-w-lg mx-auto" />
+            <div className="lg:col-span-2 rounded-lg shadow-lg animate-in bg-gradient-to-br from-white/30 via-white/10 to-transparent p-[1px]">
+              <div className="h-full w-full rounded-[7px] bg-white/20 dark:bg-gray-900/50 p-8 backdrop-blur-lg backdrop-brightness-110 backdrop-saturate-150">
+                <SecureContactForm onSuccess={() => {}} onError={() => {}} className="max-w-lg mx-auto" />
+              </div>
             </div>
           </div>
         </div>

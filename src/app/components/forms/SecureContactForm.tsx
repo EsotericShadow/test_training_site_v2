@@ -377,7 +377,7 @@ export default function SecureContactForm({
   // Success state
   if (isSubmitted) {
     return (
-      <div className={`bg-white dark:bg-gray-900 rounded-xl shadow-lg p-8 text-center ${className}`}>
+      <div className={`text-center ${className}`}>
         <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
         <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Message Sent Successfully!</h3>
         <p className="text-gray-600 dark:text-gray-400 mb-6">
@@ -398,7 +398,7 @@ export default function SecureContactForm({
   }
 
   return (
-    <div className={`bg-white dark:bg-gray-900 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-8 ${className}`}>
+    <div className={className}>
       {/* Security indicator */}
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Send Us a Message</h2>

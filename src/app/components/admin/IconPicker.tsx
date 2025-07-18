@@ -24,7 +24,7 @@ export default function IconPicker({ value, onChange }: IconPickerProps) {
   // Get the currently selected icon component
   const SelectedIcon = useMemo(() => {
     if (value && Icons[value as keyof typeof Icons]) {
-      return Icons[value as keyof typeof Icons] as React.ElementType;
+      return Icons[value as keyof typeof Icons] as React.ComponentType<{ className?: string }>;
     }
     return null;
   }, [value]);
@@ -91,7 +91,7 @@ export default function IconPicker({ value, onChange }: IconPickerProps) {
           {/* The grid of icons */}
           <div className="grid grid-cols-8 gap-2 p-4 max-h-72 overflow-y-auto">
             {filteredIcons.map((name) => {
-              const Icon = Icons[name as keyof typeof Icons] as React.ElementType;
+              const Icon = Icons[name as keyof typeof Icons] as React.ComponentType<{ className?: string }>;
               return (
                 <button
                   type="button"

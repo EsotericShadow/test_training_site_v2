@@ -47,9 +47,9 @@ const equipmentTypes: Equipment[] = [
 
 export default function ExpandedCoursePageClient({ course }: ExpandedCoursePageClientProps) {
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <div className="min-h-screen transition-colors duration-300">
       
-      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 py-4">
+      <div className="border-b border-gray-200 dark:border-gray-700 py-4">
         <div className="container mx-auto px-4">
           <Link 
             href="/courses"
@@ -61,7 +61,7 @@ export default function ExpandedCoursePageClient({ course }: ExpandedCoursePageC
         </div>
       </div>
 
-      <section className="relative py-20 sm:py-32 bg-gray-900 text-white overflow-hidden">
+      <section className="relative py-20 sm:py-32 text-white overflow-hidden">
         <div className="absolute inset-0 z-0">
           {course.image_url ? (
             <Image 
@@ -89,7 +89,7 @@ export default function ExpandedCoursePageClient({ course }: ExpandedCoursePageC
         </div>
       </section>
 
-      <section className="py-20 bg-white dark:bg-gray-800">
+      <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold text-gray-900 dark:text-white">What You&apos;ll Learn</h2>

@@ -150,7 +150,7 @@ export default function AboutPageClient({ teamMembers }: AboutPageClientProps) {
                   {(() => {
                     console.log('Company Value Icon:', value.icon); // Log the icon name
                     const iconName = toPascalCase(value.icon);
-                    const IconComponent = LucideIcons[iconName as keyof typeof LucideIcons] as React.ElementType | undefined ?? Shield;
+                    const IconComponent = LucideIcons[iconName as keyof typeof LucideIcons] as React.ComponentType<{ className?: string }> | undefined ?? Shield;
                     return <IconComponent className="h-10 w-10" />;
                   })()}
                 </div>

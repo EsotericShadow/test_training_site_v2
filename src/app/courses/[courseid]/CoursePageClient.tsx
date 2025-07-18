@@ -31,9 +31,9 @@ interface CoursePageClientProps {
 
 export default function CoursePageClient({ course }: CoursePageClientProps) {
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <div className="min-h-screen transition-colors duration-300">
       
-      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 py-4">
+      <div className="border-b border-gray-200 dark:border-gray-700 py-4">
         <div className="container mx-auto px-4">
           <Link 
             href="/courses"
@@ -45,7 +45,7 @@ export default function CoursePageClient({ course }: CoursePageClientProps) {
         </div>
       </div>
 
-      <section className="relative py-20 sm:py-32 bg-gray-900 text-white overflow-hidden">
+      <section className="relative py-20 sm:py-32 text-white overflow-hidden">
         <div className="absolute inset-0 z-0">
           {course.image_url ? (
             <Image 
@@ -77,7 +77,7 @@ export default function CoursePageClient({ course }: CoursePageClientProps) {
 
       <div className="container mx-auto px-4 -mt-16 relative z-20">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8">
+          <div className="lg:col-span-2 rounded-2xl shadow-2xl p-8">
             <div className="space-y-12">
               <div>
                 <h2 className="animate-in text-3xl font-bold text-gray-900 dark:text-white mt-12 mb-6">What You&apos;ll Learn</h2>
@@ -118,7 +118,7 @@ export default function CoursePageClient({ course }: CoursePageClientProps) {
           </div>
 
           <div className="lg:sticky top-24 self-start">
-            <div className="bg-gray-800 text-white rounded-2xl shadow-2xl p-8 space-y-6">
+            <div className="text-white rounded-2xl shadow-2xl p-8 space-y-6">
               <h3 className="text-2xl font-bold text-yellow-400">Course Details</h3>
               <div className="space-y-4">
                 <div className="flex items-center space-x-4">
@@ -174,7 +174,7 @@ export default function CoursePageClient({ course }: CoursePageClientProps) {
         </div>
       </div>
 
-      <section id="request-syllabus" className="py-20 bg-white dark:bg-gray-900">
+      <section id="request-syllabus" className="py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-6">Get Started Today</h2>
@@ -182,7 +182,7 @@ export default function CoursePageClient({ course }: CoursePageClientProps) {
               Contact us to schedule this course for your team or to join an upcoming session.
             </p>
             
-            <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-2xl border border-gray-200 dark:border-gray-700 flex flex-col md:flex-row items-center justify-center gap-8">
+            <div className="rounded-2xl p-8 shadow-2xl border border-gray-200 dark:border-gray-700 flex flex-col md:flex-row items-center justify-center gap-8">
               <a href="tel:250-615-3727" className="flex items-center space-x-4 text-yellow-600 dark:text-yellow-400 hover:text-yellow-700 dark:hover:text-yellow-300 transition-colors">
                 <Phone className="h-8 w-8" />
                 <span className="font-bold text-2xl">250-615-3727</span>

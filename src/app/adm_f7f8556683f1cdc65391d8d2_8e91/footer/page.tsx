@@ -246,7 +246,7 @@ export default function FooterEditor() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+      <div className="min-h-screen flex items-center justify-center p-4">
         <div className="bg-card border border-border rounded-2xl shadow-xl p-8 text-center">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-slate-500 to-gray-600 rounded-full mb-6 shadow-lg">
             <div className="w-8 h-8 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
@@ -259,9 +259,9 @@ export default function FooterEditor() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       {/* Header */}
-      <header className="bg-card border-b border-border shadow-lg">
+      <header className="border-b border-border shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-6 space-y-4 sm:space-y-0">
             <div className="flex items-center space-x-4 w-full sm:w-auto">
@@ -312,8 +312,8 @@ export default function FooterEditor() {
 
         <div className="space-y-10">
           {/* Company Information */}
-          <div className="bg-card border border-border rounded-2xl shadow-xl">
-            <div className="px-6 py-4 border-b border-border bg-gradient-to-r from-slate-50 to-gray-50 dark:from-slate-900/20 dark:to-gray-900/20 rounded-t-2xl">
+          <div className="border border-border rounded-2xl shadow-xl">
+            <div className="px-6 py-4 border-b border-border rounded-t-2xl">
               <div className="flex items-center space-x-3">
                 <div className="w-8 h-8 bg-gradient-to-r from-slate-500 to-gray-600 rounded-lg flex items-center justify-center">
                   <Folder className="w-4 h-4 text-white" />
@@ -331,7 +331,7 @@ export default function FooterEditor() {
                     type="text"
                     value={footerContent.company_name || ''}
                     onChange={(e) => setFooterContent({...footerContent, company_name: e.target.value})}
-                    className="w-full px-4 py-4 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
+                    className="w-full px-4 py-4 border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
                     placeholder="Karma Training"
                   />
                 </div>
@@ -343,7 +343,7 @@ export default function FooterEditor() {
                     type="text"
                     value={footerContent.tagline || ''}
                     onChange={(e) => setFooterContent({...footerContent, tagline: e.target.value})}
-                    className="w-full px-4 py-4 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
+                    className="w-full px-4 py-4 border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
                     placeholder="Industrial Safety Northwestern BC"
                   />
                 </div>
@@ -355,7 +355,7 @@ export default function FooterEditor() {
                     type="text"
                     value={footerContent.slogan || ''}
                     onChange={(e) => setFooterContent({...footerContent, slogan: e.target.value})}
-                    className="w-full px-4 py-4 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
+                    className="w-full px-4 py-4 border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
                     placeholder="We believe the choices you make today will define your tomorrow"
                   />
                 </div>
@@ -367,7 +367,7 @@ export default function FooterEditor() {
                     value={footerContent.description || ''}
                     onChange={(e) => setFooterContent({...footerContent, description: e.target.value})}
                     rows={4}
-                    className="w-full px-4 py-4 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
+                    className="w-full px-4 py-4 border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
                     placeholder="Karma Training is Northwestern British Columbia's premier provider of workplace safety training..."
                   />
                 </div>
@@ -379,7 +379,7 @@ export default function FooterEditor() {
                     type="text"
                     value={footerContent.phone || ''}
                     onChange={(e) => setFooterContent({...footerContent, phone: e.target.value})}
-                    className="w-full px-4 py-4 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
+                    className="w-full px-4 py-4 border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
                     placeholder="250-615-3727"
                   />
                 </div>

@@ -101,7 +101,7 @@ export default function CoursesPageClient() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-500 mx-auto mb-4"></div>
           <p className="text-gray-600 dark:text-gray-400">Loading courses...</p>
@@ -112,7 +112,7 @@ export default function CoursesPageClient() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Error Loading Courses</h1>
           <p className="text-gray-600 dark:text-gray-400 mb-6">{error}</p>
@@ -128,8 +128,8 @@ export default function CoursesPageClient() {
   }
 
   return (
-    <div ref={sectionRef} className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
-      <section className="relative bg-gray-900 text-white py-32">
+    <div ref={sectionRef} className="min-h-screen transition-colors duration-300">
+      <section className="relative text-white py-32">
         <div className="absolute inset-0">
           <Image
             src="https://bluvpssu00ym8qv7.public.blob.vercel-storage.com/other/1750011620811-IMG_8439.JPG"
@@ -144,7 +144,7 @@ export default function CoursesPageClient() {
         </div>
       </section>
 
-      <section className="py-12 bg-yellow-500/5 dark:bg-gray-800 border-b border-yellow-500/20">
+      <section className="py-12 border-b border-yellow-500/20">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-center">
             <div className="flex items-center justify-center space-x-3 icon-container">
@@ -167,7 +167,7 @@ export default function CoursesPageClient() {
         </div>
       </section>
 
-      <section className="py-20 bg-white dark:bg-gray-800">
+      <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold text-gray-900 dark:text-white">Complete Course Catalog</h2>

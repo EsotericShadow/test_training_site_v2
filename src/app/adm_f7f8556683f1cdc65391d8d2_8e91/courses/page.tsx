@@ -317,7 +317,7 @@ export default function CourseManagement() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+      <div className="min-h-screen flex items-center justify-center p-4">
         <div className="bg-card border border-border rounded-2xl shadow-xl p-8 text-center">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-emerald-500 to-green-600 rounded-full mb-6 shadow-lg">
             <div className="w-8 h-8 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
@@ -330,9 +330,9 @@ export default function CourseManagement() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       {/* Header */}
-      <header className="bg-card border-b border-border shadow-lg">
+      <header className="border-b border-border shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-6 space-y-4 sm:space-y-0">
             <div className="flex items-center space-x-4 w-full sm:w-auto">
@@ -390,8 +390,8 @@ export default function CourseManagement() {
 
         {/* Add/Edit Form */}
         {showAddForm && (
-          <div className="bg-card border border-border rounded-2xl shadow-xl mb-10">
-            <div className="px-6 py-4 border-b border-border bg-gradient-to-r from-emerald-50 to-green-50 dark:from-emerald-900/20 dark:to-green-900/20 rounded-t-2xl">
+          <div className="border border-border rounded-2xl shadow-xl mb-10">
+            <div className="px-6 py-4 border-b border-border rounded-t-2xl">
               <div className="flex justify-between items-center">
                 <div className="flex items-center space-x-3">
                   <div className="w-8 h-8 bg-gradient-to-r from-emerald-500 to-green-600 rounded-lg flex items-center justify-center">
@@ -612,8 +612,8 @@ export default function CourseManagement() {
         )}
 
         {/* Courses List */}
-        <div className="bg-card border border-border rounded-2xl shadow-xl">
-          <div className="px-6 py-4 border-b border-border bg-gradient-to-r from-emerald-50 to-green-50 dark:from-emerald-900/20 dark:to-green-900/20 rounded-t-2xl">
+        <div className="border border-border rounded-2xl shadow-xl">
+          <div className="px-6 py-4 border-b border-border rounded-t-2xl">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <div className="w-8 h-8 bg-gradient-to-r from-emerald-500 to-green-600 rounded-lg flex items-center justify-center">
@@ -645,7 +645,7 @@ export default function CourseManagement() {
             ) : (
               <div className="grid grid-cols-1 gap-8">
                 {courses.map((course) => (
-                  <div key={course.id} className="bg-background border border-border rounded-xl p-6 hover:shadow-lg transition-all duration-200 group">
+                  <div key={course.id} className="border border-border rounded-xl p-6 hover:shadow-lg transition-all duration-200 group">
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex-1">
                         <div className="flex items-center space-x-2 mb-2">
