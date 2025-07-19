@@ -6,10 +6,9 @@ import Header from '@/app/components/layout/header';
 import Footer from '@/app/components/layout/footer';
 import { ThemeProvider } from './components/theme/smart-theme-provider';
 import dynamic from 'next/dynamic';
+import { Suspense } from 'react';
 
-const DynamicSilk = dynamic(() => import('@/app/components/ui/Silk'), {
-  loading: () => null,
-});
+const DynamicSilk = dynamic(() => import('@/app/components/ui/Silk'));
 
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
@@ -138,7 +137,9 @@ export default async function RootLayout({
         <ThemeProvider>
           <div className="min-h-screen flex flex-col text-black dark:text-white transition-colors duration-300 relative z-0">
             <div className="fixed inset-0 z-[-1]">
-              <DynamicSilk color="#303E5A" />
+              <Suspense fallback={<div className="bg-gray-900 w-full h-full" />}>
+                <DynamicSilk color="#303E5A" />
+              </Suspense>
             </div>
             <Header courseCategories={courseCategories} />
             <main className="flex-grow pt-24 relative z-10">

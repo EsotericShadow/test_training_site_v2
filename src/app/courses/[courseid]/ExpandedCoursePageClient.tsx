@@ -69,9 +69,10 @@ export default function ExpandedCoursePageClient({ course }: ExpandedCoursePageC
             <Image 
               src={course.image_url} 
               alt={course.image_alt || course.title}
-              fill
-              className="object-cover"
+              layout="fill"
+              objectFit="cover"
               priority
+              sizes="100vw"
             />
           ) : (
             <div className="bg-gray-800 w-full h-full" />

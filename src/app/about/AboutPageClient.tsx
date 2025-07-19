@@ -1,13 +1,17 @@
 'use client';
 
-import WhyChooseUsBento from '@/app/components/home/WhyChooseUsBento';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Shield, Camera, Briefcase, Calendar, Users, BookOpen, type LucideIcon } from 'lucide-react';
 import { useGsap } from '@/app/hooks/useGsap';
 import { gsap } from 'gsap';
 import type { TeamMember } from '../../../types/database';
+
+const WhyChooseUsBento = dynamic(() => import('@/app/components/home/WhyChooseUsBento'), {
+  loading: () => <div className="h-96 flex items-center justify-center"><div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-yellow-400"></div></div>,
+});
 
 const LucideIconMap: Record<string, LucideIcon> = {
   Shield,
@@ -63,6 +67,8 @@ export default function AboutPageClient({ teamMembers }: AboutPageClientProps) {
   const [companyValues, setCompanyValues] = useState<CompanyValue[]>([]);
   const [whyChooseUs, setWhyChooseUs] = useState<WhyChooseUs[]>([]);
   const [loading, setLoading] = useState(true);
+  const [heroImage, setHeroImage] = useState<string | null>(null);
+  const [heroImageAlt, setHeroImageAlt] = useState<string | null>(null);
 
   const sectionRefs = useGsap(() => {
     gsap.utils.toArray<HTMLElement>('.animate-section').forEach((section) => {
@@ -80,14 +86,39 @@ export default function AboutPageClient({ teamMembers }: AboutPageClientProps) {
   });
 
   useEffect(() => {
-    fetch('/api/about-snippet').then(res => res.json())
-    .then((companyData) => {
-      setCompanyInfo(companyData.companyInfo);
-      setCompanyValues(companyData.companyValues || []);
-      setWhyChooseUs(companyData.whyChooseUs || []);
-      setLoading(false);
-    })
-    .catch(() => setLoading(false));
+    const fetchData = async () => {
+      try {
+        const [companyDataResponse, heroImageResponse] = await Promise.all([
+          fetch('/api/about-snippet'),
+          fetch('/api/adm_f7f8556683f1cdc65391d8d2_8e91/files?category=other')
+        ]);
+
+        if (companyDataResponse.ok) {
+          const companyData = await companyDataResponse.json();
+          setCompanyInfo(companyData.companyInfo);
+          setCompanyValues(companyData.companyValues || []);
+          setWhyChooseUs(companyData.whyChooseUs || []);
+        } else {
+          console.error('Failed to load company data');
+        }
+
+        if (heroImageResponse.ok) {
+          const { file } = await heroImageResponse.json();
+          setHeroImage(file.blob_url);
+          setHeroImageAlt(file.alt_text || 'About page hero image');
+        } else {
+          console.error('Failed to load hero image');
+          setHeroImage('https://bluvpssu00ym8qv7.public.blob.vercel-storage.com/other/1750011620811-IMG_8439.JPG'); // Fallback
+          setHeroImageAlt('Safety training in action');
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
 
   if (loading) {
@@ -98,12 +129,16 @@ export default function AboutPageClient({ teamMembers }: AboutPageClientProps) {
     <div ref={sectionRefs} className="">
       <section className="relative text-white py-24">
         <div className="absolute inset-0">
-          <Image
-            src="https://bluvpssu00ym8qv7.public.blob.vercel-storage.com/other/1750011620811-IMG_8439.JPG"
-            alt="Safety training in action"
-            fill
-            className="object-cover opacity-30"
-          />
+          {heroImage && (
+            <Image
+              src={heroImage}
+              alt={heroImageAlt || 'Hero background'}
+              fill
+              className="object-cover opacity-30"
+              priority
+              sizes="100vw"
+            />
+          )}
         </div>
         <div className="relative container mx-auto px-4 text-center">
           <h1 className="text-5xl md:text-7xl font-extrabold mb-4">About <span className="text-yellow-400">{companyInfo?.company_name || 'Us'}</span></h1>
@@ -175,7 +210,9 @@ export default function AboutPageClient({ teamMembers }: AboutPageClientProps) {
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold text-gray-900 dark:text-white">Why Choose Us</h2>
           </div>
-          <WhyChooseUsBento items={whyChooseUs} />
+          <Suspense fallback={<div className="h-96 flex items-center justify-center"><div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-yellow-400"></div></div>}>
+            <WhyChooseUsBento items={whyChooseUs} />
+          </Suspense>
         </div>
       </section>
 

@@ -22,6 +22,12 @@
     "test:e2e": "playwright test",
     "analyze": "cross-env ANALYZE=true next build"
   },
+  "browserslist": [
+    "last 2 chrome versions",
+    "last 2 firefox versions",
+    "last 2 safari versions",
+    "last 2 edge versions"
+  ],
   "dependencies": {
     "@heroicons/react": "^2.2.0",
     "@react-three/fiber": "^9.2.0",

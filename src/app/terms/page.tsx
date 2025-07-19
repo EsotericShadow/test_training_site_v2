@@ -1,14 +1,53 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Mail, MapPin } from 'lucide-react'
 
 export default function TermsConditionsPage() {
+  const [heroImage, setHeroImage] = useState<string | null>(null);
+  const [heroImageAlt, setHeroImageAlt] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchHeroImage = async () => {
+      try {
+        const response = await fetch('/api/adm_f7f8556683f1cdc65391d8d2_8e91/files?category=other');
+        if (response.ok) {
+          const { file } = await response.json();
+          setHeroImage(file.blob_url);
+          setHeroImageAlt(file.alt_text || 'Terms and conditions hero image');
+        } else {
+          console.error('Failed to load hero image');
+          setHeroImage('https://bluvpssu00ym8qv7.public.blob.vercel-storage.com/other/1750011620811-IMG_8439.JPG'); // Fallback
+          setHeroImageAlt('Safety training in action');
+        }
+      } catch (error) {
+        console.error('Error fetching hero image:', error);
+        setHeroImage('https://bluvpssu00ym8qv7.public.blob.vercel-storage.com/other/1750011620811-IMG_8439.JPG'); // Fallback
+        setHeroImageAlt('Safety training in action');
+      }
+    };
+
+    fetchHeroImage();
+  }, []);
+
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
-      {/* Hero Section */}
-      <section className="bg-gradient-to-br from-gray-900 to-black dark:from-black dark:to-gray-900 text-white py-20">
-        <div className="container mx-auto px-4">
+      <section className="relative bg-gradient-to-br from-gray-900 to-black dark:from-black dark:to-gray-900 text-white py-20 overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          {heroImage && (
+            <Image
+              src={heroImage}
+              alt={heroImageAlt || 'Hero background'}
+              fill
+              className="object-cover opacity-30"
+              priority
+              sizes="100vw"
+            />
+          )}
+        </div>
+        <div className="relative container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-5xl font-bold mb-6">Terms and Conditions</h1>
             <p className="text-xl text-gray-300 leading-relaxed mb-8">

@@ -17,7 +17,23 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const files = await filesOps.getAll();
+    const { searchParams } = new URL(request.url);
+    const category = searchParams.get('category');
+
+    let files;
+    if (category) {
+      files = await filesOps.getByCategory(category);
+    } else {
+      files = await filesOps.getAll();
+    }
+
+    if (category && files.length > 0) {
+      const randomIndex = Math.floor(Math.random() * files.length);
+      return NextResponse.json({ file: files[randomIndex] });
+    } else if (category && files.length === 0) {
+      return NextResponse.json({ error: 'No files found for this category' }, { status: 404 });
+    }
+
     return NextResponse.json({ files });
   } catch (error) {
     console.error('Error fetching files:', error);

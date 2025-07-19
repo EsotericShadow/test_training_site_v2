@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Phone, Mail, MapPin, Clock } from 'lucide-react'
 import SecureContactForm from '@/app/components/forms/SecureContactForm'
 import { useGsap } from '@/app/hooks/useGsap'
@@ -16,6 +17,8 @@ interface CompanyInfo {
 
 export default function ContactPageClient() {
   const [companyInfo, setCompanyInfo] = useState<CompanyInfo | null>(null);
+  const [heroImage, setHeroImage] = useState<string | null>(null);
+  const [heroImageAlt, setHeroImageAlt] = useState<string | null>(null);
 
   const sectionRef = useGsap((ref) => {
     if (!ref.current) return;
@@ -33,12 +36,35 @@ export default function ContactPageClient() {
   });
 
   useEffect(() => {
-    fetch('/api/adm_f7f8556683f1cdc65391d8d2_8e91/company-info')
-      .then(res => res.json())
-      .then(data => {
-        setCompanyInfo(data.companyInfo);
-      })
-      .catch(() => {});
+    const fetchData = async () => {
+      try {
+        const [companyInfoResponse, heroImageResponse] = await Promise.all([
+          fetch('/api/adm_f7f8556683f1cdc65391d8d2_8e91/company-info'),
+          fetch('/api/adm_f7f8556683f1cdc65391d8d2_8e91/files?category=other')
+        ]);
+
+        if (companyInfoResponse.ok) {
+          const companyData = await companyInfoResponse.json();
+          setCompanyInfo(companyData.companyInfo);
+        } else {
+          console.error('Failed to load company info');
+        }
+
+        if (heroImageResponse.ok) {
+          const { file } = await heroImageResponse.json();
+          setHeroImage(file.blob_url);
+          setHeroImageAlt(file.alt_text || 'Contact page hero image');
+        } else {
+          console.error('Failed to load hero image');
+          setHeroImage('https://bluvpssu00ym8qv7.public.blob.vercel-storage.com/other/1750011620811-IMG_8439.JPG'); // Fallback
+          setHeroImageAlt('Safety training in action');
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
   }, []);
 
   const contactDetails = [
@@ -50,8 +76,20 @@ export default function ContactPageClient() {
 
   return (
     <div ref={sectionRef} className="">
-      <section className="py-24">
-        <div className="container mx-auto px-4 text-center">
+      <section className="relative py-24 text-white overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          {heroImage && (
+            <Image
+              src={heroImage}
+              alt={heroImageAlt || 'Hero background'}
+              fill
+              className="object-cover opacity-30"
+              priority
+              sizes="100vw"
+            />
+          )}
+        </div>
+        <div className="relative container mx-auto px-4 text-center">
           <h1 className="text-5xl md:text-7xl font-extrabold mb-4">Get in Touch</h1>
           <p className="text-xl md:text-2xl text-yellow-400">We&apos;re here to help you build a safer workplace.</p>
         </div>

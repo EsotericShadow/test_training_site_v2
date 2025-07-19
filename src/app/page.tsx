@@ -1,8 +1,9 @@
 import { Metadata } from 'next';
 import Image from 'next/image';
 import HeroSection from '@/app/components/home/hero-section';
-import FeaturedCourses from '@/app/components/home/featured-courses';
-import AboutSnippet from '@/app/components/home/about-snippet';
+import DynamicFeaturedCourses from '@/app/components/home/DynamicFeaturedCourses';
+import DynamicAboutSnippet from '@/app/components/home/DynamicAboutSnippet';
+import { Suspense } from 'react';
 
 
 interface HeroSection {
@@ -176,8 +177,12 @@ export default async function Home() {
         <div className="absolute inset-0 bg-black opacity-60"></div>
         <HeroSection initialData={heroData} />
       </div>
-        <FeaturedCourses />
-        <AboutSnippet teamMembers={teamMembers} />
+      <Suspense fallback={<div className="h-96 flex items-center justify-center"><div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-yellow-400"></div></div>}>
+        <DynamicFeaturedCourses />
+      </Suspense>
+      <Suspense fallback={<div className="h-96 flex items-center justify-center"><div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-yellow-400"></div></div>}>
+        <DynamicAboutSnippet teamMembers={teamMembers} />
+      </Suspense>
     </>
   );
 }
