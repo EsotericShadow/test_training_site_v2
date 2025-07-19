@@ -36,7 +36,7 @@ export default function HeroSection({ initialData }: HeroSectionProps) {
     if (!ref.current) return;
 
     const currentRef = ref.current;
-    setTimeout(() => {
+    requestAnimationFrame(() => {
       gsap.to(currentRef.querySelectorAll('.slogan, .main-heading, .subtitle, .cta-button'), {
         opacity: 1,
         y: 0,
@@ -44,7 +44,7 @@ export default function HeroSection({ initialData }: HeroSectionProps) {
         ease: 'power3.out',
         stagger: 0.15,
       });
-    }, 0);
+    });
   });
 
   if (!initialData) {
