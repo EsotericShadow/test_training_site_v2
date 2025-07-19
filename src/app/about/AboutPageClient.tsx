@@ -229,7 +229,7 @@ export default function AboutPageClient({ teamMembers }: AboutPageClientProps) {
               <div key={member.id} className="backdrop-blur-md bg-white/10 border border-white/20 rounded-xl shadow-xl overflow-hidden text-center">
                 <div className="relative aspect-[3/4]">
                   {member.photo_url ? (
-                    <Image src={member.photo_url} alt={member.name} fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" className="object-cover" />
+                    <Image src={member.photo_url} alt={member.name} fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" className="object-cover" quality={75} />
                   ) : (
                     <div className="bg-gray-200 dark:bg-gray-700 h-full flex items-center justify-center">
                       <Camera className="h-12 w-12 text-gray-200" />

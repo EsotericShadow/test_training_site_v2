@@ -50,13 +50,14 @@ export default function CoursePageClient({ course }: CoursePageClientProps) {
       <section className="relative py-12 sm:py-20 text-white overflow-hidden">
         <div className="absolute inset-0 z-0 h-64 md:h-96">
           {course.image_url ? (
-            <Image 
-              src={course.image_url} 
+            <Image
+              src={course.image_url}
               alt={course.image_alt || course.title}
-              layout="fill"
-              objectFit="cover"
+              fill
+              className="object-cover opacity-20"
               priority
               sizes="100vw"
+              quality={80}
             />
           ) : (
             <div className="bg-gray-800 w-full h-full" />

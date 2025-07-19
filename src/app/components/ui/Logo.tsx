@@ -10,7 +10,7 @@ interface LogoProps {
 export default function Logo({ size = 'md', className = '', showText = true }: LogoProps) {
   const sizeMap = {
     sm: { width: 120, height: 32, textSize: 'text-lg' },
-    md: { width: 150, height: 48, textSize: 'text-xl' },
+    md: { width: 150, height: 80, textSize: 'text-xl' },
     lg: { width: 387, height: 122, textSize: 'text-3xl md:text-4xl' },
   }
 
