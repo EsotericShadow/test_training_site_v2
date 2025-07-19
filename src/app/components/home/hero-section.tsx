@@ -82,10 +82,10 @@ export default function HeroSection({ initialData }: HeroSectionProps) {
           {heroSection?.subtitle}
         </p>
         <div className="flex justify-center gap-4">
-          <Link href={heroSection?.primary_button_link || '/courses'} className="cta-button bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-4 px-8 rounded-lg transition duration-300 transform hover:scale-105 shadow-lg opacity-0 translate-y-[50px]">
+          <Link href={heroSection?.primary_button_link || '/courses'} className="cta-button bg-yellow-500 hover:bg-yellow-600 text-gray-900 dark:text-white font-bold py-4 px-8 rounded-lg transition duration-300 transform hover:scale-105 shadow-lg opacity-0 translate-y-[50px]">
             {heroSection?.primary_button_text || 'View Courses'}
           </Link>
-          <Link href={heroSection?.secondary_button_link || '/contact'} className="cta-button bg-transparent border-2 border-yellow-500 text-yellow-500 font-bold py-4 px-8 rounded-lg hover:bg-yellow-500 hover:text-black transition duration-300 transform hover:scale-105 opacity-0 translate-y-[50px]">
+          <Link href={heroSection?.secondary_button_link || '/contact'} className="cta-button bg-transparent border-2 border-yellow-500 text-yellow-500 font-bold py-4 px-8 rounded-lg hover:bg-yellow-500 hover:text-gray-900 dark:hover:text-white transition duration-300 transform hover:scale-105 opacity-0 translate-y-[50px]">
             {heroSection?.secondary_button_text || 'Contact Us'}
           </Link>
         </div>

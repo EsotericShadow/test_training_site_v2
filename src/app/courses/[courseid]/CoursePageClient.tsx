@@ -65,7 +65,7 @@ export default function CoursePageClient({ course }: CoursePageClientProps) {
         </div>
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-4xl">
-            <span className="bg-yellow-500 text-black px-4 py-2 rounded-full text-sm font-semibold">
+            <span className="bg-yellow-500 text-gray-900 dark:text-white px-4 py-2 rounded-full text-sm font-semibold">
               {course.category.name}
             </span>
             <h1 className="text-4xl md:text-6xl font-extrabold my-6 text-white drop-shadow-lg">{course.title}</h1>

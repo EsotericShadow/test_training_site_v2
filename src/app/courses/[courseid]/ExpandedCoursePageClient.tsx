@@ -81,7 +81,7 @@ export default function ExpandedCoursePageClient({ course }: ExpandedCoursePageC
         </div>
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-4xl">
-            <span className="bg-yellow-500 text-black px-4 py-2 rounded-full text-sm font-semibold">
+            <span className="bg-yellow-500 text-gray-900 dark:text-white px-4 py-2 rounded-full text-sm font-semibold">
               {course.category.name}
             </span>
             <h1 className="text-4xl md:text-6xl font-extrabold my-6 text-white drop-shadow-lg">{course.title}</h1>
@@ -186,7 +186,7 @@ export default function ExpandedCoursePageClient({ course }: ExpandedCoursePageC
               <div className="pt-6 border-t border-gray-700">
                 <a 
                   href="#request-syllabus"
-                  className="w-full block text-center bg-yellow-500 hover:bg-yellow-600 text-black px-6 py-4 rounded-lg font-bold text-lg transition-all duration-200 transform hover:scale-105"
+                  className="w-full block text-center bg-yellow-500 hover:bg-yellow-600 text-gray-900 dark:text-white px-6 py-4 rounded-lg font-bold text-lg transition-all duration-200 transform hover:scale-105"
                 >
                   Request Syllabus
                 </a>

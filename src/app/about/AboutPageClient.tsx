@@ -150,31 +150,31 @@ export default function AboutPageClient({ teamMembers }: AboutPageClientProps) {
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="prose prose-xl dark:prose-invert max-w-none">
-              <h2 className="text-4xl font-bold text-gray-900 dark:text-white">Our Mission</h2>
-              <p>{companyInfo?.mission}</p>
-              <h2 className="text-4xl font-bold text-gray-900 dark:text-white mt-12">Our Story</h2>
-              <p>{companyInfo?.description}</p>
+              <h2 className="text-4xl font-bold text-gray-300 dark:text-white">Our Mission</h2>
+              <p className="text-gray-300">{companyInfo?.mission}</p>
+              <h2 className="text-4xl font-bold text-gray-300 dark:text-white mt-12">Our Story</h2>
+              <p className="text-gray-300">{companyInfo?.description}</p>
             </div>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               <div className="backdrop-blur-md bg-white/10 border border-white/20 p-6 rounded-xl shadow-xl text-center">
                 <Calendar className="h-10 w-10 text-yellow-500 mx-auto mb-3" />
-                <p className="text-4xl font-bold text-gray-900 dark:text-white">{companyInfo?.established_year}</p>
-                <p className="text-md text-gray-600 dark:text-gray-400">Established</p>
+                <p className="text-4xl font-bold text-gray-300 dark:text-white">{companyInfo?.established_year}</p>
+                <p className="text-md text-gray-300">Established</p>
               </div>
               <div className="backdrop-blur-md bg-white/10 border border-white/20 p-6 rounded-xl shadow-xl text-center">
                 <Briefcase className="h-10 w-10 text-yellow-500 mx-auto mb-3" />
-                <p className="text-4xl font-bold text-gray-900 dark:text-white">{companyInfo?.total_experience || 'N/A'}</p>
-                <p className="text-md text-gray-600 dark:text-gray-400">Years Experience</p>
+                <p className="text-4xl font-bold text-gray-300 dark:text-white">{companyInfo?.total_experience || 'N/A'}</p>
+                <p className="text-md text-gray-300">Years Experience</p>
               </div>
               <div className="backdrop-blur-md bg-white/10 border border-white/20 p-6 rounded-xl shadow-xl text-center">
                 <Users className="h-10 w-10 text-yellow-500 mx-auto mb-3" />
-                <p className="text-4xl font-bold text-gray-900 dark:text-white">{companyInfo?.students_trained_count || 'N/A'}</p>
-                <p className="text-md text-gray-600 dark:text-gray-400">Students Trained</p>
+                <p className="text-4xl font-bold text-gray-300 dark:text-white">{companyInfo?.students_trained_count || 'N/A'}</p>
+                <p className="text-md text-gray-300">Students Trained</p>
               </div>
               <div className="backdrop-blur-md bg-white/10 border border-white/20 p-6 rounded-xl shadow-xl text-center">
                 <BookOpen className="h-10 w-10 text-yellow-500 mx-auto mb-3" />
-                <p className="text-4xl font-bold text-gray-900 dark:text-white">{companyInfo?.total_courses || 'N/A'}</p>
-                <p className="text-md text-gray-600 dark:text-gray-400">Courses Offered</p>
+                <p className="text-4xl font-bold text-gray-300 dark:text-white">{companyInfo?.total_courses || 'N/A'}</p>
+                <p className="text-md text-gray-300">Courses Offered</p>
               </div>
             </div>
           </div>
@@ -184,7 +184,7 @@ export default function AboutPageClient({ teamMembers }: AboutPageClientProps) {
       <section className="animate-section py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-gray-900 dark:text-white">Our Values</h2>
+            <h2 className="text-4xl font-bold text-gray-300 dark:text-white">Our Values</h2>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {companyValues.map(value => (
@@ -197,8 +197,8 @@ export default function AboutPageClient({ teamMembers }: AboutPageClientProps) {
                     return <IconComponent className="h-10 w-10" />;
                   })()}
                 </div>
-                <h3 className="text-2xl font-semibold mb-3">{value.title}</h3>
-                <p className="text-gray-600 dark:text-gray-400">{value.description}</p>
+                <h3 className="text-2xl font-semibold mb-3 text-gray-300">{value.title}</h3>
+                <p className="text-gray-300">{value.description}</p>
               </div>
             ))}
           </div>
@@ -208,7 +208,7 @@ export default function AboutPageClient({ teamMembers }: AboutPageClientProps) {
       <section className="animate-section py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-gray-900 dark:text-white">Why Choose Us</h2>
+            <h2 className="text-4xl font-bold text-gray-200 dark:text-white">Why Choose Us</h2>
           </div>
           <Suspense fallback={<div className="h-96 flex items-center justify-center"><div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-yellow-400"></div></div>}>
             <WhyChooseUsBento items={whyChooseUs} />
@@ -219,8 +219,8 @@ export default function AboutPageClient({ teamMembers }: AboutPageClientProps) {
       <section className="animate-section py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-gray-900 dark:text-white">Meet Our Team</h2>
-            <p className="text-xl text-gray-600 dark:text-gray-400 mt-4 max-w-3xl mx-auto">
+            <h2 className="text-4xl font-bold text-gray-200 dark:text-white">Meet Our Team</h2>
+            <p className="text-xl text-gray-300 mt-4 max-w-3xl mx-auto">
               Our certified instructors are the backbone of our success, bringing decades of real-world experience to every course.
             </p>
           </div>
@@ -232,14 +232,14 @@ export default function AboutPageClient({ teamMembers }: AboutPageClientProps) {
                     <Image src={member.photo_url} alt={member.name} fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" className="object-cover" />
                   ) : (
                     <div className="bg-gray-200 dark:bg-gray-700 h-full flex items-center justify-center">
-                      <Camera className="h-12 w-12 text-gray-400" />
+                      <Camera className="h-12 w-12 text-gray-200" />
                     </div>
                   )}
                 </div>
                 <div className="p-6">
-                  <h3 className="text-2xl font-semibold">{member.name}</h3>
+                  <h3 className="text-2xl font-semibold text-gray-300">{member.name}</h3>
                   <p className="text-yellow-500 font-medium mb-4">{member.role}</p>
-                  <p className="text-gray-600 dark:text-gray-400 mb-4">{member.bio || ''}</p>
+                  <p className="text-gray-300 mb-4">{member.bio || ''}</p>
                   <div className="flex flex-wrap justify-center gap-2">
                     {Array.isArray(member.specializations) ? member.specializations.map((spec: string, i: number) => (
                       <span key={i} className="bg-yellow-100 text-yellow-800 text-sm font-medium px-3 py-1 rounded-full">{spec}</span>
@@ -252,7 +252,7 @@ export default function AboutPageClient({ teamMembers }: AboutPageClientProps) {
         </div>
       </section>
 
-      <section className="text-black bg-yellow-400 py-20">
+      <section className="text-gray-900 dark:text-white bg-yellow-400 py-20">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-4xl font-bold mb-4">Ready to Improve Your Workplace Safety?</h2>
           <p className="text-xl mb-8">Let&apos;s work together to create a safer, more productive environment for your team.</p>

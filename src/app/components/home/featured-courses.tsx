@@ -81,8 +81,8 @@ export default function FeaturedCourses() {
     <section ref={sectionRef} className="py-20">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-gray-900 dark:text-white">Featured Courses</h2>
-          <p className="text-xl text-gray-600 dark:text-gray-400 mt-4 max-w-2xl mx-auto">
+          <h2 className="text-4xl font-bold text-gray-100 dark:text-white">Featured Courses</h2>
+          <p className="text-xl text-gray-300 dark:text-gray-400 mt-4 max-w-2xl mx-auto">
             Explore our most popular safety training programs, designed for the industries of Northwestern BC.
           </p>
         </div>
@@ -100,16 +100,16 @@ export default function FeaturedCourses() {
                   />
                 ) : (
                   <div className="h-full flex items-center justify-center">
-                    <Camera className="h-12 w-12 text-gray-400" />
+                    <Camera className="h-12 w-12 text-gray-300" />
                   </div>
                 )}
               </div>
               <div className="p-6">
-                <h3 className="text-2xl font-semibold mb-3 text-gray-900 dark:text-white">{course.title}</h3>
-                <p className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-3">{course.description}</p>
-                <div className="flex justify-between items-center text-sm text-gray-500 dark:text-gray-400 mb-6">
-                  <div className="flex items-center"><Clock className="h-4 w-4 mr-1" /> {course.duration}</div>
-                  <div className="flex items-center"><Users className="h-4 w-4 mr-1" /> {course.audience}</div>
+                <h3 className="text-2xl font-semibold mb-3 text-gray-100 dark:text-white">{course.title}</h3>
+                <p className="text-gray-300 dark:text-gray-400 mb-4 line-clamp-3">{course.description}</p>
+                <div className="flex justify-between items-center text-sm text-gray-400 dark:text-gray-400 mb-6">
+                  <div className="flex items-center"><Clock className="h-6 w-6 mr-1" /> {course.duration}</div>
+                  <div className="flex items-center"><Users className="h-10 w-10 mr-1" /> {course.audience}</div>
                 </div>
                 <Link href={`/courses/${course.slug}`} className="inline-flex items-center text-yellow-500 hover:text-yellow-600 font-semibold">
                   Learn More <ArrowRight className="h-4 w-4 ml-2" />
@@ -120,7 +120,7 @@ export default function FeaturedCourses() {
         </div>
 
         <div className="text-center mt-12">
-          <Link href="/courses" className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-4 px-8 rounded-lg transition duration-300 transform hover:scale-105 shadow-lg">
+          <Link href="/courses" className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 dark:text-white font-bold py-4 px-8 rounded-lg transition duration-300 transform hover:scale-105 shadow-lg">
             View All Courses
           </Link>
         </div>

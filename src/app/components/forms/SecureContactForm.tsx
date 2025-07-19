@@ -389,9 +389,9 @@ export default function SecureContactForm({
             initializeSecurity();
             startTimeRef.current = Date.now();
           }}
-          className="bg-brand-yellow hover:bg-brand-yellow-dark text-black px-6 py-2 rounded-lg font-semibold transition-all duration-200"
+          className="bg-brand-yellow hover:bg-brand-yellow-dark text-gray-900 dark:text-white px-6 py-2 rounded-lg font-semibold transition-all duration-200"
         >
-          Send Another Message
+          Try Again
         </button>
       </div>
     );
@@ -401,7 +401,7 @@ export default function SecureContactForm({
     <div className={className}>
       {/* Security indicator */}
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Send Us a Message</h2>
+        <h2 className="text-2xl font-bold text-gray-200 dark:text-white">Send Us a Message</h2>
         <div className="flex items-center space-x-2">
           <Shield className={`h-5 w-5 ${securityScore >= 70 ? 'text-green-500' : securityScore >= 50 ? 'text-yellow-500' : 'text-red-500'}`} />
           <span className="text-sm text-gray-500">
@@ -442,7 +442,7 @@ export default function SecureContactForm({
         {/* Name and Email row */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label htmlFor="name" className="block text-sm font-medium text-gray-300 dark:text-gray-300 mb-2">
               Full Name *
             </label>
             <input
@@ -463,7 +463,7 @@ export default function SecureContactForm({
           </div>
 
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label htmlFor="email" className="block text-sm font-medium text-gray-300 dark:text-gray-300 mb-2">
               Email Address *
             </label>
             <input
@@ -487,7 +487,7 @@ export default function SecureContactForm({
         {/* Company and Phone row */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="company" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label htmlFor="company" className="block text-sm font-medium text-gray-300 dark:text-gray-300 mb-2">
               Company Name
             </label>
             <input
@@ -507,7 +507,7 @@ export default function SecureContactForm({
           </div>
 
           <div>
-            <label htmlFor="phone" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label htmlFor="phone" className="block text-sm font-medium text-gray-300 dark:text-gray-300 mb-2">
               Phone Number
             </label>
             <input
@@ -516,7 +516,7 @@ export default function SecureContactForm({
               name="phone"
               value={formData.phone}
               onChange={handleInputChange}
-              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-brand-yellow focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors duration-200 ${
+              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-brand-yellow focus:border-transparent bg-white dark:bg-gray-800 text-gray-400 dark:text-white transition-colors duration-200 ${
                 errors.phone ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-gray-600'
               }`}
               placeholder="(250) 555-0123"
@@ -529,7 +529,7 @@ export default function SecureContactForm({
 
         {/* Training Type */}
         <div>
-          <label htmlFor="trainingType" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <label htmlFor="trainingType" className="block text-sm font-medium text-gray-400 dark:text-gray-300 mb-2">
             Training Interest
           </label>
           <select
@@ -553,7 +553,7 @@ export default function SecureContactForm({
 
         {/* Message */}
         <div>
-          <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <label htmlFor="message" className="block text-sm font-medium text-gray-400 dark:text-gray-300 mb-2">
             Message *
           </label>
           <textarea
@@ -570,15 +570,15 @@ export default function SecureContactForm({
             maxLength={5000}
           />
           {errors.message && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.message}</p>}
-          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+          <p className="mt-1 text-sm text-gray-400 dark:text-gray-400">
             {formData.message.length}/5000 characters
           </p>
         </div>
 
         {/* Submit Button */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
-            <Shield className="h-4 w-4" />
+          <div className="flex items-center space-x-2 text-sm text-gray-300 dark:text-gray-400">
+            <Shield className="h-6 w-6" />
             <span>Your information is secure and encrypted</span>
           </div>
 
@@ -587,8 +587,8 @@ export default function SecureContactForm({
             disabled={isSubmitting || isBlocked}
             className={`flex items-center space-x-2 px-8 py-3 rounded-lg font-semibold text-lg transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg ${
               isSubmitting || isBlocked
-                ? 'bg-gray-400 text-gray-700 cursor-not-allowed'
-                : 'bg-amber-400 hover:bg-amber-500 text-black'
+                ? 'bg-gray-400 text-gray-300 cursor-not-allowed'
+                : 'bg-amber-400 hover:bg-amber-500 text-gray-900 dark:text-white'
             }`}
           >
             {isSubmitting ? (
@@ -599,7 +599,7 @@ export default function SecureContactForm({
             ) : (
               <>
                 <Send className="h-5 w-5" />
-                <span>Send Message</span>
+                <span>Submit</span>
               </>
             )}
           </button>

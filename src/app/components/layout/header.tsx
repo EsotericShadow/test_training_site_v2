@@ -97,7 +97,7 @@ export default function Header({ courseCategories }: HeaderProps) {
               {isCoursesOpen && (
                 <div ref={dropdownRef} className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-80 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden">
                   <div className="max-h-96 overflow-y-auto py-2">
-                    <Link href="/courses" onClick={handleNavigation} className="block px-5 py-3 bg-gray-50 dark:bg-gray-700 font-semibold hover:bg-yellow-400 hover:text-black transition-colors rounded-md mx-2 my-1">View All Courses</Link>
+                    <Link href="/courses" onClick={handleNavigation} className="block px-5 py-3 bg-gray-50 dark:bg-gray-700 font-semibold hover:bg-yellow-400 hover:text-gray-900 dark:hover:text-white transition-colors rounded-md mx-2 my-1">View All Courses</Link>
                     {Object.entries(courseCategories).map(([category, courses]) => (
                       <div key={category} className="mt-2">
                         <h3 className="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-yellow-600 dark:text-yellow-400 font-semibold mb-1">{category}</h3>
@@ -117,7 +117,7 @@ export default function Header({ courseCategories }: HeaderProps) {
             <Link href="/contact" className="text-gray-700 dark:text-gray-200 hover:text-yellow-500 font-medium transition-colors">Contact</Link>
           </div>
           <div className="hidden lg:block">
-            <Link href="/contact" className="bg-yellow-500 hover:bg-yellow-600 text-black px-6 py-3 rounded-lg font-semibold transition-all duration-300 shadow-md hover:shadow-lg">
+            <Link href="/contact" className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 dark:text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 shadow-md hover:shadow-lg">
               Request a Quote
             </Link>
           </div>
@@ -164,7 +164,7 @@ export default function Header({ courseCategories }: HeaderProps) {
             </div>
             <Link href="/contact" onClick={handleNavigation} className="block text-lg font-medium hover:text-yellow-500">Contact</Link>
             <div className="pt-4">
-              <Link href="/contact" onClick={handleNavigation} className="block w-full text-center bg-yellow-500 hover:bg-yellow-600 text-black px-6 py-3 rounded-lg font-semibold transition-all duration-300 shadow-md hover:shadow-lg">
+              <Link href="/contact" onClick={handleNavigation} className="block w-full text-center bg-yellow-500 hover:bg-yellow-600 text-gray-900 dark:text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 shadow-md hover:shadow-lg">
                 Request a Quote
               </Link>
             </div>
