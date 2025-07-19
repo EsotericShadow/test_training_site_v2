@@ -57,11 +57,11 @@ export default function Footer({ footerContent, popularCourses }: FooterProps) {
             <ul className="space-y-3">
               <li className="flex items-start"><MapPin className="h-6 w-6 mr-3 mt-1 text-yellow-400" /><span>{footerContent?.location}</span></li>
               <li className="flex items-center"><Mail className="h-5 w-5 mr-3 text-yellow-400" /><a href={`mailto:${footerContent?.email}`} className="hover:text-yellow-400">{footerContent?.email}</a></li>
-              <li className="flex items-center"><Phone className="h-5 w-5 mr-3 text-yellow-400" /><a href={`tel:${footerContent?.phone}`} className="hover:text-yellow-400">{footerContent?.phone}</a></li>
+              <li className="flex items-center"><Phone className="h-5 w-5 mr-3 text-yellow-400" /><a href={`tel:${footerContent?.phone}`} className="hover:text-yellow-400">Call us at {footerContent?.phone}</a></li>
             </ul>
           </div>
         </div>
-        <div className="mt-16 pt-8 border-t border-gray-800 text-center text-gray-400">
+        <div className="mt-16 pt-8 border-t border-gray-800 text-center text-gray-300">
           <p>{footerContent?.copyright_text || `© ${new Date().getFullYear()} ${footerContent?.company_name}. All Rights Reserved.`}</p>
         </div>
       </div>

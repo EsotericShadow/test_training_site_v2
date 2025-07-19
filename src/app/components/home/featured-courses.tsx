@@ -107,7 +107,7 @@ export default function FeaturedCourses() {
               </div>
               <div className="p-6">
                 <h3 className="text-2xl font-semibold mb-3 text-gray-100 dark:text-white">{course.title}</h3>
-                <p className="text-gray-300 dark:text-gray-400 mb-4 line-clamp-3">{course.description}</p>
+                <p className="text-gray-200 dark:text-gray-400 mb-4 line-clamp-3">{course.description}</p>
                 <div className="flex justify-between items-center text-sm text-gray-400 dark:text-gray-400 mb-6">
                   <div className="flex items-center"><Clock className="h-6 w-6 mr-1" /> {course.duration}</div>
                   <div className="flex items-center"><Users className="h-10 w-10 mr-1" /> {course.audience}</div>
