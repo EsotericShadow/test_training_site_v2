@@ -35,12 +35,15 @@ export default function HeroSection({ initialData }: HeroSectionProps) {
   const sectionRef = useGsap((ref) => {
     if (!ref.current) return;
 
-    gsap.to(ref.current.querySelectorAll('.slogan, .main-heading, .subtitle, .cta-button'), {
-      opacity: 1,
-      y: 0,
-      duration: 1,
-      ease: 'power3.out',
-      stagger: 0.15,
+    const currentRef = ref.current;
+    requestAnimationFrame(() => {
+      gsap.to(currentRef.querySelectorAll('.slogan, .main-heading, .subtitle, .cta-button'), {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        ease: 'power3.out',
+        stagger: 0.15,
+      });
     });
   });
 
