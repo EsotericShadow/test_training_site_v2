@@ -45,44 +45,30 @@ Server response latency can stem from various factors. Consider the following ar
 5.  **Hosting Provider (Vercel):**
     *   The quality and location of your hosting provider can significantly affect server response times. Vercel's serverless functions can experience "cold starts" which might contribute to initial latency, though the N+1 query pattern and `cache: 'no-store'` are more direct causes of sustained slowness.
 
-## Proposed Solutions
+## Proposed Solutions (Implemented)
 
-1.  **Optimize Database Queries (Address N+1):**
-    *   **Refactor Queries:** The most impactful change will be to refactor database queries to avoid the N+1 problem. Instead of separate queries for each course's features and categories, use SQL `JOIN` operations to fetch all necessary data in a single, more efficient query.
-        *   **Example for `getAllCourses` in `src/app/api/adm_f7f8556683f1cdc65391d8d2_8e91/courses/route.ts`:**
-            Instead of:
-            ```typescript
-            const courses = await coursesOps.getAll();
-            const coursesWithFeatures = await Promise.all(
-              courses.map(async (course) => {
-                const features = await courseFeaturesOps.getByCourseId(course.id);
-                const category = course.category_id ? await courseCategoriesOps.getById(course.category_id) : null;
-                return { ...course, features, category: category ? { name: category.name } : undefined };
-              })
-            );
-            ```
-            Consider a single SQL query that joins `courses`, `course_features`, and `course_categories` tables. This might involve more complex SQL to aggregate features, but it will drastically reduce database round trips.
-    *   **Add/Refine Database Indexes:** Ensure appropriate indexes are on columns used in `WHERE` clauses and `JOIN` conditions (e.g., `course_id` in `course_features`, `id` in `course_categories`).
-    *   **Consider Caching:** For frequently accessed, relatively static data, implement server-side caching (e.g., using an in-memory cache or Redis) to reduce database load.
-2.  **Optimize Server-Side Code (Next.js API Routes & Server Components):**
-    *   **Review `cache: 'no-store'` Usage:** In `src/app/layout.tsx`, evaluate if `cache: 'no-store'` is strictly necessary for `getCourseCategories()` and `getFooterData()`. If the data doesn't change frequently, consider using Next.js's default caching behavior or `revalidate` options to serve cached data for subsequent requests, reducing the load on API routes and the database.
-    *   **Profile API Routes:** Use Node.js profiling tools to identify bottlenecks within your Next.js API routes beyond database interactions.
-    *   **Efficient Algorithms:** Review and optimize algorithms for performance-critical operations within your API logic.
-    *   **Asynchronous Operations:** Ensure I/O operations (like file reads, network requests) are non-blocking.
-3.  **Implement Caching:**
-    *   **Server-side Caching:** Cache dynamic content that doesn't change frequently. For example, the results of `coursesOps.getAll()` could be cached for a short period if the data doesn't update constantly.
-    *   **CDN (Content Delivery Network):** For static assets (images, CSS, JS), a CDN (like Vercel's built-in CDN) significantly reduces latency by serving content from edge locations closer to the user.
-4.  **Upgrade Server Resources (Vercel):**
-    *   If resource monitoring indicates CPU, memory, or disk I/O are bottlenecks, consider upgrading your Vercel plan or optimizing your serverless function configurations (e.g., memory allocation).
-5.  **Review Third-Party Integrations:**
-    *   Minimize reliance on slow third-party services.
-    *   Implement timeouts and fallbacks for external API calls.
-    *   Consider caching responses from third-party APIs where appropriate.
-6.  **Enable HTTP/2 or HTTP/3:**
-    *   Vercel typically handles this, but ensure your application is configured to leverage modern HTTP protocols for more efficient request/response handling.
-7.  **Server Location:**
-    *   Vercel automatically deploys to regions closest to your users. Ensure your primary data center for `@vercel/postgres` is also optimally located relative to your users.
+The following solutions have been implemented to address server response latency:
 
-This issue is a high priority as it impacts the very first byte received by the user, setting the tone for the entire page load experience.
+1.  **Optimized Database Queries (N+1 Addressed):**
+    *   The `getAllCourses` function in `src/app/api/adm_f7f8556683f1cdc65391d8d2_8e91/courses/route.ts` has been refactored. Instead of making multiple individual database calls for course features and categories, a single, more efficient SQL `JOIN` query utilizing `ARRAY_AGG` is now used within `lib/database.ts` (`coursesOps.getAllWithDetails`). This significantly reduces database round trips and server-side processing time.
+    *   Explicit database indexes have been added to `course_features.course_id` and `courses.category_id` to further optimize `JOIN` operations.
+
+2.  **Optimized Server-Side Data Fetching (`cache: 'no-store'` Replaced):**
+    *   The `cache: 'no-store'` directive has been removed from the `fetch` calls within `getCourseCategories()` and `getFooterData()` functions in `src/app/layout.tsx`.
+    *   These `fetch` calls now use `{ next: { revalidate: 3600 } }` to leverage Next.js's built-in data caching and revalidation mechanisms. This allows the server to serve cached data for subsequent requests, significantly reducing the load on API routes and the database, and improving initial page load times.
+
+These changes directly address the primary causes of server response latency identified in the audit, leading to a faster Time to First Byte (TTFB) and improved First Contentful Paint (FCP) and Largest Contentful Paint (LCP).
+
+**Further Considerations (Not yet implemented, but still relevant for overall performance):**
+
+*   **Profile API Routes:** Continue to use Node.js profiling tools to identify any remaining bottlenecks within Next.js API routes beyond database interactions.
+*   **Efficient Algorithms:** Review and optimize algorithms for performance-critical operations within API logic.
+*   **Asynchronous Operations:** Ensure I/O operations (like file reads, network requests) are non-blocking.
+*   **Server Resources (Vercel Environment):** Monitor server resource utilization (CPU/Memory) and consider upgrading Vercel plan or optimizing serverless function configurations if bottlenecks are identified.
+*   **Review Third-Party Integrations:** Minimize reliance on slow third-party services and implement timeouts/fallbacks for external API calls.
+*   **Enable HTTP/2 or HTTP/3:** Ensure the application leverages modern HTTP protocols for efficient request/response handling.
+*   **Server Location:** Ensure the primary data center for `@vercel/postgres` is optimally located relative to users.
+
+This issue was a high priority as it impacts the very first byte received by the user, setting the tone for the entire page load experience.
 
 
