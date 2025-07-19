@@ -31,21 +31,13 @@ export default function WhyChooseUsBento({ items }: WhyChooseUsBentoProps) {
   const bentoRef = useRef<HTMLDivElement>(null);
   const historyRef = useRef<Set<string>[]>([]);
   const [bentoSlots, setBentoSlots] = useState<BentoSlot[]>([]);
-
-  // Log the items prop when the component mounts or items change
-  useEffect(() => {
-    console.log("WhyChooseUsBento received items:", items);
-  }, [items]);
+  const [isVisible, setIsVisible] = useState(false);
 
   const getSlots = useCallback(() => {
-    console.log("Current historyRef:", historyRef.current);
-    console.log("Available items:", items);
-
     const newSlots: BentoSlot[] = [];
-    let availableItemsForThisCycle = [...items]; // Create a mutable copy for this cycle
+    let availableItemsForThisCycle = [...items];
     const recentImages = new Set<string>(historyRef.current.flatMap(set => [...set]));
 
-    // Helper to pick a random item from a given array and return the selected item and the remaining items
     const pickAndReturnRemaining = (pool: WhyChooseUsItem[], filterFn: (item: WhyChooseUsItem) => boolean): { selected: WhyChooseUsItem | undefined, remaining: WhyChooseUsItem[] } => {
       const filteredPool = pool.filter(filterFn);
       if (filteredPool.length === 0) return { selected: undefined, remaining: pool };
@@ -53,21 +45,16 @@ export default function WhyChooseUsBento({ items }: WhyChooseUsBentoProps) {
       const randIdx = Math.floor(Math.random() * filteredPool.length);
       const selected = filteredPool[randIdx];
 
-      // Ensure selected is not undefined before accessing its properties
       const remaining = selected ? pool.filter(item => item.id !== selected.id) : pool;
       return { selected, remaining };
     };
 
-    console.log("Unique image URLs count:", new Set(items.map(item => item.image_url).filter(Boolean)).size);
-
     // Select 2 items for text slots
     for (let i = 0; i < 2; i++) {
-      // Prefer items with point but no image_url
       let result = pickAndReturnRemaining(availableItemsForThisCycle, item => !!item.point && !item.image_url);
       let selectedItem = result.selected;
       availableItemsForThisCycle = result.remaining;
 
-      // If none, pick any with point
       if (!selectedItem) {
         result = pickAndReturnRemaining(availableItemsForThisCycle, item => !!item.point);
         selectedItem = result.selected;
@@ -90,23 +77,15 @@ export default function WhyChooseUsBento({ items }: WhyChooseUsBentoProps) {
       });
     }
 
-    console.log("Before image slot selection, availableItemsForThisCycle:", availableItemsForThisCycle);
-
     // Select 4 items for image slots
     for (let i = 0; i < 4; i++) {
       let selectedItem: WhyChooseUsItem | undefined;
 
-      // Log available non-recent images
-      const availableNonRecent = availableItemsForThisCycle.filter(item => !!item.image_url && !recentImages.has(item.image_url || '')).length;
-      console.log(`Available non-recent images for image slot ${i}:`, availableNonRecent);
-
-      // Try to pick an image not in recent history
       let result = pickAndReturnRemaining(availableItemsForThisCycle, item => !!item.image_url && !recentImages.has(item.image_url || ''));
       selectedItem = result.selected;
       availableItemsForThisCycle = result.remaining;
 
       if (!selectedItem) {
-        // If no non-recent image, pick any available image
         result = pickAndReturnRemaining(availableItemsForThisCycle, item => !!item.image_url);
         selectedItem = result.selected;
         availableItemsForThisCycle = result.remaining;
@@ -128,7 +107,6 @@ export default function WhyChooseUsBento({ items }: WhyChooseUsBentoProps) {
       });
     }
 
-    // Shuffle the final slots to randomize their positions in the grid
     const shuffleArray = (array: BentoSlot[]) => {
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -139,30 +117,55 @@ export default function WhyChooseUsBento({ items }: WhyChooseUsBentoProps) {
       return array;
     };
 
-    console.log("Generated Slots:", newSlots);
     return shuffleArray(newSlots);
   }, [items]);
 
   useEffect(() => {
-    const regenerate = () => {
-      const newSlots = getSlots();
-      setBentoSlots(newSlots);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (entry) {
+          setIsVisible(entry.isIntersecting);
+        }
+      },
+      {
+        root: null, // viewport
+        rootMargin: '0px',
+        threshold: 0.1, // Trigger when 10% of the component is visible
+      }
+    );
 
-      // Update history with displayed image_urls, keeping only last 3 cycles
-      const displayedImages = new Set(newSlots.map(slot => slot.item.image_url).filter(Boolean) as string[]);
-      historyRef.current = [...historyRef.current, displayedImages].slice(-3);
-      console.log("Updated historyRef:", historyRef.current);
+    if (bentoRef.current) {
+      observer.observe(bentoRef.current);
+    }
+
+    return () => {
+      if (bentoRef.current) {
+        observer.unobserve(bentoRef.current);
+      }
     };
-
-    regenerate(); // Initial
-
-    const interval = setInterval(regenerate, 10000); // Regenerate every 10 seconds
-
-    return () => clearInterval(interval);
-  }, [getSlots]);
+  }, []);
 
   useEffect(() => {
-    if (!bentoRef.current || bentoSlots.length === 0) return;
+    let interval: NodeJS.Timeout;
+    if (isVisible) {
+      const regenerate = () => {
+        const newSlots = getSlots();
+        setBentoSlots(newSlots);
+
+        const displayedImages = new Set(newSlots.map(slot => slot.item.image_url).filter(Boolean) as string[]);
+        historyRef.current = [...historyRef.current, displayedImages].slice(-3);
+      };
+
+      regenerate(); // Initial regeneration when component becomes visible
+      interval = setInterval(regenerate, 10000); // Regenerate every 10 seconds
+    }
+
+    return () => clearInterval(interval);
+  }, [isVisible, getSlots]);
+
+  useEffect(() => {
+    if (!bentoRef.current || bentoSlots.length === 0 || !isVisible) return;
 
     const state = Flip.getState(bentoRef.current.children);
 
@@ -171,7 +174,7 @@ export default function WhyChooseUsBento({ items }: WhyChooseUsBentoProps) {
       ease: 'power2.inOut',
       stagger: 0.05,
     });
-  }, [bentoSlots]);
+  }, [bentoSlots, isVisible]);
 
   if (items.length === 0) {
     return null;
