@@ -1,23 +1,11 @@
 import { Metadata } from 'next';
 import Image from 'next/image';
-import HeroSection from '@/app/components/home/hero-section';
 import DynamicFeaturedCourses from '@/app/components/home/DynamicFeaturedCourses';
 import DynamicAboutSnippet from '@/app/components/home/DynamicAboutSnippet';
 import { Suspense } from 'react';
+import dynamicComponent from 'next/dynamic';
 
-
-interface HeroSection {
-  slogan?: string;
-  main_heading?: string;
-  highlight_text?: string;
-  subtitle?: string;
-  background_image_url?: string;
-  background_image_alt?: string;
-  primary_button_text?: string;
-  primary_button_link?: string;
-  secondary_button_text?: string;
-  secondary_button_link?: string;
-}
+const DynamicHeroSection = dynamicComponent(() => import('@/app/components/home/hero-section'));
 
 export const dynamic = 'force-dynamic';
 
@@ -175,7 +163,9 @@ export default async function Home() {
           />
         )}
         <div className="absolute inset-0 bg-black opacity-60"></div>
-        <HeroSection initialData={heroData} />
+        <Suspense fallback={<div className="h-96 flex items-center justify-center"><div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-yellow-400"></div></div>}>
+          <DynamicHeroSection initialData={heroData} />
+        </Suspense>
       </div>
       <Suspense fallback={<div className="h-96 flex items-center justify-center"><div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-yellow-400"></div></div>}>
         <DynamicFeaturedCourses />

@@ -1,5 +1,6 @@
 'use client';
 
+import { useCallback } from 'react';
 import Link from 'next/link';
 import { useGsap } from '@/app/hooks/useGsap';
 import { gsap } from 'gsap';
@@ -32,7 +33,7 @@ interface HeroSectionProps {
 }
 
 export default function HeroSection({ initialData }: HeroSectionProps) {
-  const sectionRef = useGsap((ref) => {
+  const sectionRef = useGsap(useCallback((ref) => {
     if (!ref.current) return;
 
     const currentRef = ref.current;
@@ -45,7 +46,7 @@ export default function HeroSection({ initialData }: HeroSectionProps) {
         stagger: 0.15,
       });
     });
-  });
+  }, []));
 
   if (!initialData) {
     return <div className="h-screen bg-gray-900 flex items-center justify-center"><div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-yellow-400"></div></div>;  // Restore loading if needed
