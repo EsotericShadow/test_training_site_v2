@@ -23,7 +23,7 @@ interface ThemeProviderProps {
 }
 
 export function ThemeProvider({ children }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>('dark');
+  const [theme] = useState<Theme>('dark');
 
   useEffect(() => {
     document.documentElement.classList.add('dark');
