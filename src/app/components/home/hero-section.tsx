@@ -1,10 +1,6 @@
-
 'use client';
 
-import { useState, useEffect } from 'react';
 import Link from 'next/link';
-
-
 import { useGsap } from '@/app/hooks/useGsap';
 import { gsap } from 'gsap';
 
@@ -36,43 +32,26 @@ interface HeroSectionProps {
 }
 
 export default function HeroSection({ initialData }: HeroSectionProps) {
-  const [heroData, setHeroData] = useState(initialData);
-  const [loading, setLoading] = useState(!initialData);
-
   const sectionRef = useGsap((ref) => {
     if (!ref.current) return;
 
-    // Animate all elements to their final visible state with a stagger
     gsap.to(ref.current.querySelectorAll('.slogan, .main-heading, .subtitle, .cta-button'), {
       opacity: 1,
-      y: 0, // Animate to their original Y position
+      y: 0,
       duration: 1,
       ease: 'power3.out',
-      stagger: 0.15, // Stagger the animation for each element
+      stagger: 0.15,
     });
   });
 
-  useEffect(() => {
-    if (!initialData) {
-      fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/adm_f7f8556683f1cdc65391d8d2_8e91/hero-section`)
-        .then((res) => res.json())
-        .then((data) => {
-          setHeroData(data);
-          setLoading(false);
-        })
-        .catch(() => setLoading(false));
-    }
-  }, [initialData]);
-
-  if (loading) {
-    return <div className="h-screen bg-gray-900 flex items-center justify-center"><div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-yellow-400"></div></div>;
+  if (!initialData) {
+    return <div className="h-screen bg-gray-900 flex items-center justify-center"><div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-yellow-400"></div></div>;  // Restore loading if needed
   }
 
-  const { heroSection, heroStats } = heroData || {};
+  const { heroSection, heroStats } = initialData;
 
   return (
     <section ref={sectionRef} className="relative text-white">
-
       <div className="relative container mx-auto px-4 py-48 text-center">
         <p className="slogan text-yellow-400 font-semibold text-lg mb-4 opacity-0 translate-y-[50px]">{heroSection?.slogan}</p>
         <h1 className="main-heading text-4xl md:text-6xl font-extrabold leading-tight mb-6 opacity-0 translate-y-[50px]">
@@ -85,7 +64,7 @@ export default function HeroSection({ initialData }: HeroSectionProps) {
           <Link href={heroSection?.primary_button_link || '/courses'} className="cta-button bg-yellow-500 hover:bg-yellow-600 text-gray-900 dark:text-white font-bold py-4 px-8 rounded-lg transition duration-300 transform hover:scale-105 shadow-lg opacity-0 translate-y-[50px]">
             {heroSection?.primary_button_text || 'View Courses'}
           </Link>
-          <Link href={heroSection?.secondary_button_link || '/contact'} className="cta-button bg-transparent border-2 border-yellow-500 text-yellow-500 font-bold py-4 px-8 rounded-lg hover:bg-yellow-500 hover:text-gray-900 dark:hover:text-white transition duration-300 transform hover:scale-105 opacity-0 translate-y-[50px]">
+          <Link href={heroSection?.secondary_button_link || '/contact'} className="cta-button bg-transparent border-2 border-yellow-500 text-yellow-500 font-bold py-4 px-8 rounded-lg hover:bg-yellow-400 hover:text-gray-900 dark:hover:text-white transition duration-300 transform hover:scale-105 opacity-0 translate-y-[50px]">
             {heroSection?.secondary_button_text || 'Contact Us'}
           </Link>
         </div>
