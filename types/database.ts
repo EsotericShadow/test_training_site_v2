@@ -48,6 +48,7 @@ export interface Course {
     slug: string;
     title: string;
     description: string;
+    overview?: string;
     what_youll_learn?: string;
     duration: string;
     audience: string;
@@ -57,7 +58,8 @@ export interface Course {
     image_alt?: string;
     created_at: string;
     updated_at: string;
-    category_name?: string;
+    category_name?: string | null;
+    features?: { feature: string; display_order: number }[];
 }
 
 export interface CourseFeature {

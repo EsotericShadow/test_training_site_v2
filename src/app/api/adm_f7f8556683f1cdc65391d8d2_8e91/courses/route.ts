@@ -3,11 +3,11 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export const runtime = 'nodejs';
 import { withSecureAuth } from '../../../../../lib/secure-jwt';
-import { coursesOps, courseFeaturesOps, courseCategoriesOps } from '../../../../../lib/database';
+import { coursesOps, courseFeaturesOps } from '../../../../../lib/database';
 import { sanitizeInput, validateInput } from '../../../../../lib/security-utils';
 import { validateToken } from '../../../../../lib/csrf';
 import { validateSession } from '../../../../../lib/session-manager';
-import type { Course, CourseFeature } from '../../../../../types/database';
+import type { Course } from '../../../../../types/database';
 
 // Define the expected signature for a Next.js App Router API Handler.
 type AppRouteHandlerFn = (
@@ -20,25 +20,10 @@ type AppRouteHandlerFn = (
 // GET - Get all courses for admin management
 async function getAllCourses(): Promise<NextResponse> {
   try {
-    const courses = await coursesOps.getAll();
-    
-    const coursesWithFeatures = await Promise.all(
-      courses.map(async (course) => {
-        const features = await courseFeaturesOps.getByCourseId(course.id);
-        const category = course.category_id ? await courseCategoriesOps.getById(course.category_id) : null;
-        return {
-          ...course,
-          features: features.map((f: CourseFeature) => ({
-            feature: f.feature,
-            display_order: f.display_order
-          })),
-          category: category ? { name: category.name } : undefined
-        };
-      })
-    );
+    const courses = await coursesOps.getAllWithDetails();
 
     return NextResponse.json({
-      courses: coursesWithFeatures
+      courses: courses
     });
   } catch (error: unknown) {
     console.error('Error fetching courses for admin:', error);

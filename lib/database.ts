@@ -22,6 +22,11 @@ import type {
   FileFolder,
 } from '../types/database';
 
+interface CourseRow extends Course {
+  features: { feature: string; display_order: number }[];
+  category_name: string | null;
+}
+
 type DbResult<T = never> = {
   id?: number | null;
   changes: number;
@@ -148,6 +153,55 @@ export const coursesOps = {
       ORDER BY c.created_at DESC
     `;
     return rows as Course[];
+  },
+  getAllWithDetails: async (): Promise<Course[]> => {
+    const { rows } = await sql<CourseRow>`
+      SELECT
+          c.id,
+          c.slug,
+          c.title,
+          c.description,
+          c.duration,
+          c.audience,
+          c.category_id,
+          c.popular,
+          c.image_url,
+          c.image_alt,
+          c.created_at,
+          c.updated_at,
+          c.overview,
+          c.what_youll_learn,
+          cat.name AS category_name,
+          ARRAY_AGG(json_build_object('feature', cf.feature, 'display_order', cf.display_order) ORDER BY cf.display_order) FILTER (WHERE cf.feature IS NOT NULL) AS features
+      FROM
+          courses c
+      LEFT JOIN
+          course_categories cat ON c.category_id = cat.id
+      LEFT JOIN
+          course_features cf ON c.id = cf.course_id
+      GROUP BY
+          c.id, c.slug, c.title, c.description, c.duration, c.audience, c.category_id, c.popular, c.image_url, c.image_alt, c.created_at, c.updated_at, c.overview, c.what_youll_learn, cat.name
+      ORDER BY
+          c.created_at DESC
+    `;
+    return rows.map((row) => ({
+      id: row.id,
+      slug: row.slug,
+      title: row.title,
+      description: row.description,
+      what_youll_learn: row.what_youll_learn,
+      duration: row.duration,
+      audience: row.audience,
+      category_id: row.category_id,
+      popular: row.popular,
+      image_url: row.image_url,
+      image_alt: row.image_alt,
+      created_at: row.created_at,
+      updated_at: row.updated_at,
+      overview: row.overview,
+      category_name: row.category_name,
+      features: row.features || [],
+    })) as Course[];
   },
   getById: async (id: number): Promise<Course | null> => {
     const { rows } = await sql`

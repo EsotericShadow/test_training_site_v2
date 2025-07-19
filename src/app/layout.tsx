@@ -92,7 +92,7 @@ async function getCourseCategories(): Promise<CourseCategories> {
 async function getFooterData(): Promise<FooterData> {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://test-training-site-v2-xjey.vercel.app';
-    const response = await fetch(`${baseUrl}/api/adm_f7f8556683f1cdc65391d8d2_8e91/footer`, { cache: 'no-store' });
+    const response = await fetch(`${baseUrl}/api/adm_f7f8556683f1cdc65391d8d2_8e91/footer`, { next: { revalidate: 3600 } });
     if (!response.ok) throw new Error('Failed to fetch footer data');
     const data = await response.json();
     return { footerContent: data.footerContent, popularCourses: data.popularCourses || [] };

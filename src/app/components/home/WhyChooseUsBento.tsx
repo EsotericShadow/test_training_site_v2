@@ -135,13 +135,15 @@ export default function WhyChooseUsBento({ items }: WhyChooseUsBentoProps) {
       }
     );
 
-    if (bentoRef.current) {
-      observer.observe(bentoRef.current);
+    const currentRef = bentoRef.current;
+
+    if (currentRef) {
+      observer.observe(currentRef);
     }
 
     return () => {
-      if (bentoRef.current) {
-        observer.unobserve(bentoRef.current);
+      if (currentRef) {
+        observer.unobserve(currentRef);
       }
     };
   }, []);
