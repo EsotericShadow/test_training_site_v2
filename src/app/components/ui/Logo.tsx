@@ -24,7 +24,7 @@ export default function Logo({ size = 'md', className = '', showText = true }: L
           alt="Karma Training Logo"
           width={width}
           height={height}
-          className="w-auto h-auto transition-transform duration-300 group-hover:scale-105"
+          className="transition-transform duration-300 group-hover:scale-105 object-contain"
           priority
           quality={60}
           sizes="(max-width: 768px) 25vw, (max-width: 1200px) 50vw, 33vw"
