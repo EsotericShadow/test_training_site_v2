@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Shield, Camera, Briefcase, Calendar, Users, BookOpen, type LucideIcon } from 'lucide-react';
+import AboutIcon from './AboutIcons';
 import { useGsap } from '@/app/hooks/useGsap';
 import { gsap } from 'gsap';
 import type { TeamMember } from '../../../types/database';
@@ -12,15 +12,6 @@ import type { TeamMember } from '../../../types/database';
 const WhyChooseUsBento = dynamic(() => import('@/app/components/home/WhyChooseUsBento'), {
   loading: () => <div className="h-96 flex items-center justify-center"><div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-yellow-400"></div></div>,
 });
-
-const LucideIconMap: Record<string, LucideIcon> = {
-  Shield,
-  Camera,
-  Briefcase,
-  Calendar,
-  Users,
-  BookOpen,
-};
 
 interface CompanyInfo {
   company_name: string;
@@ -58,9 +49,7 @@ interface AboutPageClientProps {
   teamMembers: TeamMember[];
 }
 
-function toPascalCase(str: string): string {
-  return str.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join('');
-}
+
 
 export default function AboutPageClient({ teamMembers }: AboutPageClientProps) {
   const [companyInfo, setCompanyInfo] = useState<CompanyInfo | null>(null);
@@ -157,22 +146,22 @@ export default function AboutPageClient({ teamMembers }: AboutPageClientProps) {
             </div>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               <div className="backdrop-blur-md bg-white/10 border border-white/20 p-6 rounded-xl shadow-xl text-center">
-                <Calendar className="h-10 w-10 text-yellow-500 mx-auto mb-3" />
+                <AboutIcon name="calendar" className="h-10 w-10 text-yellow-500 mx-auto mb-3" />
                 <p className="text-4xl font-bold text-gray-300 dark:text-white">{companyInfo?.established_year}</p>
                 <p className="text-md text-gray-300">Established</p>
               </div>
               <div className="backdrop-blur-md bg-white/10 border border-white/20 p-6 rounded-xl shadow-xl text-center">
-                <Briefcase className="h-10 w-10 text-yellow-500 mx-auto mb-3" />
+                <AboutIcon name="briefcase" className="h-10 w-10 text-yellow-500 mx-auto mb-3" />
                 <p className="text-4xl font-bold text-gray-300 dark:text-white">{companyInfo?.total_experience || 'N/A'}</p>
                 <p className="text-md text-gray-300">Years Experience</p>
               </div>
               <div className="backdrop-blur-md bg-white/10 border border-white/20 p-6 rounded-xl shadow-xl text-center">
-                <Users className="h-10 w-10 text-yellow-500 mx-auto mb-3" />
+                <AboutIcon name="users" className="h-10 w-10 text-yellow-500 mx-auto mb-3" />
                 <p className="text-4xl font-bold text-gray-300 dark:text-white">{companyInfo?.students_trained_count || 'N/A'}</p>
                 <p className="text-md text-gray-300">Students Trained</p>
               </div>
               <div className="backdrop-blur-md bg-white/10 border border-white/20 p-6 rounded-xl shadow-xl text-center">
-                <BookOpen className="h-10 w-10 text-yellow-500 mx-auto mb-3" />
+                <AboutIcon name="book-open" className="h-10 w-10 text-yellow-500 mx-auto mb-3" />
                 <p className="text-4xl font-bold text-gray-300 dark:text-white">{companyInfo?.total_courses || 'N/A'}</p>
                 <p className="text-md text-gray-300">Courses Offered</p>
               </div>
@@ -190,12 +179,7 @@ export default function AboutPageClient({ teamMembers }: AboutPageClientProps) {
             {companyValues.map(value => (
               <div key={value.id} className="backdrop-blur-md bg-white/10 border border-white/20 p-8 rounded-xl shadow-xl text-center">
                 <div className="bg-yellow-400 text-white rounded-full p-4 w-20 h-20 mx-auto mb-6 flex items-center justify-center">
-                  {(() => {
-                    console.log('Company Value Icon:', value.icon); // Log the icon name
-                    const iconName = toPascalCase(value.icon);
-                    const IconComponent = LucideIconMap[iconName] || Shield;
-                    return <IconComponent className="h-10 w-10" />;
-                  })()}
+                  <AboutIcon name={value.icon} className="h-10 w-10" />;
                 </div>
                 <h3 className="text-2xl font-semibold mb-3 text-gray-300">{value.title}</h3>
                 <p className="text-gray-300">{value.description}</p>
@@ -232,7 +216,7 @@ export default function AboutPageClient({ teamMembers }: AboutPageClientProps) {
                     <Image src={member.photo_url} alt={member.name} fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" className="object-cover" quality={75} />
                   ) : (
                     <div className="bg-gray-200 dark:bg-gray-700 h-full flex items-center justify-center">
-                      <Camera className="h-12 w-12 text-gray-200" />
+                      <AboutIcon name="camera" className="h-12 w-12 text-gray-200" />
                     </div>
                   )}
                 </div>

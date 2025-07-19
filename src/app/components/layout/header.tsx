@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
-import { Menu, X, ChevronDown, Phone, Mail } from 'lucide-react'
+import LayoutIcon from './LayoutIcons'
 import Logo from '../ui/Logo'
 
 interface Course {
@@ -64,11 +64,11 @@ export default function Header({ courseCategories }: HeaderProps) {
         <div className="container mx-auto px-4 sm:px-6 flex justify-between items-center py-2">
           <div className="flex items-center space-x-4">
             <a href="tel:250-615-3727" className="flex items-center space-x-2 hover:text-yellow-400 transition-colors">
-              <Phone className="h-4 w-4" />
+              <LayoutIcon name="phone" className="h-4 w-4" />
               <span>250-615-3727</span>
             </a>
             <a href="mailto:info@karmatraining.ca" className="flex items-center space-x-2 hover:text-yellow-400 transition-colors">
-              <Mail className="h-4 w-4" />
+              <LayoutIcon name="mail" className="h-4 w-4" />
               <span className="hidden sm:inline">info@karmatraining.ca</span>
             </a>
           </div>
@@ -92,7 +92,7 @@ export default function Header({ courseCategories }: HeaderProps) {
                 aria-expanded={isCoursesOpen}
               >
                 <span>Courses</span>
-                <ChevronDown className={`h-5 w-5 transition-transform ${isCoursesOpen ? 'rotate-180' : ''}`} />
+                <LayoutIcon name="chevron-down" className={`h-5 w-5 transition-transform ${isCoursesOpen ? 'rotate-180' : ''}`} />
               </button>
               {isCoursesOpen && (
                 <div ref={dropdownRef} className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-80 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden">
@@ -123,7 +123,7 @@ export default function Header({ courseCategories }: HeaderProps) {
           </div>
           <div className="lg:hidden">
             <button onClick={() => setIsMenuOpen(!isMenuOpen)} aria-label="Toggle menu">
-              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              {isMenuOpen ? <LayoutIcon name="x" className="h-6 w-6" /> : <LayoutIcon name="menu" className="h-6 w-6" />}
             </button>
           </div>
         </div>
@@ -142,7 +142,7 @@ export default function Header({ courseCategories }: HeaderProps) {
                 aria-expanded={isCoursesOpen}
               >
                 <span>Courses</span>
-                <ChevronDown className={`h-5 w-5 transition-transform ${isCoursesOpen ? 'rotate-180' : ''}`} />
+                <LayoutIcon name="chevron-down" className={`h-5 w-5 transition-transform ${isCoursesOpen ? 'rotate-180' : ''}`} />
               </button>
               {isCoursesOpen && (
                 <div className="mt-2 pl-4 space-y-2 max-h-96 overflow-y-auto">

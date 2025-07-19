@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, Clock, Users, Camera } from 'lucide-react';
+import HomeIcon from './HomeIcons';
 import { useGsap } from '@/app/hooks/useGsap';
 import { gsap } from 'gsap';
 
@@ -101,7 +101,7 @@ export default function FeaturedCourses() {
                   />
                 ) : (
                   <div className="h-full flex items-center justify-center">
-                    <Camera className="h-12 w-12 text-gray-300" />
+                    <HomeIcon name="camera" className="h-12 w-12 text-gray-300" />
                   </div>
                 )}
               </div>
@@ -109,11 +109,11 @@ export default function FeaturedCourses() {
                 <h3 className="text-2xl font-semibold mb-3 text-gray-100 dark:text-white">{course.title}</h3>
                 <p className="text-gray-200 dark:text-gray-400 mb-4 line-clamp-3">{course.description}</p>
                 <div className="flex justify-between items-center text-sm text-gray-400 dark:text-gray-400 mb-6">
-                  <div className="flex items-center"><Clock className="h-6 w-6 mr-1" /> {course.duration}</div>
-                  <div className="flex items-center"><Users className="h-10 w-10 mr-1" /> {course.audience}</div>
+                  <div className="flex items-center"><HomeIcon name="clock" className="h-6 w-6 mr-1" /> {course.duration}</div>
+                  <div className="flex items-center"><HomeIcon name="users" className="h-10 w-10 mr-1" /> {course.audience}</div>
                 </div>
                 <Link href={`/courses/${course.slug}`} className="inline-flex items-center text-yellow-500 hover:text-yellow-600 font-semibold">
-                  Learn more about {course.title} <ArrowRight className="h-4 w-4 ml-2" />
+                  Learn more about {course.title} <HomeIcon name="arrow-right" className="h-4 w-4 ml-2" />
                 </Link>
               </div>
             </div>

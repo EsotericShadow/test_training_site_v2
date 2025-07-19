@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Phone, Mail, MapPin, Clock } from 'lucide-react'
+import ContactIcon from './ContactIcons'
 import SecureContactForm from '@/app/components/forms/SecureContactForm'
 import { useGsap } from '@/app/hooks/useGsap'
 import { gsap } from 'gsap'
@@ -68,10 +68,10 @@ export default function ContactPageClient() {
   }, []);
 
   const contactDetails = [
-    { icon: Phone, title: 'Phone', value: companyInfo?.phone || '250-615-3727', href: `tel:${companyInfo?.phone || '250-615-3727'}` },
-    { icon: Mail, title: 'Email', value: companyInfo?.email || 'info@karmatraining.ca', href: `mailto:${companyInfo?.email || 'info@karmatraining.ca'}` },
-    { icon: MapPin, title: 'Service Area', value: companyInfo?.location || 'Northwestern BC' },
-    { icon: Clock, title: 'Business Hours', value: companyInfo?.business_hours || 'Mon-Fri, 8am - 5pm' },
+    { icon: 'phone', title: 'Phone', value: companyInfo?.phone || '250-615-3727', href: `tel:${companyInfo?.phone || '250-615-3727'}` },
+    { icon: 'mail', title: 'Email', value: companyInfo?.email || 'info@karmatraining.ca', href: `mailto:${companyInfo?.email || 'info@karmatraining.ca'}` },
+    { icon: 'map-pin', title: 'Service Area', value: companyInfo?.location || 'Northwestern BC' },
+    { icon: 'clock', title: 'Business Hours', value: companyInfo?.business_hours || 'Mon-Fri, 8am - 5pm' },
   ];
 
   return (
@@ -104,7 +104,7 @@ export default function ContactPageClient() {
                 {contactDetails.map(detail => (
                   <div key={detail.title} className="animate-in flex items-start space-x-4">
                     <div className="bg-yellow-400 text-gray-200 dark:text-white rounded-full p-3">
-                      <detail.icon className="h-6 w-6" />
+                      <ContactIcon name={detail.icon as string} className="h-6 w-6" />
                     </div>
                     <div>
                       <h3 className="text-xl font-semibold text-gray-300 dark:text-white">{detail.title}</h3>

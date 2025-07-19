@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Clock, Users, CheckCircle, ArrowLeft, BookOpen, Phone, Mail } from 'lucide-react';
+import CourseIcon from '../CourseIcons';
 import dynamic from 'next/dynamic';
 import remarkGfm from 'remark-gfm';
 
@@ -57,7 +57,7 @@ export default function ExpandedCoursePageClient({ course }: ExpandedCoursePageC
             href="/courses"
             className="inline-flex items-center space-x-2 text-yellow-600 dark:text-yellow-400 hover:text-yellow-700 dark:hover:text-yellow-300 transition-colors font-medium"
           >
-            <ArrowLeft className="h-5 w-5" />
+            <CourseIcon name="arrow-left" className="h-5 w-5" />
             <span>Back to All Courses</span>
           </Link>
         </div>
@@ -135,7 +135,7 @@ export default function ExpandedCoursePageClient({ course }: ExpandedCoursePageC
                     <ul className="mt-4 space-y-2">
                       {course.features.slice(0, 5).map((feature, index) => (
                         <li key={index} className="flex items-center">
-                          <CheckCircle className="h-5 w-5 text-green-500 mr-2" />
+                          <CourseIcon name="check-circle" className="h-5 w-5 text-green-500 mr-2" />
                           <span>{feature.feature}</span>
                         </li>
                       ))}
@@ -162,21 +162,21 @@ export default function ExpandedCoursePageClient({ course }: ExpandedCoursePageC
               <h3 className="text-2xl font-bold text-yellow-400">Program Details</h3>
               <div className="space-y-4">
                 <div className="flex items-center space-x-4">
-                  <Clock className="h-6 w-6 text-yellow-400" />
+                  <CourseIcon name="clock" className="h-6 w-6 text-yellow-400" />
                   <div>
                     <p className="text-sm text-gray-300">Duration</p>
                     <p className="font-semibold text-lg">Minimum of 1 day*</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-4">
-                  <Users className="h-6 w-6 text-yellow-400" />
+                  <CourseIcon name="users" className="h-6 w-6 text-yellow-400" />
                   <div>
                     <p className="text-sm text-gray-300">Program Capacity</p>
                     <p className="font-semibold text-lg">4-10 trainees*</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-4">
-                  <BookOpen className="h-6 w-6 text-yellow-400" />
+                  <CourseIcon name="book-open" className="h-6 w-6 text-yellow-400" />
                   <div>
                     <p className="text-sm text-gray-300">Structure</p>
                     <p className="font-semibold text-lg">50% Classroom, 50% Practical</p>
@@ -206,12 +206,12 @@ export default function ExpandedCoursePageClient({ course }: ExpandedCoursePageC
             </p>
             <div className="flex flex-col md:flex-row items-center justify-center gap-8">
               <a href="tel:250-615-3727" className="flex items-center space-x-4 text-yellow-400 hover:text-yellow-300 transition-colors">
-                <Phone className="h-8 w-8" />
+                <CourseIcon name="phone" className="h-8 w-8" />
                 <span className="font-bold text-2xl">250-615-3727</span>
               </a>
               <div className="border-l border-gray-600 h-12 hidden md:block"></div>
               <a href="mailto:info@karmatraining.ca" className="flex items-center space-x-4 text-yellow-400 hover:text-yellow-300 transition-colors">
-                <Mail className="h-8 w-8" />
+                <CourseIcon name="mail" className="h-8 w-8" />
                 <span className="font-bold text-2xl">info@karmatraining.ca</span>
               </a>
             </div>

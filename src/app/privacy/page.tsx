@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Mail, MapPin } from 'lucide-react'
+import LegalIcon from '../LegalIcons'
 
 export default function PrivacyPolicyPage() {
   const [heroImage, setHeroImage] = useState<string | null>(null);
@@ -141,7 +141,7 @@ export default function PrivacyPolicyPage() {
                 <div className="space-y-6">
                   <div className="flex items-start space-x-4 p-4 bg-white dark:bg-gray-900 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
                     <div className="bg-brand-yellow/20 rounded-full p-3">
-                      <Mail className="h-6 w-6 text-brand-yellow" />
+                      <LegalIcon name="mail" className="h-6 w-6 text-brand-yellow" />
                     </div>
                     <div>
                       <h4 className="font-semibold text-gray-900 dark:text-white mb-1">Email</h4>
@@ -151,7 +151,7 @@ export default function PrivacyPolicyPage() {
                   </div>
                   <div className="flex items-start space-x-4 p-4 bg-white dark:bg-gray-900 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
                     <div className="bg-brand-yellow/20 rounded-full p-3">
-                      <MapPin className="h-6 w-6 text-brand-yellow" />
+                      <LegalIcon name="map-pin" className="h-6 w-6 text-brand-yellow" />
                     </div>
                     <div>
                       <h4 className="font-semibold text-gray-900 dark:text-white mb-1">Service Area</h4>

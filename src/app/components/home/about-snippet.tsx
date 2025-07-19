@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, CheckCircle } from 'lucide-react';
+import HomeIcon from './HomeIcons';
 import { useGsap } from '@/app/hooks/useGsap';
 import { gsap } from 'gsap';
 
@@ -78,13 +78,13 @@ export default function AboutSnippet({ teamMembers }: AboutSnippetProps) {
             <ul className="animate-in space-y-4 mb-8">
               {whyChooseUs.map(item => (
                 <li key={item.id} className="flex items-start">
-                  <CheckCircle className="h-6 w-6 text-green-500 mr-3 mt-1" />
+                  <HomeIcon name="check-circle" className="h-6 w-6 text-green-500 mr-3 mt-1" />
                   <span className="text-lg text-gray-700 dark:text-gray-300">{item.point}</span>
                 </li>
               ))}
             </ul>
             <Link href="/about" className="animate-in inline-flex items-center text-yellow-500 hover:text-yellow-600 font-semibold text-lg">
-              Learn More About Us <ArrowRight className="h-5 w-5 ml-2" />
+              Learn More About Us <HomeIcon name="arrow-right" className="h-5 w-5 ml-2" />
             </Link>
           </div>
           <div className="grid grid-cols-2 gap-4">

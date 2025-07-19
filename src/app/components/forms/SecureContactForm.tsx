@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Shield, AlertTriangle, CheckCircle, Send, Loader2 } from 'lucide-react';
+import FormIcon from './FormIcons';
 
 interface SecureContactFormProps {
   onSuccess?: () => void;
@@ -378,7 +378,7 @@ export default function SecureContactForm({
   if (isSubmitted) {
     return (
       <div className={`text-center ${className}`}>
-        <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
+        <FormIcon name="check-circle" className="h-16 w-16 text-green-500 mx-auto mb-4" />
         <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Message Sent Successfully!</h3>
         <p className="text-gray-600 dark:text-gray-400 mb-6">
           Thank you for your inquiry. We&apos;ll get back to you within 24 hours.
@@ -403,7 +403,7 @@ export default function SecureContactForm({
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold text-gray-200 dark:text-white">Send Us a Message</h2>
         <div className="flex items-center space-x-2">
-          <Shield className={`h-5 w-5 ${securityScore >= 70 ? 'text-green-500' : securityScore >= 50 ? 'text-yellow-500' : 'text-red-500'}`} />
+          <FormIcon name="shield" className={`h-5 w-5 ${securityScore >= 70 ? 'text-green-500' : securityScore >= 50 ? 'text-yellow-500' : 'text-red-500'}`} />
           <span className="text-sm text-gray-500">
             Security: {securityScore >= 70 ? 'High' : securityScore >= 50 ? 'Medium' : 'Low'}
           </span>
@@ -413,7 +413,7 @@ export default function SecureContactForm({
       {/* Error display */}
       {errors.security && (
         <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg flex items-center space-x-2">
-          <AlertTriangle className="h-5 w-5 text-red-500" />
+          <FormIcon name="alert-triangle" className="h-5 w-5 text-red-500" />
           <span className="text-red-700 dark:text-red-400">{errors.security}</span>
         </div>
       )}
@@ -578,7 +578,7 @@ export default function SecureContactForm({
         {/* Submit Button */}
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2 text-sm text-gray-300 dark:text-gray-400">
-            <Shield className="h-6 w-6" />
+            <FormIcon name="shield" className="h-6 w-6" />
             <span>Your information is secure and encrypted</span>
           </div>
 
@@ -593,12 +593,12 @@ export default function SecureContactForm({
           >
             {isSubmitting ? (
               <>
-                <Loader2 className="h-5 w-5 animate-spin" />
+                <FormIcon name="loader-2" className="h-5 w-5 animate-spin" />
                 <span>Sending...</span>
               </>
             ) : (
               <>
-                <Send className="h-5 w-5" />
+                <FormIcon name="send" className="h-5 w-5" />
                 <span>Submit</span>
               </>
             )}

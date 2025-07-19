@@ -1,5 +1,10 @@
 import type { NextConfig } from "next";
 
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+  openAnalyzer: false, // Set to true to open the analyzer report in a new browser tab
+});
+
 const nextConfig: NextConfig = {
   
 
@@ -161,5 +166,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
-
+module.exports = withBundleAnalyzer(nextConfig);

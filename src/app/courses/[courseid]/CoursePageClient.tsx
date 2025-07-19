@@ -6,7 +6,7 @@ import dynamic from 'next/dynamic';
 import remarkGfm from 'remark-gfm';
 
 const ReactMarkdown = dynamic(() => import('react-markdown'), { ssr: false });
-import { Clock, Users, Award, CheckCircle, ArrowLeft, BookOpen, Shield, Phone, Mail } from 'lucide-react';
+import CourseIcon from '../CourseIcons';
 
 interface Course {
   id: number;
@@ -41,7 +41,7 @@ export default function CoursePageClient({ course }: CoursePageClientProps) {
             href="/courses"
             className="inline-flex items-center space-x-2 text-yellow-600 dark:text-yellow-400 hover:text-yellow-700 dark:hover:text-yellow-300 transition-colors font-medium"
           >
-            <ArrowLeft className="h-5 w-5" />
+            <CourseIcon name="arrow-left" className="h-5 w-5" />
             <span>Back to All Courses</span>
           </Link>
         </div>
@@ -100,7 +100,7 @@ export default function CoursePageClient({ course }: CoursePageClientProps) {
                       .sort((a, b) => a.display_order - b.display_order)
                       .map((objective, index) => (
                       <li key={index} className="flex items-start space-x-3">
-                        <CheckCircle className="h-6 w-6 text-green-500 mt-1 flex-shrink-0" />
+                        <CourseIcon name="check-circle" className="h-6 w-6 text-green-500 mt-1 flex-shrink-0" />
                         <span className="text-gray-700 dark:text-gray-300 text-lg">{objective.feature}</span>
                       </li>
                     ))}
@@ -126,14 +126,14 @@ export default function CoursePageClient({ course }: CoursePageClientProps) {
               <h3 className="text-2xl font-bold text-yellow-400">Course Details</h3>
               <div className="space-y-4">
                 <div className="flex items-center space-x-4">
-                  <Clock className="h-6 w-6 text-yellow-400" />
+                  <CourseIcon name="clock" className="h-6 w-6 text-yellow-400" />
                   <div>
                     <p className="text-sm text-gray-300">Duration</p>
                     <p className="font-semibold text-lg">{course.duration}</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-4">
-                  <Users className="h-6 w-6 text-yellow-400" />
+                  <CourseIcon name="users" className="h-6 w-6 text-yellow-400" />
                   <div>
                     <p className="text-sm text-gray-300">Target Audience</p>
                     <p className="font-semibold text-lg">{course.audience}</p>
@@ -141,7 +141,7 @@ export default function CoursePageClient({ course }: CoursePageClientProps) {
                 </div>
                 {course.format && (
                   <div className="flex items-center space-x-4">
-                    <BookOpen className="h-6 w-6 text-yellow-400" />
+                    <CourseIcon name="book-open" className="h-6 w-6 text-yellow-400" />
                     <div>
                       <p className="text-sm text-gray-300">Format</p>
                       <p className="font-semibold text-lg">{course.format}</p>
@@ -149,7 +149,7 @@ export default function CoursePageClient({ course }: CoursePageClientProps) {
                   </div>
                 )}
                 <div className="flex items-center space-x-4">
-                  <Shield className="h-6 w-6 text-yellow-400" />
+                  <CourseIcon name="shield" className="h-6 w-6 text-yellow-400" />
                   <div>
                     <p className="text-sm text-gray-300">Compliance</p>
                     <p className="font-semibold text-lg">WorkSafeBC Approved</p>
@@ -157,7 +157,7 @@ export default function CoursePageClient({ course }: CoursePageClientProps) {
                 </div>
                 {course.passing_grade && (
                   <div className="flex items-center space-x-4">
-                    <Award className="h-6 w-6 text-yellow-400" />
+                    <CourseIcon name="award" className="h-6 w-6 text-yellow-400" />
                     <div>
                       <p className="text-sm text-gray-300">Passing Grade</p>
                       <p className="font-semibold text-lg">{course.passing_grade}</p>
@@ -188,12 +188,12 @@ export default function CoursePageClient({ course }: CoursePageClientProps) {
             
             <div className="rounded-2xl p-8 shadow-2xl border border-gray-200 dark:border-gray-700 flex flex-col md:flex-row items-center justify-center gap-8">
               <a href="tel:250-615-3727" className="flex items-center space-x-4 text-yellow-600 dark:text-yellow-400 hover:text-yellow-700 dark:hover:text-yellow-300 transition-colors">
-                <Phone className="h-8 w-8" />
+                <CourseIcon name="phone" className="h-8 w-8" />
                 <span className="font-bold text-2xl">250-615-3727</span>
               </a>
               <div className="border-l border-gray-300 dark:border-gray-600 h-12 hidden md:block"></div>
               <a href="mailto:info@karmatraining.ca" className="flex items-center space-x-4 text-yellow-600 dark:text-yellow-400 hover:text-yellow-700 dark:hover:text-yellow-300 transition-colors">
-                <Mail className="h-8 w-8" />
+                <CourseIcon name="mail" className="h-8 w-8" />
                 <span className="font-bold text-2xl">info@karmatraining.ca</span>
               </a>
             </div>

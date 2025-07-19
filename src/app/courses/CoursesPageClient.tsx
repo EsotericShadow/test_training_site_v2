@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Clock, Users, Award, ArrowRight, Shield, Camera } from 'lucide-react';
+import CourseIcon from './CourseIcons';
 import { useGsap } from '@/app/hooks/useGsap';
 import { gsap } from 'gsap';
 
@@ -170,19 +170,19 @@ export default function CoursesPageClient() {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-center">
             <div className="flex items-center justify-center space-x-3 icon-container">
-              <Shield className="h-8 w-8 text-yellow-500 icon" />
+              <CourseIcon name="shield" className="h-8 w-8 text-yellow-500 icon" />
               <span className="font-semibold text-gray-300 dark:text-white">WorkSafeBC Compliant</span>
             </div>
             <div className="flex items-center justify-center space-x-3 icon-container">
-              <Award className="h-8 w-8 text-yellow-500 icon" />
+              <CourseIcon name="award" className="h-8 w-8 text-yellow-500 icon" />
               <span className="font-semibold text-gray-300 dark:text-white">Official Certification</span>
             </div>
             <div className="flex items-center justify-center space-x-3 icon-container">
-              <Users className="h-8 w-8 text-yellow-500 icon" />
+              <CourseIcon name="users" className="h-8 w-8 text-yellow-500 icon" />
               <span className="font-semibold text-gray-300 dark:text-white">Expert Instructors</span>
             </div>
             <div className="flex items-center justify-center space-x-3 icon-container">
-              <Clock className="h-8 w-8 text-yellow-500 icon" />
+              <CourseIcon name="clock" className="h-8 w-8 text-yellow-500 icon" />
               <span className="font-semibold text-gray-300 dark:text-white">Flexible Scheduling</span>
             </div>
           </div>
@@ -202,7 +202,7 @@ export default function CoursesPageClient() {
           {courses.length === 0 ? (
             <div className="text-center py-12">
               <div className="inline-flex items-center justify-center w-16 h-16 bg-yellow-500/10 rounded-full mb-4">
-                <Shield className="w-8 w-8 text-yellow-500" />
+                <CourseIcon name="shield" className="w-8 w-8 text-yellow-500" />
               </div>
               <h3 className="text-xl font-semibold text-gray-100 dark:text-white mb-2">No Courses Available</h3>
               <p className="text-gray-200 dark:text-gray-200">
@@ -229,7 +229,7 @@ export default function CoursesPageClient() {
                     ) : (
                       <div className="h-full flex items-center justify-center text-gray-200 dark:text-gray-400">
                         <div className="text-center">
-                          <Camera className="h-8 w-8 mx-auto mb-2 text-yellow-500" />
+                          <CourseIcon name="camera" className="h-8 w-8 mx-auto mb-2 text-yellow-500" />
                           <p className="font-medium text-sm">{course.title}</p>
                           <p className="text-xs">{course.image_alt || 'Professional safety training course'}</p>
                         </div>
@@ -246,11 +246,11 @@ export default function CoursesPageClient() {
                     <h3 className="text-xl font-bold text-gray-100 dark:text-white mb-3">{course.title}</h3>
                     <div className="flex flex-wrap gap-4 mb-4 text-sm text-gray-300 dark:text-gray-400">
                       <div className="flex items-center space-x-1">
-                        <Clock className="h-6 w-6 text-yellow-500" />
+                        <CourseIcon name="clock" className="h-6 w-6 text-yellow-500" />
                         <span>{course.duration}</span>
                       </div>
                       <div className="flex items-center space-x-1">
-                        <Users className="h-10 w-10 text-yellow-500" />
+                        <CourseIcon name="users" className="h-10 w-10 text-yellow-500" />
                         <span>{course.audience}</span>
                       </div>
                     </div>
@@ -264,7 +264,7 @@ export default function CoursesPageClient() {
                         className="flex-1 bg-yellow-500 hover:bg-yellow-600 text-gray-900 dark:text-white px-4 py-3 rounded-lg font-semibold text-center transition-all duration-200 transform hover:-translate-y-1 hover:shadow flex items-center justify-center space-x-2 animate-fadeIn"
                       >
                         <span>Learn More</span>
-                        <ArrowRight className="h-4 w-4" />
+                        <CourseIcon name="arrow-right" className="h-4 w-4" />
                       </Link>
                       <Link
                         href={`/courses/${course.slug}#request-syllabus`}

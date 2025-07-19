@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Phone, Mail, MapPin, Facebook, Linkedin, Twitter } from 'lucide-react';
+import LayoutIcon from './LayoutIcons';
 import { PopularCourse } from '../../layout';
 
 interface FooterContent {
@@ -30,9 +30,9 @@ export default function Footer({ footerContent, popularCourses }: FooterProps) {
             {footerContent?.logo_url && <Image src={footerContent.logo_url} alt={footerContent.company_name} width={150} height={50} className="mb-4" />}
             <p className="text-gray-400">{footerContent?.description}</p>
             <div className="flex space-x-4 mt-6">
-              <a href="https://www.facebook.com/karmatraining" aria-label="Follow us on Facebook" className="text-gray-400 hover:text-white"><Facebook /></a>
-              <a href="https://www.linkedin.com/company/karmatraining" aria-label="Follow us on LinkedIn" className="text-gray-400 hover:text-white"><Linkedin /></a>
-              <a href="https://twitter.com/karmatraining" aria-label="Follow us on Twitter" className="text-gray-400 hover:text-white"><Twitter /></a>
+              <a href="https://www.facebook.com/karmatraining" aria-label="Follow us on Facebook" className="text-gray-400 hover:text-white"><LayoutIcon name="facebook" /></a>
+              <a href="https://www.linkedin.com/company/karmatraining" aria-label="Follow us on LinkedIn" className="text-gray-400 hover:text-white"><LayoutIcon name="linkedin" /></a>
+              <a href="https://twitter.com/karmatraining" aria-label="Follow us on Twitter" className="text-gray-400 hover:text-white"><LayoutIcon name="twitter" /></a>
             </div>
           </div>
           <div>
@@ -55,9 +55,9 @@ export default function Footer({ footerContent, popularCourses }: FooterProps) {
           <div>
             <h3 className="text-xl font-bold mb-4">Contact Us</h3>
             <ul className="space-y-3">
-              <li className="flex items-start"><MapPin className="h-6 w-6 mr-3 mt-1 text-yellow-400" /><span>{footerContent?.location}</span></li>
-              <li className="flex items-center"><Mail className="h-5 w-5 mr-3 text-yellow-400" /><a href={`mailto:${footerContent?.email}`} className="hover:text-yellow-400">{footerContent?.email}</a></li>
-              <li className="flex items-center"><Phone className="h-5 w-5 mr-3 text-yellow-400" /><a href={`tel:${footerContent?.phone}`} className="hover:text-yellow-400">Call us at {footerContent?.phone}</a></li>
+              <li className="flex items-start"><LayoutIcon name="map-pin" className="h-6 w-6 mr-3 mt-1 text-yellow-400" /><span>{footerContent?.location}</span></li>
+              <li className="flex items-center"><LayoutIcon name="mail" className="h-5 w-5 mr-3 text-yellow-400" /><a href={`mailto:${footerContent?.email}`} className="hover:text-yellow-400">{footerContent?.email}</a></li>
+              <li className="flex items-center"><LayoutIcon name="phone" className="h-5 w-5 mr-3 text-yellow-400" /><a href={`tel:${footerContent?.phone}`} className="hover:text-yellow-400">Call us at {footerContent?.phone}</a></li>
             </ul>
           </div>
         </div>
