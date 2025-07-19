@@ -113,7 +113,7 @@ export default function FeaturedCourses() {
                   <div className="flex items-center"><Users className="h-10 w-10 mr-1" /> {course.audience}</div>
                 </div>
                 <Link href={`/courses/${course.slug}`} className="inline-flex items-center text-yellow-500 hover:text-yellow-600 font-semibold">
-                  Learn More <ArrowRight className="h-4 w-4 ml-2" />
+                  Learn more about {course.title} <ArrowRight className="h-4 w-4 ml-2" />
                 </Link>
               </div>
             </div>

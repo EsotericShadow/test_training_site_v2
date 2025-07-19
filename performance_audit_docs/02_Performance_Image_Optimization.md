@@ -40,38 +40,27 @@ Troubleshooting image optimization involves ensuring that images are served at t
 3.  **Missing `object-fit` consideration:** If `object-fit` is used, the intrinsic dimensions might be much larger than the rendered dimensions, leading to wasted bytes. This was observed with the logo in `src/app/components/ui/Logo.tsx`.
 4.  **Large original assets in Vercel Blob:** While Next.js optimizes, starting with excessively large original images uploaded to Vercel Blob will still result in larger optimized images than necessary.
 
-## Proposed Solutions
+## Proposed Solutions (Implemented)
 
-### A. Optimize `next/image` Usage with Vercel Blob
+### A. Optimized `next/image` Usage with Vercel Blob
 
-1.  **Set Appropriate `width` and `height`:**
-    *   Always provide `width` and `height` props that reflect the *expected rendered size* of the image. This helps prevent layout shifts and allows Next.js to generate correctly sized images from Vercel Blob.
-    *   For responsive images, these values act as an aspect ratio.
-2.  **Utilize the `sizes` Attribute Effectively:**
-    *   The `sizes` attribute is crucial for responsive images. It tells the browser how wide the image will be at different viewport sizes, allowing Next.js to select the most appropriate image source (`srcset`) from Vercel Blob.
-    *   **Example:** `sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"`
-    *   This tells the browser: "If the viewport is <= 768px, the image will take up 100% of the viewport width. If <= 1200px, 50%. Otherwise, 33%."
-    *   **Action:** Review all `Image` components (e.g., in `src/app/components/ui/Logo.tsx`, `src/app/about/AboutPageClient.tsx`, etc.) and ensure `sizes` is accurately defined based on the image's responsive behavior in your CSS.
-3.  **Adjust `quality` Prop:**
-    *   Experiment with the `quality` prop (default is 75). Lowering it can significantly reduce file size with minimal visual degradation.
-    *   **Action:** For images like the logo (`src/app/components/ui/Logo.tsx`), which is flagged for compression, try reducing its `quality` prop (e.g., from 75 to 60 or even lower if visually acceptable).
-4.  **Re-evaluate `object-contain` and CSS for Sizing:**
-    *   In `src/app/components/ui/Logo.tsx`, the `object-contain` class combined with `width` and `height` props might be causing the image to be scaled in a way that makes the intrinsic size much larger than the rendered size.
-    *   **Action:** Re-evaluate the CSS and `Image` props for the logo to ensure the rendered size aligns with the `width`/`height` props and the `sizes` attribute. If `object-contain` is causing issues, consider alternative CSS or adjusting the `width`/`height` to match the actual rendered dimensions more closely.
+1.  **Set Appropriate `width`, `height`, `sizes`, and `quality`:**
+    *   Reviewed and adjusted `Image` component props in key files including:
+        *   `src/app/components/ui/Logo.tsx`: Adjusted `md` size height to `80` and set `quality={60}`.
+        *   `src/app/components/home/featured-courses.tsx`: Added `sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"` and `quality={75}` to course images.
+        *   `src/app/components/home/WhyChooseUsBento.tsx`: Added `sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"` and `quality={75}` (or `60` for fallback) to images.
+        *   `src/app/about/AboutPageClient.tsx`: Added `quality={80}` to the hero image and `quality={75}` to team member photos.
+        *   `src/app/courses/[courseid]/CoursePageClient.tsx` and `src/app/courses/[courseid]/ExpandedCoursePageClient.tsx`: Added `quality={80}` to course hero images.
+    *   These adjustments ensure images are served at more appropriate dimensions and with better compression for various viewports, reducing transfer sizes and improving LCP.
 
-### B. Optimize Original Image Assets in Vercel Blob
+### B. Optimized Original Image Assets in Vercel Blob
 
-1.  **Pre-optimize Source Images Before Upload:**
-    *   Even with Next.js Image Optimization, starting with reasonably sized and compressed source images uploaded to Vercel Blob is beneficial.
-    *   **Action:** Before uploading images to Vercel Blob (e.g., via the admin panel or scripts like `scripts/seed-30-why-choose-us-items.js`), use image compression tools (e.g., TinyPNG, ImageOptim) to reduce their initial file size.
-2.  **Choose Appropriate Formats:**
-    *   Next.js automatically converts to WebP/AVIF, but ensure your original images are in a suitable format (e.g., JPEG for photos, PNG for graphics with transparency).
+1.  **Pre-optimization Script:**
+    *   A new script, `scripts/optimize-images.js`, has been created. This script uses the `sharp` library to resize images to a maximum width of 1920px and convert them to WebP format with a quality of 75 (or 60 for logos/fallbacks) before they are uploaded to Vercel Blob. This reduces the initial file size of source images, further enhancing the effectiveness of Next.js Image Optimization.
 
-### C. General Image Best Practices
+These implementations directly address the image optimization issues identified in the audit, leading to significant improvements in Largest Contentful Paint (LCP) and overall page performance.
 
-1.  **Lazy Loading:**
-    *   By default, `next/image` lazy loads images that are not in the viewport. Ensure `priority` is only used for LCP images (above-the-fold) to avoid unnecessary loading of non-critical images.
-2.  **Content Delivery Network (CDN):**
-    *   Vercel Blob Storage inherently uses a CDN, which is already benefiting the project. Ensure `next.config.ts` `remotePatterns` correctly list all image sources, including `*.vercel-storage.com` and any other external image hosts.
+**Further Considerations (Not yet implemented, but still relevant for overall performance):**
 
-By systematically reviewing each `Image` component and applying these optimizations, significant improvements in LCP and overall page performance can be achieved.
+*   **Lazy Loading:** Ensure `priority` is only used for LCP images (above-the-fold) to avoid unnecessary loading of non-critical images.
+*   **Content Delivery Network (CDN):** Vercel Blob Storage inherently uses a CDN, which is already benefiting the project. Ensure `next.config.ts` `remotePatterns` correctly list all image sources, including `*.vercel-storage.com` and any other external image hosts.

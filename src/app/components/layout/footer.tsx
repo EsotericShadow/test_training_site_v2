@@ -30,9 +30,9 @@ export default function Footer({ footerContent, popularCourses }: FooterProps) {
             {footerContent?.logo_url && <Image src={footerContent.logo_url} alt={footerContent.company_name} width={150} height={50} className="mb-4" />}
             <p className="text-gray-400">{footerContent?.description}</p>
             <div className="flex space-x-4 mt-6">
-              <a href="#" className="text-gray-400 hover:text-white"><Facebook /></a>
-              <a href="#" className="text-gray-400 hover:text-white"><Linkedin /></a>
-              <a href="#" className="text-gray-400 hover:text-white"><Twitter /></a>
+              <a href="https://www.facebook.com/karmatraining" aria-label="Follow us on Facebook" className="text-gray-400 hover:text-white"><Facebook /></a>
+              <a href="https://www.linkedin.com/company/karmatraining" aria-label="Follow us on LinkedIn" className="text-gray-400 hover:text-white"><Linkedin /></a>
+              <a href="https://twitter.com/karmatraining" aria-label="Follow us on Twitter" className="text-gray-400 hover:text-white"><Twitter /></a>
             </div>
           </div>
           <div>
@@ -61,7 +61,7 @@ export default function Footer({ footerContent, popularCourses }: FooterProps) {
             </ul>
           </div>
         </div>
-        <div className="mt-16 pt-8 border-t border-gray-800 text-center text-gray-500">
+        <div className="mt-16 pt-8 border-t border-gray-800 text-center text-gray-400">
           <p>{footerContent?.copyright_text || `© ${new Date().getFullYear()} ${footerContent?.company_name}. All Rights Reserved.`}</p>
         </div>
       </div>
