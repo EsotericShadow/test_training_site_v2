@@ -19,7 +19,7 @@ export const useGsap = (animation: (ref: React.RefObject<HTMLDivElement | null>)
     return () => {
       if (ctx) ctx.revert();
     };
-  });
+  }, []); // Add empty dependency array to run only once on mount
 
   return ref;
 };
