@@ -63,8 +63,8 @@ export default function ExpandedCoursePageClient({ course }: ExpandedCoursePageC
         </div>
       </div>
 
-      <section className="relative py-20 sm:py-32 text-white overflow-hidden">
-        <div className="absolute inset-0 z-0">
+      <section className="relative py-12 sm:py-20 text-white overflow-hidden">
+        <div className="absolute inset-0 z-0 h-64 md:h-96">
           {course.image_url ? (
             <Image 
               src={course.image_url} 
@@ -121,7 +121,7 @@ export default function ExpandedCoursePageClient({ course }: ExpandedCoursePageC
         </div>
       </section>
 
-      <div className="container mx-auto px-4 py-20">
+      <div className="container mx-auto px-4 pt-8 relative z-20">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           <div className="lg:col-span-2">
             <div className="space-y-12">
