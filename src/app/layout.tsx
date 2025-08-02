@@ -5,10 +5,10 @@ import './globals.css';
 import Header from '@/app/components/layout/header';
 import Footer from '@/app/components/layout/footer';
 import { ThemeProvider } from './components/theme/smart-theme-provider';
-import dynamic from 'next/dynamic';
+import nextDynamic from 'next/dynamic';
 import { Suspense } from 'react';
 
-const DynamicSilk = dynamic(() => import('@/app/components/ui/Silk'));
+const DynamicSilk = nextDynamic(() => import('@/app/components/ui/Silk'));
 
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
@@ -23,6 +23,8 @@ export const metadata: Metadata = {
   description: 'Professional safety training courses including KIST Orientation, WHMIS, Fall Protection, and more. Serving Northwestern British Columbia with expert instruction and certification.',
   keywords: 'safety training, KIST, WHMIS, fall protection, Northwestern BC, workplace safety, certification',
 };
+
+export const dynamic = 'force-dynamic';
 
 interface ApiCourse {
   title: string;
@@ -64,7 +66,7 @@ interface FooterData {
 async function getCourseCategories(): Promise<CourseCategories> {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://test-training-site-v2-xjey.vercel.app';
-    const response = await fetch(`${baseUrl}/api/adm_f7f8556683f1cdc65391d8d2_8e91/courses`, { cache: 'no-store' });
+    const response = await fetch(`${baseUrl}/api/adm_f7f8556683f1cdc65391d8d2_8e91/courses`);
     if (!response.ok) throw new Error('Failed to fetch courses');
     const { courses }: { courses: ApiCourse[] } = await response.json();
 
@@ -92,7 +94,7 @@ async function getCourseCategories(): Promise<CourseCategories> {
 async function getFooterData(): Promise<FooterData> {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://test-training-site-v2-xjey.vercel.app';
-    const response = await fetch(`${baseUrl}/api/adm_f7f8556683f1cdc65391d8d2_8e91/footer`, { cache: 'no-store' });
+    const response = await fetch(`${baseUrl}/api/adm_f7f8556683f1cdc65391d8d2_8e91/footer`);
     if (!response.ok) throw new Error('Failed to fetch footer data');
     const data = await response.json();
     return { footerContent: data.footerContent, popularCourses: data.popularCourses || [] };
