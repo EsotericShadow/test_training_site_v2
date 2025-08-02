@@ -119,14 +119,28 @@ export const validateInput = {
     if (typeof data !== 'object' || data === null) {
       return { success: false, error: 'Invalid input' };
     }
-    if (!data['category'] || typeof data['category'] !== 'string') return { success: false, error: 'Category is required' };
+    if (!data['category'] || typeof data['category'] !== 'string') {
+      console.error('Validation Error: Category is required');
+      return { success: false, error: 'Category is required' };
+    }
     const allowedCategories = ['general', 'team-photos', 'course-images', 'testimonials', 'company', 'other'];
-    if (!allowedCategories.includes(data['category'] as string)) return { success: false, error: 'Invalid category' };
+    if (!allowedCategories.includes(data['category'] as string)) {
+      console.error('Validation Error: Invalid category', data['category']);
+      return { success: false, error: 'Invalid category' };
+    }
     data['alt_text'] = sanitizeInput.text(data['alt_text'] || '').substring(0, 1000);
     data['title'] = sanitizeInput.text(data['title'] || '').substring(0, 200);
     data['description'] = sanitizeInput.text(data['description'] || '').substring(0, 5000);
     data['tags'] = sanitizeInput.text(data['tags'] || '').substring(0, 1000);
-    if (typeof data['is_featured'] !== 'boolean') return { success: false, error: 'is_featured must be a boolean' };
+    if (typeof data['is_featured'] === 'string') {
+      data['is_featured'] = data['is_featured'] === 'true';
+    } else if (typeof data['is_featured'] === 'number') {
+      data['is_featured'] = data['is_featured'] === 1;
+    }
+    if (typeof data['is_featured'] !== 'boolean') {
+      console.error('Validation Error: is_featured must be a boolean', data['is_featured']);
+      return { success: false, error: 'is_featured must be a boolean' };
+    }
     return { success: true, data };
   },
 

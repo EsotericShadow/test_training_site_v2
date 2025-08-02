@@ -5,7 +5,7 @@ import CoursesPageClient from './CoursesPageClient';
 
 // Generate metadata for SEO (replaces NextSeo)
 export async function generateMetadata(): Promise<Metadata> {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://test-training-site-v2-xjey.vercel.app';
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
   
   return {
     title: 'Safety Training Courses | Karma Industrial Safety Trainings',
@@ -19,7 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
       address: false,
       telephone: false,
     },
-    metadataBase: new URL(baseUrl),
+    metadataBase: new URL(baseUrl as string),
     alternates: {
       canonical: '/courses',
     },
@@ -63,7 +63,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 // Server component wrapper
 export default function CoursesPage() {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://test-training-site-v2-xjey.vercel.app';
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
   // JSON-LD structured data for courses page
   const jsonLd = {

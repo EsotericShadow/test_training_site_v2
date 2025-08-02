@@ -31,7 +31,7 @@ interface PageProps {
 // Fetch course data server-side
 async function getCourse(slug: string): Promise<Course | null> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://test-training-site-v2-xjey.vercel.app';
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
     const response = await fetch(`${baseUrl}/api/courses/${slug}`, {
       cache: 'no-store', // Ensure fresh data for dynamic content
     });
@@ -59,7 +59,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://test-training-site-v2-xjey.vercel.app';
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
   
   // Create dynamic title and description
   const title = `${course.title} | Karma Industrial Safety Trainings`;
@@ -90,7 +90,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       address: false,
       telephone: false,
     },
-    metadataBase: new URL(baseUrl),
+    metadataBase: new URL(baseUrl as string),
     alternates: {
       canonical: `/courses/${course.slug}`,
     },
@@ -141,7 +141,7 @@ export default async function CoursePage({ params }: PageProps) {
     notFound();
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://test-training-site-v2-xjey.vercel.app';
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
   // Dynamic JSON-LD structured data based on course information
   const jsonLd = {

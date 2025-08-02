@@ -2,7 +2,9 @@ import { NextResponse } from 'next/server';
 import { teamMembersOps } from '../../../../lib/database';
 import { logger } from '../../../../lib/logger';
 
-export const runtime = 'nodejs'; // Ensure Node.js for database
+export const revalidate = 0;
+
+  // Ensure Node.js for database
 
 export async function GET() {
   try {

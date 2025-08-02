@@ -1,8 +1,8 @@
 // src/app/api/contact/submit/route.ts
 import { NextResponse, NextRequest } from 'next/server';
 
-export const runtime = 'nodejs';
-import { sql } from '@vercel/postgres';
+ 
+import { db } from '../../../../../lib/database';
 import { 
   validateInput, 
   rateLimiter, 
@@ -139,8 +139,9 @@ async function performSecurityChecks(ip: string, userAgent: string, referer: str
   if (process.env.NODE_ENV === 'production') {
     const allowedDomains = [
       process.env.NEXT_PUBLIC_DOMAIN,
-      'test-training-site-v2-xjey.vercel.app',
-      'www.test-training-site-v2-xjey.vercel.app'
+      // Removed Vercel-specific domains as per migration to NetNation
+      // 'test-training-site-v2-xjey.vercel.app',
+      // 'www.test-training-site-v2-xjey.vercel.app'
     ].filter(Boolean);
 
     const refererDomain = referer ? new URL(referer).hostname : '';
@@ -334,22 +335,32 @@ async function processSubmission(data: SubmissionData, ip: string, userAgent: st
 // Store submission in database
 async function storeSubmission(data: SubmissionData, submissionId: string, ip: string, userAgent: string) {
   try {
-    await sql`
+    await db.query(`
       INSERT INTO contact_submissions 
       (submission_id, name, email, company, phone, training_type, message, ip_address, user_agent, created_at)
       VALUES (
-        ${submissionId}, 
-        ${data.name}, 
-        ${data.email}, 
-        ${data.company || null}, 
-        ${data.phone || null}, 
-        ${data.trainingType || null}, 
-        ${data.message}, 
-        ${ip}, 
-        ${userAgent}, 
-        CURRENT_TIMESTAMP
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        NOW()
       )
-    `;
+    `, [
+      submissionId,
+      data.name,
+      data.email,
+      data.company || null,
+      data.phone || null,
+      data.trainingType || null,
+      data.message,
+      ip,
+      userAgent,
+    ]);
     
     console.log('Submission stored successfully:', submissionId);
   } catch (storageError) {

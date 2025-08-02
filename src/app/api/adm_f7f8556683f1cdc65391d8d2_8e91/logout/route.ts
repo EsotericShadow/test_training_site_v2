@@ -1,7 +1,7 @@
 // src/app/api/adm_f7f8556683f1cdc65391d8d2_8e91/logout/route.ts
 import { NextResponse, NextRequest } from 'next/server';
 
-export const runtime = 'nodejs';
+ 
 import { validateSession, terminateSession } from '../../../../../lib/session-manager';
 import { logger } from '../../../../../lib/logger';
 import { validateToken } from '../../../../../lib/csrf';

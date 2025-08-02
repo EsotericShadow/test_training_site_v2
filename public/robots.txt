@@ -5,4 +5,4 @@ Allow: /admin/
 Allow: /wp-login/ 
 Allow: /login/ 
 
-Sitemap: https://test-training-site-v2-xjey.vercel.app/sitemap.xml
+Sitemap: ${NEXT_PUBLIC_SITE_URL}/sitemap.xml

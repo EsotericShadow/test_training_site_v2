@@ -110,4 +110,4 @@ export const GET = getHeroSection;
 export const PUT: AppRouteHandlerFn = withSecureAuth(updateHeroSection);
 export const dynamic = 'force-dynamic'; // Ensure this route is always fresh
 export const revalidate = 0; // Disable revalidation for this route 
-export const runtime = 'nodejs'; // Use nodejs runtime for database operations
+  // Use nodejs runtime for database operations

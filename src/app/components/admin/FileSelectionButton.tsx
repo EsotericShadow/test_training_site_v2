@@ -12,7 +12,7 @@ interface FileItem {
   id: number;
   filename: string;
   original_name: string;
-  blob_url: string;
+  file_url: string;
   alt_text?: string;
   title?: string;
   description?: string;
@@ -49,7 +49,7 @@ export default function FileSelectionButton({
   const [showModal, setShowModal] = useState(false);
 
   const handleFileSelect = (file: FileItem) => {
-    onChange(file.blob_url, file);
+    onChange(file.file_url, file);
     setShowModal(false);
   };
 

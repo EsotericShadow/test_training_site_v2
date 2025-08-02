@@ -5,7 +5,7 @@ import ContactPageClient from './ContactPageClient';
 
 // Generate metadata for SEO (replaces NextSeo)
 export async function generateMetadata(): Promise<Metadata> {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://test-training-site-v2-xjey.vercel.app';
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
   
   return {
     title: 'Contact Us | Karma Industrial Safety Trainings',
@@ -19,7 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
       address: true,
       telephone: true,
     },
-    metadataBase: new URL(baseUrl),
+    metadataBase: new URL(baseUrl as string),
     alternates: {
       canonical: '/contact',
     },
@@ -63,7 +63,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 // Server component wrapper
 export default function ContactPage() {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://test-training-site-v2-xjey.vercel.app';
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
   // JSON-LD structured data for contact page
   const jsonLd = {

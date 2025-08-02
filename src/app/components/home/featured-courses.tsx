@@ -90,7 +90,7 @@ export default function FeaturedCourses() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {courses.map((course) => (
             <div key={course.id} className="course-card backdrop-blur-md bg-white/10 border border-white/20 rounded-xl shadow-xl overflow-hidden">
-              <div className="relative h-56">
+              <div className="relative aspect-video">
                 {course.image_url ? (
                   <Image
                     src={course.image_url}

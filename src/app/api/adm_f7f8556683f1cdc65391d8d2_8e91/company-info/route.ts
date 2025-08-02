@@ -1,7 +1,7 @@
 // Minimal test - with imports from company-info
 import { NextRequest, NextResponse } from 'next/server';
 
-export const runtime = 'nodejs';
+
 import { withSecureAuth } from '../../../../../lib/secure-jwt';
 import { companyInfoOps, companyValuesOps, whyChooseUsOps } from '../../../../../lib/database';
 import { sanitizeInput, validateInput } from '../../../../../lib/security-utils';

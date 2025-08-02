@@ -1,6 +1,6 @@
 import { NextResponse, NextRequest } from 'next/server';
 
-export const runtime = 'nodejs';
+ 
 import { withSecureAuth, AuthResult } from '../../../../../lib/secure-jwt';
 import { logger, handleApiError } from '../../../../../lib/logger';
 import { getUserSessions, terminateOtherSessions } from '../../../../../lib/session-manager';

@@ -1,5 +1,5 @@
 import { config } from 'dotenv';
-import { createPool } from '@vercel/postgres';
+import mysql from 'mysql2/promise';
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -11,23 +11,30 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const migrationsDir = path.join(__dirname, 'migrations');
 
-const pool = createPool({
-  connectionString: process.env.POSTGRES_URL
+const pool = mysql.createPool({
+  host: process.env.MYSQL_HOST,
+  port: parseInt(process.env.MYSQL_PORT || '3307', 10),
+  user: process.env.MYSQL_USER,
+  password: process.env.MYSQL_PASSWORD,
+  database: process.env.MYSQL_DATABASE,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
 });
 
 async function ensureMigrationsTable() {
-  await pool.sql`
+  await pool.query(`
     CREATE TABLE IF NOT EXISTS schema_migrations (
-      id SERIAL PRIMARY KEY,
-      name TEXT UNIQUE NOT NULL,
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      name VARCHAR(255) UNIQUE NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
-  `;
+  `);
 }
 
 async function getAppliedMigrations() {
-  const result = await pool.sql`SELECT name FROM schema_migrations ORDER BY name`;
-  return new Set(result.rows.map(row => row.name));
+  const [rows] = await pool.query(`SELECT name FROM schema_migrations ORDER BY name`);
+  return new Set(rows.map(row => row.name));
 }
 
 async function getMigrationFiles() {
@@ -66,7 +73,7 @@ export async function migrate() {
   for (const migrationFile of pendingMigrations) {
     try {
       await runMigration(migrationFile, 'up');
-      await pool.sql`INSERT INTO schema_migrations (name) VALUES (${migrationFile})`;
+      await pool.query(`INSERT INTO schema_migrations (name) VALUES (?)`, [migrationFile]);
       console.log(`✅ Successfully applied ${migrationFile}`);
     } catch (error) {
       console.error(`❌ Failed to apply migration ${migrationFile}:`, error);
@@ -88,7 +95,7 @@ async function rollback() {
   const lastMigration = Array.from(appliedMigrations).pop();
   try {
     await runMigration(lastMigration, 'down');
-    await pool.sql`DELETE FROM schema_migrations WHERE name = ${lastMigration}`;;
+    await pool.query(`DELETE FROM schema_migrations WHERE name = ?`, [lastMigration]);
     console.log(`✅ Successfully rolled back ${lastMigration}`);
   } catch (error) {
     console.error(`❌ Failed to roll back migration ${lastMigration}:`, error);

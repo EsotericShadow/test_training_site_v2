@@ -12,7 +12,7 @@ export const dynamic = 'force-dynamic';
 // Fetch hero data server-side for better performance
 async function getHeroData() {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/adm_f7f8556683f1cdc65391d8d2_8e91/hero-section`, { cache: 'no-store' });
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/hero-section`, { cache: 'no-store' });
     
     if (response.ok) {
       const data = await response.json();
@@ -36,7 +36,7 @@ async function getHeroData() {
 
 // Generate metadata for SEO (replaces NextSeo)
 export async function generateMetadata(): Promise<Metadata> {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://test-training-site-v2-xjey.vercel.app';
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
   
   // Fetch hero data for potential image preloading
   const heroData = await getHeroData();
@@ -54,7 +54,7 @@ export async function generateMetadata(): Promise<Metadata> {
       address: false,
       telephone: false,
     },
-    metadataBase: new URL(baseUrl),
+    metadataBase: new URL(baseUrl as string),
     alternates: {
       canonical: '/',
     },
@@ -97,15 +97,15 @@ export async function generateMetadata(): Promise<Metadata> {
       google: 'your-google-verification-code', // Replace with actual verification code
     },
     // Add preload hints for critical resources
-    other: heroImage
-      ? { preload: `<${heroImage}>; rel=preload; as=image` }
+    other: heroData.heroSection.background_image_url
+      ? { preload: `<${heroData.heroSection.background_image_url}>; rel=preload; as=image` }
       : {},
   };
 }
 
 // Server component (no 'use client' directive)
 export default async function Home() {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://test-training-site-v2-xjey.vercel.app';
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
   
   // Fetch hero data server-side
   const heroData = await getHeroData();

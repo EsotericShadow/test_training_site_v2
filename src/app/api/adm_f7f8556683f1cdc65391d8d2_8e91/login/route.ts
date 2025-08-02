@@ -1,7 +1,7 @@
 // src/app/api/adm_f7f8556683f1cdc65391d8d2_8e91/login/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 
-export const runtime = 'nodejs';
+ 
 import bcrypt from 'bcryptjs';
 import { z } from 'zod';
 import sanitizeHtml from 'isomorphic-dompurify';

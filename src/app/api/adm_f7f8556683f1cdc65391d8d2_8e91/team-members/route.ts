@@ -1,6 +1,6 @@
 import { NextResponse, NextRequest } from 'next/server';
 
-export const runtime = 'nodejs';
+ 
 import { withSecureAuth } from '../../../../../lib/secure-jwt';
 import { teamMembersOps, TeamMember } from '../../../../../lib/database';
 import { sanitizeInput, validateInput } from '../../../../../lib/security-utils';

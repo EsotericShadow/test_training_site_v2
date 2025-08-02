@@ -17,7 +17,7 @@ interface Course {
   image_url?: string;
   image_alt?: string;
   features: { feature: string; display_order: number }[];
-  category?: { name: string };
+  category_name?: string;
   popular: boolean;
 }
 
@@ -84,8 +84,8 @@ export default function CoursesPageClient() {
     const fetchCoursesAndHero = async () => {
       try {
         const [coursesResponse, heroImageResponse] = await Promise.all([
-          fetch('/api/adm_f7f8556683f1cdc65391d8d2_8e91/courses'),
-          fetch('/api/adm_f7f8556683f1cdc65391d8d2_8e91/files?category=other')
+          fetch('/api/courses'),
+          fetch('/api/courses/hero-image')
         ]);
 
         if (coursesResponse.ok) {
@@ -97,17 +97,17 @@ export default function CoursesPageClient() {
 
         if (heroImageResponse.ok) {
           const { file } = await heroImageResponse.json();
-          setHeroImage(file.blob_url);
+          setHeroImage(file.file_url);
           setHeroImageAlt(file.alt_text || 'Courses page hero image');
         } else {
           console.error('Failed to load hero image');
-          setHeroImage('https://bluvpssu00ym8qv7.public.blob.vercel-storage.com/other/1750011620811-IMG_8439.JPG'); // Fallback
+          setHeroImage('/uploads/general/1752864410580-MEWP_Splash.webp'); // Fallback
           setHeroImageAlt('Safety training in action');
         }
       } catch (error) {
         console.error('Error fetching data:', error);
         setError('Failed to load data');
-        setHeroImage('https://bluvpssu00ym8qv7.public.blob.vercel-storage.com/other/1750011620811-IMG_8439.JPG'); // Fallback
+        setHeroImage('/uploads/general/1752864410580-MEWP_Splash.webp'); // Fallback
         setHeroImageAlt('Safety training in action');
       } finally {
         setLoading(false);
@@ -154,7 +154,7 @@ export default function CoursesPageClient() {
               src={heroImage}
               alt={heroImageAlt || 'Hero background'}
               fill
-              className="object-cover opacity-30"
+              className="object-cover opacity-50"
               priority
               sizes="100vw"
             />
@@ -216,14 +216,13 @@ export default function CoursesPageClient() {
                   key={course.id}
                   className="course-card backdrop-blur-md bg-white/10 border border-white/20 rounded-xl shadow-xl overflow-hidden"
                 >
-                  <div className="relative">
+                  <div className="relative aspect-4/3">
                     {course.image_url ? (
                       <Image
                         src={course.image_url}
                         alt={course.image_alt || course.title}
-                        width={400}
-                        height={300}
-                        layout="responsive"
+                        fill
+                        className="object-cover"
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       />
                     ) : (
@@ -240,7 +239,7 @@ export default function CoursesPageClient() {
                   <div className="p-6 flex flex-col flex-1">
                     <div className="mb-4">
                       <span className="bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 px-3 py-1 rounded-full text-sm font-medium">
-                        {course.category?.name || 'Uncategorized'}
+                        {course.category_name || 'Uncategorized'}
                       </span>
                     </div>
                     <h3 className="text-xl font-bold text-gray-100 dark:text-white mb-3">{course.title}</h3>

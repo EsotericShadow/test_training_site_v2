@@ -11,7 +11,7 @@ interface FileItem {
   id: number;
   filename: string;
   original_name: string;
-  blob_url: string;
+  file_url: string;
   alt_text?: string;
   title?: string;
   description?: string;
@@ -184,7 +184,7 @@ export default function FileSelectionModal({
           id: data.fileId,
           filename: data.filename,
           original_name: selectedFile.name,
-          blob_url: data.fileUrl,
+          file_url: data.fileUrl,
           alt_text: uploadFormData.alt_text,
           title: uploadFormData.title,
           description: uploadFormData.description,
@@ -485,7 +485,7 @@ export default function FileSelectionModal({
                       <>
                         <div className="aspect-square relative mb-2 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-600">
                           <Image
-                            src={file.blob_url}
+                            src={file.file_url}
                             alt={file.alt_text || file.original_name}
                             fill
                             className="object-cover"
@@ -512,7 +512,7 @@ export default function FileSelectionModal({
                       <>
                         <div className="w-16 h-16 relative rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-600 flex-shrink-0">
                           <Image
-                            src={file.blob_url}
+                            src={file.file_url}
                             alt={file.alt_text || file.original_name}
                             fill
                             className="object-cover"

@@ -5,7 +5,7 @@ export const dynamic = 'force-dynamic';
 
 // Generate metadata for SEO (replaces NextSeo)
 export async function generateMetadata(): Promise<Metadata> {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://test-training-site-v2-xjey.vercel.app';
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
   
   return {
     title: 'About Us | Karma Industrial Safety Trainings',
@@ -19,7 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
       address: false,
       telephone: false,
     },
-    metadataBase: new URL(baseUrl),
+    metadataBase: new URL(baseUrl as string),
     alternates: {
       canonical: '/about',
     },
@@ -79,7 +79,7 @@ export default async function AboutPage() {
   }));
 
   // JSON-LD structured data for about page
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://test-training-site-v2-xjey.vercel.app';
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'EducationalOrganization',

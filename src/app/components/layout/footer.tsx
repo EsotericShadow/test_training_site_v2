@@ -27,7 +27,7 @@ export default function Footer({ footerContent, popularCourses }: FooterProps) {
       <div className="container mx-auto px-4 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           <div>
-            {footerContent?.logo_url && <Image src={footerContent.logo_url} alt={footerContent.company_name} width={150} height={50} className="mb-4" />}
+            {footerContent?.logo_url && <Image src={footerContent.logo_url} alt={footerContent.company_name} width={150} height={50} className="mb-4" style={{ width: 'auto' }}/>}
             <p className="text-gray-400">{footerContent?.description}</p>
             <div className="flex space-x-4 mt-6">
               <a href="https://www.facebook.com/share/12MLNsHCu94/?mibextid=wwXIfr" aria-label="Follow us on Facebook" className="text-gray-400 hover:text-white"><LayoutIcon name="facebook" /></a>

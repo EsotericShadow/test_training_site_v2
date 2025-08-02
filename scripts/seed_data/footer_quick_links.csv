@@ -1,0 +1,7 @@
+id,title,url,display_order,is_active,created_at
+1,About Us,/about,1,1,2025-08-01 02:41:04
+2,All Courses,/courses,2,1,2025-08-01 02:41:04
+3,Contact  Quote,/contact,3,1,2025-08-01 02:41:04
+4,Our Team,/about#team,4,1,2025-08-01 02:41:04
+5,Privacy Policy,/privacy,5,1,2025-08-01 02:41:04
+6,Terms of Use,/terms,6,1,2025-08-01 02:41:04

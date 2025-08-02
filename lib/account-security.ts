@@ -1,8 +1,20 @@
 // lib/account-security.ts
-import { sql } from '@vercel/postgres';
+import { db } from './database';
 import { logger } from './logger';
+import mysql from 'mysql2/promise';
 
 // --- TYPE DEFINITIONS ---
+
+interface AttemptCountResult {
+  attempt_count: string; // MySQL returns COUNT(*) as string
+  last_attempt: string | null;
+}
+
+interface FailedLoginStatsResult {
+  total_attempts: string;
+  unique_usernames: string;
+  unique_ips: string;
+}
 
 export interface LockoutStatus {
   locked: boolean;
@@ -38,15 +50,15 @@ export async function checkAccountLockout(username: string): Promise<LockoutStat
   try {
     const windowStart = new Date(Date.now() - ATTEMPT_WINDOW);
     
-    const result = await sql`
+    const [rows] = await db.query<mysql.RowDataPacket[]>(`
       SELECT COUNT(*) as attempt_count, MAX(attempt_time) as last_attempt
       FROM failed_login_attempts
-      WHERE username = ${username}
-      AND attempt_time > ${windowStart.toISOString()}
-    `;
+      WHERE username = ?
+      AND attempt_time > ?
+    `, [username, windowStart.toISOString()]);
     
-    const failedAttempts = parseInt(result.rows[0]?.attempt_count || '0', 10);
-    const lastAttemptTime = result.rows[0]?.last_attempt;
+    const failedAttempts = parseInt((rows[0] as AttemptCountResult)?.attempt_count || '0', 10);
+    const lastAttemptTime = (rows[0] as AttemptCountResult)?.last_attempt;
     
     if (failedAttempts >= LOCKOUT_THRESHOLD && lastAttemptTime) {
       const lastAttempt = new Date(lastAttemptTime);
@@ -86,10 +98,10 @@ export async function checkAccountLockout(username: string): Promise<LockoutStat
 
 export async function recordFailedLoginAttempt(username: string, ipAddress: string): Promise<void> {
   try {
-    await sql`
+    await db.query(`
       INSERT INTO failed_login_attempts (username, ip_address)
-      VALUES (${username}, ${ipAddress})
-    `;
+      VALUES (?, ?)
+    `, [username, ipAddress]);
     logger.info('Recorded failed login attempt', { username, ipAddress });
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : String(error);
@@ -103,13 +115,13 @@ export async function recordFailedLoginAttempt(username: string, ipAddress: stri
 
 export async function resetFailedLoginAttempts(username: string): Promise<void> {
   try {
-    const result = await sql`
+    const [result] = await db.query<mysql.ResultSetHeader>(`
       DELETE FROM failed_login_attempts
-      WHERE username = ${username}
-    `;
+      WHERE username = ?
+    `, [username]);
     logger.info('Reset failed login attempts', { 
-      username, 
-      count: result.rowCount || 0
+      username,
+      count: result.affectedRows || 0
     });
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : String(error);
@@ -123,12 +135,12 @@ export async function resetFailedLoginAttempts(username: string): Promise<void> 
 export async function cleanupFailedLoginAttempts(): Promise<void> {
   try {
     const cutoff = new Date(Date.now() - (24 * 60 * 60 * 1000)); // 24 hours ago
-    const result = await sql`
+    const [result] = await db.query<mysql.ResultSetHeader>(`
       DELETE FROM failed_login_attempts
-      WHERE attempt_time < ${cutoff.toISOString()}
-    `;
+      WHERE attempt_time < ?
+    `, [cutoff.toISOString()]);
     logger.info('Cleaned up old failed login attempts', { 
-      count: result.rowCount || 0
+      count: result.affectedRows || 0
     });
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : String(error);
@@ -141,19 +153,19 @@ export async function cleanupFailedLoginAttempts(): Promise<void> {
 export async function getFailedLoginStats(hours: number = 24): Promise<FailedLoginStats> {
   try {
     const cutoff = new Date(Date.now() - (hours * 60 * 60 * 1000));
-    const result = await sql`
+    const [rows] = await db.query<mysql.RowDataPacket[]>(`
       SELECT 
         COUNT(*) as total_attempts,
         COUNT(DISTINCT username) as unique_usernames,
         COUNT(DISTINCT ip_address) as unique_ips
       FROM failed_login_attempts
-      WHERE attempt_time > ${cutoff.toISOString()}
-    `;
-    
+      WHERE attempt_time > ?
+    `, [cutoff.toISOString()]);
+
     return {
-      totalAttempts: parseInt(result.rows[0]?.total_attempts || '0', 10),
-      uniqueUsernames: parseInt(result.rows[0]?.unique_usernames || '0', 10),
-      uniqueIPs: parseInt(result.rows[0]?.unique_ips || '0', 10),
+      totalAttempts: parseInt((rows[0] as FailedLoginStatsResult)?.total_attempts || '0', 10),
+      uniqueUsernames: parseInt((rows[0] as FailedLoginStatsResult)?.unique_usernames || '0', 10),
+      uniqueIPs: parseInt((rows[0] as FailedLoginStatsResult)?.unique_ips || '0', 10),
       timeWindow: hours
     };
   } catch (error: unknown) {
@@ -172,13 +184,13 @@ export async function getFailedLoginStats(hours: number = 24): Promise<FailedLog
 
 export async function getRecentFailedAttempts(username: string, limit: number = 10): Promise<FailedLoginAttempt[]> {
   try {
-    const { rows } = await sql`
+    const [rows] = await db.query<mysql.RowDataPacket[]>(`
       SELECT username, ip_address, attempt_time
       FROM failed_login_attempts
-      WHERE username = ${username}
+      WHERE username = ?
       ORDER BY attempt_time DESC
-      LIMIT ${limit}
-    `;
+      LIMIT ?
+    `, [username, limit]);
     return rows as FailedLoginAttempt[];
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : String(error);
@@ -193,15 +205,15 @@ export async function getRecentFailedAttempts(username: string, limit: number = 
 export async function checkIPLockout(ipAddress: string): Promise<LockoutStatus> {
   try {
     const windowStart = new Date(Date.now() - ATTEMPT_WINDOW);
-    const result = await sql`
+    const [rows] = await db.query<mysql.RowDataPacket[]>(`
       SELECT COUNT(*) as attempt_count, MAX(attempt_time) as last_attempt
       FROM failed_login_attempts
-      WHERE ip_address = ${ipAddress}
-      AND attempt_time > ${windowStart.toISOString()}
-    `;
-    
-    const failedAttempts = parseInt(result.rows[0]?.attempt_count || '0', 10);
-    const lastAttemptTime = result.rows[0]?.last_attempt;
+      WHERE ip_address = ?
+      AND attempt_time > ?
+    `, [ipAddress, windowStart.toISOString()]);
+
+    const failedAttempts = parseInt((rows[0] as AttemptCountResult)?.attempt_count || '0', 10);
+    const lastAttemptTime = (rows[0] as AttemptCountResult)?.last_attempt;
     
     const IP_LOCKOUT_THRESHOLD = 20;
     

@@ -1,6 +1,6 @@
 // scripts/clear-duplicate-sessions.mjs
 import { config } from 'dotenv';
-import { sql } from '@vercel/postgres';
+import { db } from '../../lib/database.ts';
 
 // Load environment variables from .env.local
 config({ path: '.env.local' });
@@ -9,73 +9,67 @@ async function clearDuplicateSessions() {
   try {
     console.log('🔧 Starting duplicate session cleanup...');
     
-    // Check if POSTGRES_URL is set
-    if (!process.env.POSTGRES_URL) {
-      console.error('❌ POSTGRES_URL environment variable is not set!');
-      console.error('Please make sure your .env.local file contains the POSTGRES_URL variable.');
-      return;
-    }
-    
     // First, show current session count
-    const beforeCount = await sql`SELECT COUNT(*) as count FROM admin_sessions`;
-    console.log(`📊 Current sessions in database: ${beforeCount.rows[0].count}`);
+    const [beforeCountRows] = await db.query('SELECT COUNT(*) as count FROM admin_sessions');
+    const beforeCount = beforeCountRows[0].count;
+    console.log(`📊 Current sessions in database: ${beforeCount}`);
     
     // Find duplicate tokens (if any)
-    const duplicates = await sql`
+    const [duplicateRows] = await db.query(`
       SELECT token, COUNT(*) as count 
       FROM admin_sessions 
       GROUP BY token 
       HAVING COUNT(*) > 1
-    `;
+    `);
     
-    if (duplicates.rows.length > 0) {
-      console.log(`🔍 Found ${duplicates.rows.length} duplicate tokens`);
+    if (duplicateRows.length > 0) {
+      console.log(`🔍 Found ${duplicateRows.length} duplicate tokens`);
       
       // Keep only the most recent session for each duplicate token
-      for (const duplicate of duplicates.rows) {
+      for (const duplicate of duplicateRows) {
         console.log(`🧹 Cleaning up duplicate token: ${duplicate.token.substring(0, 20)}...`);
         
         // Delete all but the most recent session with this token
-        await sql`
+        await db.query(`
           DELETE FROM admin_sessions 
-          WHERE token = ${duplicate.token} 
+          WHERE token = ? 
           AND id NOT IN (
-            SELECT id FROM admin_sessions 
-            WHERE token = ${duplicate.token} 
-            ORDER BY created_at DESC 
-            LIMIT 1
+            SELECT id FROM (
+              SELECT id FROM admin_sessions 
+              WHERE token = ? 
+              ORDER BY created_at DESC 
+              LIMIT 1
+            ) as subquery
           )
-        `;
+        `, [duplicate.token, duplicate.token]);
       }
     } else {
       console.log('✅ No duplicate tokens found');
     }
     
     // Clear all expired sessions
-    const expiredResult = await sql`
+    const [expiredResult] = await db.query(`
       DELETE FROM admin_sessions 
       WHERE expires_at < NOW()
-    `;
-    console.log(`🗑️ Removed ${expiredResult.rowCount} expired sessions`);
+    `);
+    console.log(`🗑️ Removed ${expiredResult.affectedRows} expired sessions`);
     
     // Clear very old sessions (older than 7 days)
-    const oldResult = await sql`
+    const [oldResult] = await db.query(`
       DELETE FROM admin_sessions 
-      WHERE created_at < NOW() - INTERVAL '7 days'
-    `;
-    console.log(`🗑️ Removed ${oldResult.rowCount} old sessions (>7 days)`);
+      WHERE created_at < NOW() - INTERVAL 7 DAY
+    `);
+    console.log(`🗑️ Removed ${oldResult.affectedRows} old sessions (>7 days)`);
     
     // Show final count
-    const afterCount = await sql`SELECT COUNT(*) as count FROM admin_sessions`;
-    console.log(`📊 Sessions after cleanup: ${afterCount.rows[0].count}`);
+    const [afterCountRows] = await db.query('SELECT COUNT(*) as count FROM admin_sessions');
+    const afterCount = afterCountRows[0].count;
+    console.log(`📊 Sessions after cleanup: ${afterCount}`);
     
-    // Reset the sequence to prevent ID conflicts
-    await sql`
-      SELECT setval('admin_sessions_id_seq', 
-        COALESCE((SELECT MAX(id) FROM admin_sessions), 1), 
-        true)
-    `;
-    console.log('🔄 Reset session ID sequence');
+    // Reset the sequence to prevent ID conflicts (MySQL auto-increments)
+    // No direct equivalent to setval in MySQL for auto-increment columns
+    // MySQL handles auto-increment IDs automatically. If needed, you can manually reset with ALTER TABLE.
+    console.log('🔄 MySQL handles session ID sequence automatically. No reset needed.');
     
     console.log('✅ Session cleanup completed successfully!');
     console.log('💡 You can now try logging in again.');

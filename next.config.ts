@@ -34,17 +34,9 @@ const nextConfig: NextConfig = {
         port: '3000',
         pathname: '/**',
       },
-      {
-        protocol: 'https',
-        hostname: '*.vercel.app',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: '*.vercel-storage.com',
-        pathname: '/**',
-      },
+      
       // Additional patterns for common image sources
+      
       {
         protocol: 'https',
         hostname: 'images.unsplash.com',
@@ -58,6 +50,16 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'via.placeholder.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'bluvpssu00ym8qv7.public.blob.vercel-storage.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.public.blob.vercel-storage.com',
         pathname: '/**',
       },
     ],
@@ -105,11 +107,11 @@ const nextConfig: NextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://va.vercel-scripts.com",
+              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com",
               "style-src 'self' 'unsafe-inline'",
-              "img-src 'self' data: blob: http://192.168.1.222:3000 https://*.vercel.app https://*.vercel-storage.com https://images.unsplash.com https://cdn.pixabay.com https://via.placeholder.com",
+              "img-src 'self' data: blob: http://192.168.1.222:3000 https://images.unsplash.com https://cdn.pixabay.com https://via.placeholder.com https://bluvpssu00ym8qv7.public.blob.vercel-storage.com https://www.googletagmanager.com",
               "font-src 'self'",
-              "connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://vitals.vercel-insights.com",
+              "connect-src 'self' https://www.google-analytics.com https://analytics.google.com",
               "media-src 'self'",
               "object-src 'none'",
               "frame-ancestors 'none'",

@@ -40,7 +40,7 @@ export default function ContactPageClient() {
       try {
         const [companyInfoResponse, heroImageResponse] = await Promise.all([
           fetch('/api/adm_f7f8556683f1cdc65391d8d2_8e91/company-info'),
-          fetch('/api/adm_f7f8556683f1cdc65391d8d2_8e91/files?category=other')
+          fetch('/api/contact/hero-image')
         ]);
 
         if (companyInfoResponse.ok) {
@@ -52,11 +52,11 @@ export default function ContactPageClient() {
 
         if (heroImageResponse.ok) {
           const { file } = await heroImageResponse.json();
-          setHeroImage(file.blob_url);
+          setHeroImage(file.file_url);
           setHeroImageAlt(file.alt_text || 'Contact page hero image');
         } else {
           console.error('Failed to load hero image');
-          setHeroImage('https://bluvpssu00ym8qv7.public.blob.vercel-storage.com/other/1750011620811-IMG_8439.JPG'); // Fallback
+          setHeroImage('/uploads/general/1752864410580-MEWP_Splash.webp'); // Fallback
           setHeroImageAlt('Safety training in action');
         }
       } catch (error) {

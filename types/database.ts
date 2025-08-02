@@ -192,9 +192,7 @@ export interface File {
     file_size: number;
     mime_type: string;
     file_extension: string;
-    blob_url: string;
-    blob_pathname: string;
-    blob_token: string;
+    file_url: string;
     width?: number;
     height?: number;
     aspect_ratio?: number;

@@ -1,14 +1,15 @@
 // src/app/api/adm_f7f8556683f1cdc65391d8d2_8e91/upload/route.ts
 import { NextResponse, NextRequest } from 'next/server';
 
-export const runtime = 'nodejs';
-import { put } from '@vercel/blob';
+ 
+import fs from 'fs/promises';
+import path from 'path';
 import { validateSession } from '../../../../../lib/session-manager';
 import { filesOps } from '../../../../../lib/database';
 import type { File as DbFile } from '../../../../../types/database';
 import { sanitizeInput, validateInput } from '../../../../../lib/security-utils';
 
-// POST - Upload file to Vercel Blob
+// POST - Upload file to local storage
 export async function POST(request: NextRequest) {
   try {
     // Verify authentication using the same method as middleware
@@ -102,14 +103,21 @@ export async function POST(request: NextRequest) {
     const fileExtension = originalName.split('.').pop()?.toLowerCase() || '';
     const sanitizedName = originalName.replace(/[^a-zA-Z0-9.-]/g, '_');
     const filename = `${timestamp}-${sanitizedName}`;
-    const blobPathname = `${validatedData.category}/${filename}`;
+    
 
     try {
-      // Upload to Vercel Blob
-      const blob = await put(blobPathname, file, {
-        access: 'public',
-        addRandomSuffix: false,
-      });
+      const uploadDir = path.join(process.cwd(), 'public', validatedData.category as string);
+      await fs.mkdir(uploadDir, { recursive: true });
+
+      const filePath = path.join(uploadDir, filename);
+      const buffer = Buffer.from(await file.arrayBuffer());
+      await fs.writeFile(filePath, buffer);
+
+      const fileUrl = `/uploads/${validatedData.category}/${filename}`;
+      const fileInfo = {
+        url: fileUrl,
+        pathname: fileUrl,
+      };
 
       // Get image dimensions if it's an image
       const width: number | undefined = undefined;
@@ -135,16 +143,13 @@ export async function POST(request: NextRequest) {
         }
       }
 
-      // Store file metadata in database
       const fileData: Partial<DbFile> = {
         filename: filename,
         original_name: originalName,
         file_size: file.size,
         mime_type: file.type,
         file_extension: fileExtension,
-        blob_url: blob.url,
-        blob_pathname: blobPathname,
-        blob_token: blob.pathname, // Store pathname for potential deletion
+        file_url: fileInfo.url, // Store the local URL
       };
 
       if (width !== undefined) fileData.width = width;
@@ -168,7 +173,7 @@ export async function POST(request: NextRequest) {
           original_name: originalName,
           file_size: file.size,
           mime_type: file.type,
-          blob_url: blob.url,
+          file_url: fileInfo.url,
           category: validatedData.category,
           alt_text: validatedData.alt_text || originalName,
           title: validatedData.title || originalName,
@@ -179,8 +184,8 @@ export async function POST(request: NextRequest) {
         message: 'File uploaded successfully'
       });
 
-    } catch (blobError) {
-      console.error('Error uploading to Vercel Blob:', blobError);
+    } catch (uploadError) {
+      console.error('Error uploading file locally:', uploadError);
       return NextResponse.json(
         { error: 'Failed to upload file to storage' },
         { status: 500 }

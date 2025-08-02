@@ -1,48 +1,46 @@
-import { sql } from '@vercel/postgres';
+import { db } from '../../lib/database.ts';
 
 export async function up() {
-  await sql`
+  await db.query(`
     CREATE TABLE IF NOT EXISTS file_folders (
-      id SERIAL PRIMARY KEY,
-      name TEXT NOT NULL UNIQUE,
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      name VARCHAR(255) NOT NULL UNIQUE,
       description TEXT,
-      parent_id INTEGER REFERENCES file_folders(id) ON DELETE SET NULL,
-      display_order INTEGER DEFAULT 0,
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      parent_id INT REFERENCES file_folders(id) ON DELETE SET NULL,
+      display_order INT DEFAULT 0,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     );
-  `;
+  `);
   console.log('✅ file_folders table created');
 
-  await sql`
+  await db.query(`
     CREATE TABLE IF NOT EXISTS files (
-      id SERIAL PRIMARY KEY,
-      filename TEXT NOT NULL,
-      original_name TEXT NOT NULL,
-      file_size INTEGER NOT NULL,
-      mime_type TEXT NOT NULL,
-      file_extension TEXT NOT NULL,
-      blob_url TEXT NOT NULL,
-      blob_pathname TEXT NOT NULL,
-      blob_token TEXT NOT NULL,
-      width INTEGER,
-      height INTEGER,
-      aspect_ratio TEXT,
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      filename VARCHAR(255) NOT NULL,
+      original_name VARCHAR(255) NOT NULL,
+      file_size INT NOT NULL,
+      mime_type VARCHAR(255) NOT NULL,
+      file_extension VARCHAR(255) NOT NULL,
+      file_url TEXT NOT NULL,
+      width INT,
+      height INT,
+      aspect_ratio VARCHAR(255),
       alt_text TEXT,
       title TEXT,
       description TEXT,
       tags TEXT,
       caption TEXT,
-      folder_id INTEGER REFERENCES file_folders(id) ON DELETE SET NULL,
-      category TEXT DEFAULT 'general',
+      folder_id INT REFERENCES file_folders(id) ON DELETE SET NULL,
+      category VARCHAR(255) DEFAULT 'general',
       is_featured BOOLEAN DEFAULT FALSE,
-      status TEXT DEFAULT 'active' CHECK (status IN ('active', 'deleted', 'archived')),
-      usage_count INTEGER DEFAULT 0,
-      uploaded_by INTEGER REFERENCES admin_users(id) ON DELETE SET NULL,
-      uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      status VARCHAR(50) DEFAULT 'active' CHECK (status IN ('active', 'deleted', 'archived')),
+      usage_count INT DEFAULT 0,
+      uploaded_by INT REFERENCES admin_users(id) ON DELETE SET NULL,
+      uploaded_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     );
-  `;
+  `);
   console.log('✅ files table created');
 
   // Insert default folders idempotently
@@ -54,12 +52,12 @@ export async function up() {
   ];
 
   for (const folder of defaultFolders) {
-    const existingFolder = await sql`SELECT id FROM file_folders WHERE name = ${folder.name}`;
-    if (existingFolder.rows.length === 0) {
-      await sql`
+    const [existingFolderRows] = await db.query(`SELECT id FROM file_folders WHERE name = ?`, [folder.name]);
+    if (existingFolderRows.length === 0) {
+      await db.query(`
         INSERT INTO file_folders (name, description, display_order)
-        VALUES (${folder.name}, ${folder.description}, ${folder.display_order})
-      `;
+        VALUES (?, ?, ?)
+      `, [folder.name, folder.description, folder.display_order]);
       console.log(`✅ Inserted default folder: ${folder.name}`);
     } else {
       console.log(`ℹ️ Default folder already exists: ${folder.name}`);
@@ -68,13 +66,13 @@ export async function up() {
 }
 
 export async function down() {
-  await sql`
+  await db.query(`
     DROP TABLE IF EXISTS files;
-  `;
+  `);
   console.log('❌ Dropped files table');
 
-  await sql`
+  await db.query(`
     DROP TABLE IF EXISTS file_folders;
-  `;
+  `);
   console.log('❌ Dropped file_folders table');
 }

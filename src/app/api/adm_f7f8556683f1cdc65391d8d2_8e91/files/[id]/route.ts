@@ -59,9 +59,11 @@ export async function PUT(
   return handleRequest(request, params, async (id) => {
     try {
       const data = await request.json();
+      console.log('Received data for file update:', data);
       
       const validationResult = validateInput.fileMetadata(data);
       if (!validationResult.success) {
+          console.error('File metadata validation failed:', validationResult.error);
           return NextResponse.json({ error: validationResult.error }, { status: 400 });
       }
 

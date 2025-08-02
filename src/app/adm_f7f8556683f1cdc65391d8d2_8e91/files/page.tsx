@@ -33,7 +33,7 @@ interface FileItem {
   file_size: number;
   mime_type: string;
   file_extension: string;
-  blob_url: string;
+  file_url: string;
   width?: number;
   height?: number;
   alt_text?: string;
@@ -778,7 +778,7 @@ export default function FileManagement() {
                     <div className="w-full h-full flex items-center justify-center">
                       {file.mime_type.startsWith('image/') ? (
                         <Image
-                          src={file.blob_url}
+                          src={file.file_url}
                           alt={file.alt_text || file.original_name}
                           width={300}
                           height={300}
@@ -823,7 +823,7 @@ export default function FileManagement() {
                       </button>
                       
                       <a
-                        href={file.blob_url}
+                        href={file.file_url}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center justify-center p-1.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
@@ -832,7 +832,7 @@ export default function FileManagement() {
                       </a>
                       
                       <a
-                        href={file.blob_url}
+                        href={file.file_url}
                         download={file.original_name}
                         className="flex items-center justify-center p-1.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
                       >
@@ -1064,7 +1064,7 @@ export default function FileManagement() {
                 <div className="inline-block bg-slate-100 dark:bg-slate-800 rounded-xl p-4">
                   {editingFile.mime_type.startsWith('image/') ? (
                     <Image
-                      src={editingFile.blob_url}
+                      src={editingFile.file_url}
                       alt={editingFile.alt_text || editingFile.original_name}
                       width={200}
                       height={200}

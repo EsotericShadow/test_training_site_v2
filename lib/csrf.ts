@@ -1,8 +1,9 @@
 // lib/csrf.js
 import crypto from 'crypto';
-import { sql } from '@vercel/postgres';
+import { db } from './database';
 import { validateSession } from './session-manager';
 import { NextRequest } from 'next/server';
+import type mysql from 'mysql2/promise';
 
 interface CsrfToken {
   id: number;
@@ -13,22 +14,22 @@ interface CsrfToken {
 // Generate a CSRF token for a session
 export async function generateToken(sessionId: number): Promise<string> {
   const token = crypto.randomBytes(32).toString('hex');
-  await sql`
+  await db.query(`
     INSERT INTO csrf_tokens (session_id, token)
-    VALUES (${sessionId}, ${token})
-  `;
+    VALUES (?, ?)
+  `, [sessionId, token]);
   return token;
 }
 
 export async function validateToken(sessionId: number, token: string): Promise<boolean> {
   // 1. Fetch the most recent stored token data using the session ID.
-  const result = await sql<CsrfToken>`
+  const [rows] = await db.query<mysql.RowDataPacket[]>(`
     SELECT id, token, created_at FROM csrf_tokens
-    WHERE session_id = ${sessionId}
+    WHERE session_id = ?
     ORDER BY created_at DESC
     LIMIT 1
-  `;
-  const storedData = result.rows[0];
+  `, [sessionId]);
+  const storedData = rows[0] as CsrfToken;
 
   // 2. If there's no stored token for the session, or the user provided no token, fail.
   if (!storedData || !token) {
@@ -40,10 +41,10 @@ export async function validateToken(sessionId: number, token: string): Promise<b
   const tokenAge = now - new Date(storedData.created_at).getTime();
   if (tokenAge > 3600000) { // 1 hour expiry
     // Clean up expired token
-    await sql`
+    await db.query(`
       DELETE FROM csrf_tokens
-      WHERE session_id = ${sessionId}
-    `;
+      WHERE session_id = ?
+    `, [sessionId]);
     return false;
   }
 
@@ -61,10 +62,10 @@ export async function validateToken(sessionId: number, token: string): Promise<b
 
     if (isValid) {
       // 5. For one-time use, delete the token after successful validation.
-      await sql`
+      await db.query(`
         DELETE FROM csrf_tokens
-        WHERE id = ${storedData.id}
-      `;
+        WHERE id = ?
+      `, [storedData.id]);
       return true;
     }
   } catch {

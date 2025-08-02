@@ -10,8 +10,8 @@ import { Suspense } from 'react';
 
 const DynamicSilk = dynamic(() => import('@/app/components/ui/Silk'));
 
-import { Analytics } from '@vercel/analytics/next';
-import { SpeedInsights } from '@vercel/speed-insights/next';
+
+
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -27,9 +27,7 @@ export const metadata: Metadata = {
 interface ApiCourse {
   title: string;
   slug: string;
-  category?: {
-    name: string;
-  };
+  category_name?: string;
 }
 
 interface Course {
@@ -63,13 +61,13 @@ interface FooterData {
 
 async function getCourseCategories(): Promise<CourseCategories> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://test-training-site-v2-xjey.vercel.app';
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
     const response = await fetch(`${baseUrl}/api/adm_f7f8556683f1cdc65391d8d2_8e91/courses`, { cache: 'no-store' });
     if (!response.ok) throw new Error('Failed to fetch courses');
     const { courses }: { courses: ApiCourse[] } = await response.json();
 
     const groupedCourses = courses.reduce((acc: CourseCategories, course: ApiCourse) => {
-      const categoryName = course.category?.name?.trim() || 'Uncategorized';
+      const categoryName = course.category_name?.trim() || 'Uncategorized';
       if (!acc[categoryName]) acc[categoryName] = [];
       acc[categoryName].push({ name: course.title, slug: course.slug });
       return acc;
@@ -91,7 +89,7 @@ async function getCourseCategories(): Promise<CourseCategories> {
 
 async function getFooterData(): Promise<FooterData> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://test-training-site-v2-xjey.vercel.app';
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
     const response = await fetch(`${baseUrl}/api/adm_f7f8556683f1cdc65391d8d2_8e91/footer`, { cache: 'no-store' });
     if (!response.ok) throw new Error('Failed to fetch footer data');
     const data = await response.json();
@@ -148,13 +146,7 @@ export default async function RootLayout({
             <Footer footerContent={footerData.footerContent} popularCourses={footerData.popularCourses} />
           </div>
         </ThemeProvider>
-        {/* Keep Vercel Analytics too - they work great together */}
-        {process.env.NODE_ENV === 'production' && (
-          <>
-            <Analytics />
-            <SpeedInsights />
-          </>
-        )}
+        
       </body>
     </html>
   );

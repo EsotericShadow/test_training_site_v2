@@ -1,7 +1,7 @@
 // src/app/api/adm_f7f8556683f1cdc65391d8d2_8e91/categories/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 
-export const runtime = 'nodejs';
+
 import { courseCategoriesOps } from '../../../../../lib/database';
 import type { CourseCategory } from '../../../../../types/database';
 

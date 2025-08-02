@@ -1,7 +1,7 @@
 // lib/session-manager.ts
 import { NextRequest } from 'next/server';
 import { generateSecureToken, verifySecureToken, TOKEN_EXPIRY_SECONDS } from './secure-jwt';
-import { adminSessionsOps } from './database';
+import { adminSessionsOps, formatDateForMySQL } from './database';
 import { logger } from './logger';
 import type { AdminUser, AdminSession } from '../types/database';
 
@@ -66,7 +66,7 @@ export async function createSession(user: Pick<AdminUser, 'id' | 'username' | 'e
     await adminSessionsOps.create(
       user.id,
       token,
-      expiresAt.toISOString(),
+      formatDateForMySQL(expiresAt),
       ipAddress,
       userAgent.substring(0, 255)
     );
@@ -156,7 +156,7 @@ export async function renewSession(session: AdminSession, request: NextRequest):
 
     const newExpiresAt = new Date(Date.now() + (TOKEN_EXPIRY_SECONDS * 1000));
 
-    await adminSessionsOps.updateToken(session.id, newToken, newExpiresAt.toISOString());
+    await adminSessionsOps.updateToken(session.id, newToken, formatDateForMySQL(newExpiresAt));
 
     logger.info('Enhanced session renewed', { 
       ip, 

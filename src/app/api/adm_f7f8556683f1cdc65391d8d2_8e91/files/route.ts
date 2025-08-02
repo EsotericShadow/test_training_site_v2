@@ -1,5 +1,7 @@
 // src/app/api/adm_f7f8556683f1cdc65391d8d2_8e91/files/route.ts
 import { NextResponse, NextRequest } from 'next/server';
+
+export const runtime = 'nodejs';
 import { filesOps } from '../../../../../lib/database';
 import { validateSession } from '../../../../../lib/session-manager';
 

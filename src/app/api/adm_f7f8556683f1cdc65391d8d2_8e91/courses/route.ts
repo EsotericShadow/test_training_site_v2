@@ -1,7 +1,8 @@
 // src/app/api/adm_f7f8556683f1cdc65391d8d2_8e91/courses/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 
-export const runtime = 'nodejs';
+export const revalidate = 0;
+
 import { withSecureAuth } from '../../../../../lib/secure-jwt';
 import { coursesOps, courseFeaturesOps } from '../../../../../lib/database';
 import { sanitizeInput, validateInput } from '../../../../../lib/security-utils';

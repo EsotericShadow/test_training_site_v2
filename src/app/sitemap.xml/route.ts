@@ -13,7 +13,7 @@ interface SitemapPage {
 export async function GET() {
   try {
     // Ensure base URL is set
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://test-training-site-v2-xjey.vercel.app';
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
     if (!baseUrl) {
       throw new Error('NEXT_PUBLIC_BASE_URL is not defined');
     }

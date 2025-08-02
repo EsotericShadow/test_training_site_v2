@@ -1,7 +1,7 @@
 // src/app/adm_f7f8556683f1cdc65391d8d2_8e91/courses/[id]/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 
-export const runtime = 'nodejs';
+
 import { withSecureAuth, AuthResult } from '../../../../../../lib/secure-jwt';
 import { coursesOps, courseFeaturesOps } from '../../../../../../lib/database';
 import type { Course, CourseFeature } from '../../../../../../types/database';

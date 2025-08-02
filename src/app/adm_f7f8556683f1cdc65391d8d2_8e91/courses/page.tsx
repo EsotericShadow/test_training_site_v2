@@ -54,7 +54,7 @@ interface FileItem {
   id: number;
   filename: string;
   original_name: string;
-  blob_url: string;
+  file_url: string;
   alt_text?: string;
   title?: string;
   description?: string;

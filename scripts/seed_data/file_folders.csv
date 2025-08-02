@@ -1,0 +1,9 @@
+id,name,description,parent_id,display_order,created_at,updated_at
+1,Team Photos,Photos of team members and staff,NULL,1,2025-08-01 02:41:04,NULL
+2,Course Images,Images related to training courses,NULL,2,2025-08-01 02:41:04,NULL
+3,Company Assets,Logos, branding, and company materials,NULL,3,2025-08-01 02:41:04,NULL
+4,Testimonial Photos,Client and testimonial related images,NULL,4,2025-08-01 02:41:04,NULL
+5,General,Miscellaneous files and images,NULL,5,2025-08-01 02:41:04,NULL
+6,Images,Image files,NULL,2,2025-08-01 02:41:04,NULL
+7,Documents,Document files,NULL,3,2025-08-01 02:41:04,NULL
+8,Videos,Video files,NULL,4,2025-08-01 02:41:04,NULL

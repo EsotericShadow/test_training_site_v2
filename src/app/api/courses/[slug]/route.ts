@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export const runtime = 'nodejs';
+ 
 import { coursesOps, courseFeaturesOps } from '../../../../../lib/database';
 import type { CourseFeature } from '../../../../../types/database';
 
