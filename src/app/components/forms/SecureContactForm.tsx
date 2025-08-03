@@ -646,7 +646,7 @@ export default function SecureContactForm({
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2 text-sm text-gray-500">
             <FormIcon name="lock" className="h-4 w-4" />
-            <span>Your information is secure and encrypted</span>
+            <span></span>
           </div>
           
           <button
@@ -666,7 +666,7 @@ export default function SecureContactForm({
             ) : (
               <>
                 <FormIcon name="send" className="h-5 w-5" />
-                <span>Send Message</span>
+                <span>Send</span>
               </>
             )}
           </button>
