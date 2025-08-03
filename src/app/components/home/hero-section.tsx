@@ -97,7 +97,7 @@ export default function HeroSection({ initialData }: HeroSectionProps) {
 
   return (
     <section ref={sectionRef} className="relative text-white">
-      <div className="relative container mx-auto px-4 py-48 text-center">
+      <div className="relative container mx-auto px-4 py-17 sm:py-32 md:py-48 text-center">
         <p className="slogan text-yellow-400 font-semibold text-lg mb-4 opacity-0 translate-y-[50px]">{heroSection?.slogan}</p>
         <h1 className="main-heading text-4xl md:text-6xl font-extrabold leading-tight mb-6 opacity-0 translate-y-[50px]">
           {heroSection?.main_heading} <span className="text-yellow-400">{heroSection?.highlight_text}</span>
