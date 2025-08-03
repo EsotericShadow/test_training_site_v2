@@ -1,3 +1,14 @@
+/*
+ * Evergreen Web Solutions
+ * Written and developed by Gabriel Lacroix
+ *
+ * File: 20250717000000_add_images_to_why_choose_us.js
+ * Description: To be filled in with the script's purpose
+ * Dependencies: To be filled in with key dependencies or modules
+ * Created: August 2, 2025
+ * Last Modified: August 2, 2025
+ * Version: 1.0.0
+ */
 import { sql } from '@vercel/postgres';
 
 export async function up() {

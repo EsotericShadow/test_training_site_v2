@@ -1,3 +1,14 @@
+/*
+ * Evergreen Web Solutions
+ * Written and developed by Gabriel Lacroix
+ *
+ * File: 20250714000001_create_public_sessions_table.js
+ * Description: To be filled in with the script's purpose
+ * Dependencies: To be filled in with key dependencies or modules
+ * Created: August 2, 2025
+ * Last Modified: August 2, 2025
+ * Version: 1.0.0
+ */
 // scripts/migrations/20250714000001_create_public_sessions_table.js
 import { sql } from '@vercel/postgres';
 

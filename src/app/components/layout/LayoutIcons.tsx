@@ -1,3 +1,14 @@
+/*
+ * Evergreen Web Solutions
+ * Written and developed by Gabriel Lacroix
+ *
+ * File: LayoutIcons.tsx
+ * Description: To be filled in with the script's purpose
+ * Dependencies: To be filled in with key dependencies or modules
+ * Created: August 2, 2025
+ * Last Modified: August 2, 2025
+ * Version: 1.0.0
+ */
 
 import React from 'react';
 
@@ -45,3 +56,15 @@ const LayoutIcon: React.FC<LayoutIconProps> = ({ name, size = 24, color = 'curre
 };
 
 export default LayoutIcon;
+//   ___________       *Written and developed by Gabriel Lacroix*               __      ___.
+//   \_   _____/__  __ ___________  ___________   ____   ____   ____   /  \    /  \ ____\_ |__  
+//    |    __)_\  \/ // __ \_  __ \/ ___\_  __ \_/ __ \_/ __ \ /    \  \   \/\/   // __ \| __ \ 
+//    |        \\   /\  ___/|  | \/ /_/  >  | \/\  ___/\  ___/|   |  \  \        /\  ___/| \_\ \
+//   /_______  / \_/  \___  >__|  \___  /|__|    \___  >\___  >___|  /   \__/\  /  \___  >___  /
+//           \/           \/     /_____/             \/     \/     \/         \/       \/    \/ 
+//                     _________      .__          __  .__                                      
+//                    /   _____/ ____ |  |  __ ___/  |_|__| ____   ____   ______                
+//                    \_____  \ /  _ \|  | |  |  \   __\  |/  _ \ /    \ /  ___/                
+//                    /        (  <_> )  |_|  |  /|  | |  (  <_> )   |  \\___ \                 
+//                   /_______  /\____/|____/____/ |__| |__|\____/|___|  /____  >                
+//                           \/                                       \/     \/                 

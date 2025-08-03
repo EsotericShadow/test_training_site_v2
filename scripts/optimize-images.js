@@ -1,3 +1,14 @@
+/*
+ * Evergreen Web Solutions
+ * Written and developed by Gabriel Lacroix
+ *
+ * File: optimize-images.js
+ * Description: To be filled in with the script's purpose
+ * Dependencies: To be filled in with key dependencies or modules
+ * Created: August 2, 2025
+ * Last Modified: August 2, 2025
+ * Version: 1.0.0
+ */
 const sharp = require('sharp');
 const fs = require('fs').promises;
 const path = require('path');
