@@ -131,7 +131,7 @@ export default function AboutPageClient({ teamMembers }: AboutPageClientProps) {
   }
 
   return (
-    <div ref={sectionRefs} className="bg-gray-900">
+    <div ref={sectionRefs} className="bg-gray-900 pt-13" >
       <section className="relative text-white py-24">
         <div className="absolute inset-0">
           {heroImage && (

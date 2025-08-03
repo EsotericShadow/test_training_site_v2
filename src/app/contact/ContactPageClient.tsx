@@ -1,12 +1,12 @@
-'use client'
+'use client';
 
-import { useState, useEffect } from 'react'
-import Link from 'next/link'
-import Image from 'next/image'
-import ContactIcon from './ContactIcons'
-import SecureContactForm from '@/app/components/forms/SecureContactForm'
-import { useGsap } from '@/app/hooks/useGsap'
-import { gsap } from 'gsap'
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import ContactIcon from './ContactIcons';
+import SecureContactForm from '@/app/components/forms/SecureContactForm';
+import { useGsap } from '@/app/hooks/useGsap';
+import { gsap } from 'gsap';
 
 interface CompanyInfo {
   phone?: string;
@@ -75,7 +75,7 @@ export default function ContactPageClient() {
   ];
 
   return (
-    <div ref={sectionRef} className="">
+    <div ref={sectionRef} className="min-h-screen pt-13">
       <section className="relative py-24 text-white overflow-hidden">
         <div className="absolute inset-0 z-0">
           {heroImage && (
@@ -99,19 +99,19 @@ export default function ContactPageClient() {
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-3 gap-12">
             <div className="lg:col-span-1">
-              <h2 className="animate-in text-3xl font-bold text-gray-200 dark:text-white mb-6">Contact Information</h2>
+              <h2 className="animate-in text-3xl font-bold text-gray-200 mb-6">Contact Information</h2>
               <div className="space-y-6">
                 {contactDetails.map(detail => (
                   <div key={detail.title} className="animate-in flex items-start space-x-4">
-                    <div className="bg-yellow-400 text-gray-200 dark:text-white rounded-full p-3">
+                    <div className="bg-yellow-400 text-gray-200 rounded-full p-3">
                       <ContactIcon name={detail.icon as string} className="h-6 w-6" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-semibold text-gray-300 dark:text-white">{detail.title}</h3>
+                      <h3 className="text-xl font-semibold text-gray-300">{detail.title}</h3>
                       {detail.href ? (
-                        <a href={detail.href} className="text-lg text-gray-200 dark:text-gray-300 hover:text-yellow-500">{detail.value}</a>
+                        <a href={detail.href} className="text-lg text-gray-200 hover:text-yellow-500">{detail.value}</a>
                       ) : (
-                        <p className="text-lg text-gray-300 dark:text-gray-300">{detail.value}</p>
+                        <p className="text-lg text-gray-300">{detail.value}</p>
                       )}
                     </div>
                   </div>
@@ -119,7 +119,7 @@ export default function ContactPageClient() {
               </div>
             </div>
             <div className="lg:col-span-2 rounded-lg shadow-lg animate-in bg-gradient-to-br from-white/30 via-white/10 to-transparent p-[1px]">
-              <div className="h-full w-full rounded-[7px] text-gray-300 dark:text-gray-300 bg-gray-900/50 dark:bg-gray-900/50 p-8 backdrop-blur-lg backdrop-brightness-110 backdrop-saturate-150">
+              <div className="h-full w-full rounded-[7px] text-gray-300 bg-gray-900/50 p-8 backdrop-blur-lg backdrop-brightness-110 backdrop-saturate-150">
                 <SecureContactForm onSuccess={() => {}} onError={() => {}} className="max-w-lg mx-auto" />
               </div>
             </div>
@@ -131,7 +131,7 @@ export default function ContactPageClient() {
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold mb-4">Ready to Start Your Training?</h2>
           <p className="text-xl mb-8">Browse our full course catalog and find the right training for your team.</p>
-          <Link href="/courses" className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 dark:text-white font-bold py-4 px-8 rounded-lg transition duration-300 transform hover:scale-105 shadow-lg">
+          <Link href="/courses" className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-4 px-8 rounded-lg transition duration-300 transform hover:scale-105 shadow-lg">
             View All Courses
           </Link>
         </div>
