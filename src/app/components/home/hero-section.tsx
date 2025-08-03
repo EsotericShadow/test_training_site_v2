@@ -2,14 +2,14 @@
  * Karma Industrial Safety Training Website
  * Written and developed by Gabriel Lacroix for Evergreen Web Solutions
  *
- * File: hero-section.tsx
+ * File: src/app/components/home/hero-section.tsx
  * Description: Dynamic hero section component with GSAP animations that displays main
  *              messaging, call-to-action buttons, and statistical highlights. Renders
  *              server-fetched content with smooth entrance animations and responsive design.
  * Dependencies: React 19, GSAP, Next.js Link, custom useGsap hook
- * Created: June 3, 2025
- * Last Modified: August 3, 2025
- * Version: 1.0.0
+ * Created: 2025-06-06
+ * Last Modified: 2025-08-03
+ * Version: 1.0.27
  */
 'use client';
 

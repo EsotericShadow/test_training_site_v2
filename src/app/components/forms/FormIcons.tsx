@@ -2,14 +2,14 @@
  * Karma Industrial Safety Training Website
  * Written and developed by Gabriel Lacroix for Evergreen Web Solutions
  *
- * File: FormIcons.tsx
+ * File: src/app/components/forms/FormIcons.tsx
  * Description: Reusable SVG icon component for form elements. Provides a centralized
  *              icon system with consistent styling and customizable properties for
  *              security indicators, form validation, and user feedback elements.
  * Dependencies: React 19
- * Created: June 6, 2025
- * Last Modified: August 3, 2025
- * Version: 1.0.0
+ * Created: 2025-07-19
+ * Last Modified: 2025-08-03
+ * Version: 1.0.3
  */
 
 import React from 'react';

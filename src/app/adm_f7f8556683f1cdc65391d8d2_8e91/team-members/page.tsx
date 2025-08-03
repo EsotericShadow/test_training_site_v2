@@ -1,13 +1,14 @@
 /*
- * Evergreen Web Solutions
- * Written and developed by Gabriel Lacroix
+ * Karma Industrial Safety Training Website
+ * Written and developed by Gabriel Lacroix for Evergreen Web Solutions
  *
- * File: page.tsx
- * Description: To be filled in with the script's purpose
- * Dependencies: To be filled in with key dependencies or modules
- * Created: August 2, 2025
- * Last Modified: August 2, 2025
- * Version: 1.0.0
+ * File: src/app/adm_f7f8556683f1cdc65391d8d2_8e91/team-members/page.tsx
+ * Description: This component provides a comprehensive interface for managing team members,
+ *              including creating, editing, and deleting profiles.
+ * Dependencies: React, Next.js, Lucide-React, Heroicons, FileSelectionButton
+ * Created: 2025-06-08
+ * Last Modified: 2025-08-03
+ * Version: 1.0.8
  */
 'use client';
 

@@ -2,14 +2,14 @@
  * Karma Industrial Safety Training Website
  * Written and developed by Gabriel Lacroix for Evergreen Web Solutions
  *
- * File: Logo.tsx
+ * File: src/app/components/ui/Logo.tsx
  * Description: Reusable logo component with multiple size variants and optional text display.
  *              Features responsive sizing, hover animations, and optimized image loading
  *              for consistent branding across the application.
  * Dependencies: Next.js 15 Image and Link components
- * Created: June 3, 2025
- * Last Modified: August 3, 2025
- * Version: 1.0.0
+ * Created: 2025-06-06
+ * Last Modified: 2025-08-03
+ * Version: 1.0.10
  */
 import Image from 'next/image'
 import Link from 'next/link'

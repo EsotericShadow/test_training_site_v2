@@ -1,13 +1,13 @@
 /*
- * Evergreen Web Solutions
- * Written and developed by Gabriel Lacroix
+ * Karma Industrial Safety Training Website
+ * Written and developed by Gabriel Lacroix for Evergreen Web Solutions
  *
- * File: route.ts
- * Description: To be filled in with the script's purpose
- * Dependencies: To be filled in with key dependencies or modules
- * Created: August 2, 2025
- * Last Modified: August 2, 2025
- * Version: 1.0.0
+ * File: src/app/api/contact/security-init/route.ts
+ * Description: API route for initializing security context for the contact form, including CSRF token generation and public session creation.
+ * Dependencies: Next.js, Vercel Postgres, csrf, logger
+ * Created: 2025-07-17
+ * Last Modified: 2025-08-03
+ * Version: 1.0.2
  */
 // src/app/api/contact/security-init/route.ts
 import { NextResponse, NextRequest } from 'next/server';

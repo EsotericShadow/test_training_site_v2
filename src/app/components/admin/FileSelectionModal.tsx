@@ -2,12 +2,12 @@
  * Karma Industrial Safety Training Website
  * Written and developed by Gabriel Lacroix for Evergreen Web Solutions
  *
- * File: FileSelectionModal.tsx
+ * File: src/app/components/admin/FileSelectionModal.tsx
  * Description: Admin file selection modal component for media management and upload functionality.
  * Dependencies: React 19, modal management
- * Created: June 3, 2025
- * Last Modified: August 3, 2025
- * Version: 1.0.0
+ * Created: 2025-06-14
+ * Last Modified: 2025-08-03
+ * Version: 1.0.8
  */
 // File Selection Modal Component - Fixed Nested Form Issue
 // This component provides a reusable file selection interface that matches your dashboard styling

@@ -2,12 +2,12 @@
  * Karma Industrial Safety Training Website
  * Written and developed by Gabriel Lacroix for Evergreen Web Solutions
  *
- * File: OptimizedLucideIcon.tsx
+ * File: src/app/components/ui/OptimizedLucideIcon.tsx
  * Description: Optimized icon component wrapper for Lucide React icons with performance enhancements.
  * Dependencies: React 19, Lucide React
- * Created: June 3, 2025
- * Last Modified: August 3, 2025
- * Version: 1.0.0
+ * Created: 2025-07-19
+ * Last Modified: 2025-08-03
+ * Version: 1.0.3
  */
 
 import React from 'react';

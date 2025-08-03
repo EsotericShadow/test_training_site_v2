@@ -2,14 +2,14 @@
  * Karma Industrial Safety Training Website
  * Written and developed by Gabriel Lacroix for Evergreen Web Solutions
  *
- * File: page.tsx
+ * File: src/app/contact/page.tsx
  * Description: Contact page server component that generates contact-focused SEO metadata
  *              and renders the contact page with structured data for enhanced local search
  *              visibility and contact information accessibility.
  * Dependencies: Next.js 15, React 19, custom ContactPageClient component
- * Created: June 3, 2025
- * Last Modified: August 3, 2025
- * Version: 1.0.0
+ * Created: 2025-06-06
+ * Last Modified: 2025-08-03
+ * Version: 1.0.7
  */
 // Fixed version of src/app/contact/page.tsx
 

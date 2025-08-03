@@ -1,13 +1,13 @@
 /*
- * Evergreen Web Solutions
- * Written and developed by Gabriel Lacroix
+ * Karma Industrial Safety Training Website
+ * Written and developed by Gabriel Lacroix for Evergreen Web Solutions
  *
- * File: route.ts
- * Description: To be filled in with the script's purpose
- * Dependencies: To be filled in with key dependencies or modules
- * Created: August 2, 2025
- * Last Modified: August 2, 2025
- * Version: 1.0.0
+ * File: src/app/api/adm_f7f8556683f1cdc65391d8d2_8e91/upload/route.ts
+ * Description: API route for handling file uploads to Vercel Blob storage, including authentication, validation, and metadata storage.
+ * Dependencies: Next.js, @vercel/blob, session-manager, Vercel Postgres, security-utils
+ * Created: 2025-06-06
+ * Last Modified: 2025-08-03
+ * Version: 1.0.2
  */
 // src/app/api/adm_f7f8556683f1cdc65391d8d2_8e91/upload/route.ts
 import { NextResponse, NextRequest } from 'next/server';

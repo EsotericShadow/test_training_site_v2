@@ -1,13 +1,13 @@
 /*
- * Evergreen Web Solutions
- * Written and developed by Gabriel Lacroix
+ * Karma Industrial Safety Training Website
+ * Written and developed by Gabriel Lacroix for Evergreen Web Solutions
  *
- * File: route.ts
- * Description: To be filled in with the script's purpose
- * Dependencies: To be filled in with key dependencies or modules
- * Created: August 2, 2025
- * Last Modified: August 2, 2025
- * Version: 1.0.0
+ * File: src/app/api/adm_f7f8556683f1cdc65391d8d2_8e91/login/route.ts
+ * Description: API route for handling admin login requests, including authentication, session management, and security features like rate limiting and account lockout.
+ * Dependencies: Next.js, bcryptjs, zod, isomorphic-dompurify, Vercel Postgres, secure-jwt, rate-limiter, account-security
+ * Created: 2025-06-06
+ * Last Modified: 2025-08-03
+ * Version: 1.0.2
  */
 // src/app/api/adm_f7f8556683f1cdc65391d8d2_8e91/login/route.ts
 import { NextRequest, NextResponse } from 'next/server';

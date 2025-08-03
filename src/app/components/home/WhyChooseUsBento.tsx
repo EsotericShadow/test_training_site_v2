@@ -2,12 +2,12 @@
  * Karma Industrial Safety Training Website
  * Written and developed by Gabriel Lacroix for Evergreen Web Solutions
  *
- * File: WhyChooseUsBento.tsx
+ * File: src/app/components/home/WhyChooseUsBento.tsx
  * Description: Bento grid component showcasing company advantages and unique selling points.
  * Dependencies: React 19, CSS Grid
- * Created: June 3, 2025
- * Last Modified: August 3, 2025
- * Version: 1.0.0
+ * Created: 2025-07-17
+ * Last Modified: 2025-08-03
+ * Version: 1.0.13
  */
 'use client';
 

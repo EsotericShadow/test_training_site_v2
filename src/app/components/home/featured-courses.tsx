@@ -2,12 +2,12 @@
  * Karma Industrial Safety Training Website
  * Written and developed by Gabriel Lacroix for Evergreen Web Solutions
  *
- * File: featured-courses.tsx
+ * File: src/app/components/home/featured-courses.tsx
  * Description: Static featured courses component for homepage with highlighted course offerings.
  * Dependencies: React 19, Next.js 15
- * Created: June 3, 2025
- * Last Modified: August 3, 2025
- * Version: 1.0.0
+ * Created: 2025-06-06
+ * Last Modified: 2025-08-03
+ * Version: 1.0.14
  */
 'use client';
 

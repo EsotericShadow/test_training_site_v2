@@ -2,12 +2,12 @@
  * Karma Industrial Safety Training Website
  * Written and developed by Gabriel Lacroix for Evergreen Web Solutions
  *
- * File: IconPicker.tsx
+ * File: src/app/components/admin/IconPicker.tsx
  * Description: Admin icon picker component for selecting icons in content management interface.
  * Dependencies: React 19, icon management
- * Created: June 3, 2025
- * Last Modified: August 3, 2025
- * Version: 1.0.0
+ * Created: 2025-07-17
+ * Last Modified: 2025-08-03
+ * Version: 1.0.4
  */
 'use client';
 

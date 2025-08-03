@@ -2,13 +2,13 @@
  * Karma Industrial Safety Training Website
  * Written and developed by Gabriel Lacroix for Evergreen Web Solutions
  *
- * File: SecureContactForm.tsx
+ * File: src/app/components/forms/SecureContactForm.tsx
  * Description: Secure contact form component implementing input validation and submission.
  *              Integrates security measures like CSRF token, honeypot field, and security scoring.
  * Dependencies: React 19, Next.js 15, custom FormIcon component
- * Created: June 6, 2025
- * Last Modified: August 3, 2025
- * Version: 1.0.0
+ * Created: 2025-06-08
+ * Last Modified: 2025-08-03
+ * Version: 1.0.9
  */
 'use client';
 

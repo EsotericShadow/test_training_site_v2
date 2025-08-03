@@ -2,12 +2,12 @@
  * Karma Industrial Safety Training Website
  * Written and developed by Gabriel Lacroix for Evergreen Web Solutions
  *
- * File: about-snippet.tsx
+ * File: src/app/components/home/about-snippet.tsx
  * Description: Static about snippet component for homepage with company overview information.
  * Dependencies: React 19, Next.js 15
- * Created: June 3, 2025
- * Last Modified: August 3, 2025
- * Version: 1.0.0
+ * Created: 2025-06-06
+ * Last Modified: 2025-08-03
+ * Version: 1.0.11
  */
 'use client';
 

@@ -186,11 +186,11 @@ export const logger = {
  * @param {string} [defaultMessage='Internal server error'] - The default error message to return to the client.
  * @returns {{ error: string; status: number }} The sanitized error message and status code.
  */
-export function handleApiError(
+export async function handleApiError(
   error: unknown,
   request: NextRequest,
   defaultMessage: string = 'Internal server error'
-): { error: string; status: number } {
+): Promise<{ error: string; status: number }> {
   // Extract IP address
   const ip = request.headers.get('x-forwarded-for') || 'unknown';
 
@@ -199,10 +199,12 @@ export function handleApiError(
   try {
     const token = request.cookies.get('admin_token')?.value;
     if (token) {
-      // In a real scenario, you would decode the JWT to get the user ID.
-      // This is a simplified placeholder.
-      // const decoded = jwt.decode(token);
-      // if (decoded && typeof decoded.sub === 'string') userId = decoded.sub;
+      const { verifySecureToken } = await import('./secure-jwt');
+      const verificationResult = await verifySecureToken(token, request);
+
+      if (verificationResult.valid && verificationResult.decoded) {
+        userId = verificationResult.decoded.userId || verificationResult.decoded.id || 'authenticated_user';
+      }
       userId = 'authenticated_user';
     }
   } catch (e) {
