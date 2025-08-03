@@ -172,13 +172,13 @@ export default function CompanyInfoEditor() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-4">
-        <div className="bg-card border border-border rounded-2xl shadow-xl p-8 text-center">
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
+        <div className="bg-gray-800 border border-gray-700 rounded-2xl shadow-xl p-8 text-center">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-yellow-400 to-amber-400 rounded-full mb-6 shadow-lg">
             <div className="w-8 h-8 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
           </div>
-          <div className="text-lg font-semibold text-foreground mb-2">Loading Company Information</div>
-          <div className="text-base text-muted-foreground">Please wait...</div>
+          <div className="text-lg font-semibold text-white mb-2">Loading Company Information</div>
+          <div className="text-base text-gray-400">Please wait...</div>
         </div>
       </div>
     );
@@ -186,12 +186,12 @@ export default function CompanyInfoEditor() {
 
   if (!companyInfo) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-4">
-        <div className="bg-card border border-border rounded-2xl shadow-xl p-8 text-center">
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
+        <div className="bg-gray-800 border border-gray-700 rounded-2xl shadow-xl p-8 text-center">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-red-400 to-red-500 rounded-full mb-6 shadow-lg">
             <ShieldCheckIcon className="w-8 h-8 text-white" />
           </div>
-          <div className="text-lg font-semibold text-foreground mb-4">Failed to load company information</div>
+          <div className="text-lg font-semibold text-white mb-4">Failed to load company information</div>
           <Link 
             href="/adm_f7f8556683f1cdc65391d8d2_8e91/dashboard" 
             className="inline-flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-yellow-400 to-amber-400 hover:from-yellow-500 hover:to-amber-500 text-white font-semibold rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg"
@@ -205,15 +205,15 @@ export default function CompanyInfoEditor() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gray-900">
       {/* Header */}
-      <header className="bg-card border-b border-border shadow-lg">
+      <header className="bg-gray-800 border-b border-gray-700 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-6 space-y-4 sm:space-y-0">
             <div className="flex items-center space-x-4 w-full sm:w-auto">
               <Link 
                 href="/adm_f7f8556683f1cdc65391d8d2_8e91/dashboard"
-                className="inline-flex items-center space-x-2 px-4 py-3 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all duration-200 text-base"
+                className="inline-flex items-center space-x-2 px-4 py-3 bg-gray-700 border border-gray-600 rounded-xl text-gray-400 hover:text-gray-100 hover:bg-gray-600 transition-all duration-200 text-base"
               >
                 <ArrowLeft className="h-5 w-5" />
                 <span className="font-medium">Dashboard</span>
@@ -223,15 +223,15 @@ export default function CompanyInfoEditor() {
                   <Building2 className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold text-foreground">Company Information</h1>
-                  <p className="text-base text-muted-foreground">Manage company details</p>
+                  <h1 className="text-2xl font-bold text-white">Company Information</h1>
+                  <p className="text-base text-gray-400">Manage company details</p>
                 </div>
               </div>
             </div>
             <div className="flex items-center space-x-4 w-full sm:w-auto justify-between sm:justify-end">
               <div className="flex items-center space-x-2">
-                <span className="text-base text-muted-foreground">{user?.username}</span>
-                <div className="inline-flex items-center px-2 py-1 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-full text-sm text-yellow-600 dark:text-yellow-400">
+                <span className="text-base text-gray-400">{user?.username}</span>
+                <div className="inline-flex items-center px-2 py-1 bg-yellow-900/20 border border-yellow-800 rounded-full text-sm text-yellow-400">
                   <div className="w-1.5 h-1.5 bg-yellow-500 rounded-full mr-1 animate-pulse"></div>
                   Online
                 </div>
@@ -246,8 +246,8 @@ export default function CompanyInfoEditor() {
         {message && (
           <div className={`mb-8 p-4 rounded-xl border ${
             message.type === 'success' 
-              ? 'bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-400 border-green-200 dark:border-green-800' 
-              : 'bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-400 border-red-200 dark:border-red-800'
+              ? 'bg-green-900/20 text-green-400 border-green-800' 
+              : 'bg-red-900/20 text-red-400 border-red-800'
           }`}>
             <div className="flex items-center space-x-2">
               <ShieldCheckIcon className="w-6 h-6" />
@@ -258,78 +258,78 @@ export default function CompanyInfoEditor() {
 
         <form onSubmit={handleSubmit} className="space-y-10">
           {/* Basic Company Information */}
-          <div className="bg-card border border-border rounded-2xl shadow-xl">
-            <div className="px-6 py-4 border-b border-border bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20 rounded-t-2xl">
+          <div className="bg-gray-800 border border-gray-700 rounded-2xl shadow-xl">
+            <div className="px-6 py-4 border-b border-gray-700 bg-gradient-to-r from-yellow-900/20 to-amber-900/20 rounded-t-2xl">
               <div className="flex items-center space-x-3">
                 <div className="w-8 h-8 bg-gradient-to-r from-yellow-400 to-amber-400 rounded-lg flex items-center justify-center">
                   <Building2 className="w-4 h-4 text-white" />
                 </div>
-                <h2 className="text-lg font-bold text-foreground">Basic Information</h2>
+                <h2 className="text-lg font-bold text-white">Basic Information</h2>
               </div>
             </div>
             <div className="p-6 space-y-8">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-3">
-                  <label className="text-base font-semibold text-foreground">
+                  <label className="text-base font-semibold text-white">
                     Company Name *
                   </label>
                   <input
                     type="text"
                     value={companyInfo.company_name}
                     onChange={(e) => updateCompanyInfo('company_name', e.target.value)}
-                    className="w-full px-4 py-4 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all duration-200 text-base"
+                    className="w-full px-4 py-4 bg-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all duration-200 text-base"
                     placeholder="Enter company name"
                     required
                   />
                 </div>
                 <div className="space-y-3">
-                  <label className="text-base font-semibold text-foreground">
+                  <label className="text-base font-semibold text-white">
                     Established Year *
                   </label>
                   <input
                     type="number"
                     value={companyInfo.established_year}
                     onChange={(e) => updateCompanyInfo('established_year', parseInt(e.target.value))}
-                    className="w-full px-4 py-4 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all duration-200 text-base"
+                    className="w-full px-4 py-4 bg-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all duration-200 text-base"
                     placeholder="2020"
                     required
                   />
                 </div>
               </div>
               <div className="space-y-3">
-                <label className="text-base font-semibold text-foreground">
+                <label className="text-base font-semibold text-white">
                   Company Slogan
                 </label>
                 <input
                   type="text"
                   value={companyInfo.slogan}
                   onChange={(e) => updateCompanyInfo('slogan', e.target.value)}
-                  className="w-full px-4 py-4 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all duration-200 text-base"
+                  className="w-full px-4 py-4 bg-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all duration-200 text-base"
                   placeholder="Your company slogan..."
                 />
               </div>
               <div className="space-y-3">
-                <label className="text-base font-semibold text-foreground">
+                <label className="text-base font-semibold text-white">
                   Company Description *
                 </label>
                 <textarea
                   value={companyInfo.description}
                   onChange={(e) => updateCompanyInfo('description', e.target.value)}
                   rows={6}
-                  className="w-full px-4 py-4 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all duration-200 text-base"
+                  className="w-full px-4 py-4 bg-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all duration-200 text-base"
                   placeholder="Describe your company..."
                   required
                 />
               </div>
               <div className="space-y-3">
-                <label className="text-base font-semibold text-foreground">
+                <label className="text-base font-semibold text-white">
                   Mission Statement *
                 </label>
                 <textarea
                   value={companyInfo.mission}
                   onChange={(e) => updateCompanyInfo('mission', e.target.value)}
                   rows={6}
-                  className="w-full px-4 py-4 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all duration-200 text-base"
+                  className="w-full px-4 py-4 bg-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all duration-200 text-base"
                   placeholder="Your company mission..."
                   required
                 />
@@ -338,52 +338,52 @@ export default function CompanyInfoEditor() {
           </div>
 
           {/* Company Statistics */}
-          <div className="bg-card border border-border rounded-2xl shadow-xl">
-            <div className="px-6 py-4 border-b border-border bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20 rounded-t-2xl">
+          <div className="bg-gray-800 border border-gray-700 rounded-2xl shadow-xl">
+            <div className="px-6 py-4 border-b border-gray-700 bg-gradient-to-r from-yellow-900/20 to-amber-900/20 rounded-t-2xl">
               <div className="flex items-center space-x-3">
                 <div className="w-8 h-8 bg-gradient-to-r from-yellow-400 to-amber-400 rounded-lg flex items-center justify-center">
                   <Users className="w-4 h-4 text-white" />
                 </div>
-                <h2 className="text-lg font-bold text-foreground">Company Statistics</h2>
+                <h2 className="text-lg font-bold text-white">Company Statistics</h2>
               </div>
             </div>
             <div className="p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-3">
-                  <label className="text-base font-semibold text-foreground">
+                  <label className="text-base font-semibold text-white">
                     Total Experience (Years) *
                   </label>
                   <input
                     type="number"
                     value={companyInfo.total_experience}
                     onChange={(e) => updateCompanyInfo('total_experience', parseInt(e.target.value))}
-                    className="w-full px-4 py-4 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all duration-200 text-base"
+                    className="w-full px-4 py-4 bg-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all duration-200 text-base"
                     placeholder="10"
                     required
                   />
                 </div>
                 <div className="space-y-3">
-                  <label className="text-base font-semibold text-foreground">
+                  <label className="text-base font-semibold text-white">
                     Students Trained *
                   </label>
                   <input
                     type="number"
                     value={companyInfo.students_trained_count}
                     onChange={(e) => updateCompanyInfo('students_trained_count', parseInt(e.target.value))}
-                    className="w-full px-4 py-4 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all duration-200 text-base"
+                    className="w-full px-4 py-4 bg-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all duration-200 text-base"
                     placeholder="500"
                     required
                   />
                 </div>
                 <div className="space-y-3">
-                  <label className="text-base font-semibold text-foreground">
+                  <label className="text-base font-semibold text-white">
                     Total Courses *
                   </label>
                   <input
                     type="number"
                     value={companyInfo.total_courses}
                     onChange={(e) => updateCompanyInfo('total_courses', parseInt(e.target.value))}
-                    className="w-full px-4 py-4 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all duration-200 text-base"
+                    className="w-full px-4 py-4 bg-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all duration-200 text-base"
                     placeholder="25"
                     required
                   />
@@ -393,32 +393,32 @@ export default function CompanyInfoEditor() {
           </div>
 
           {/* Company Values */}
-          <div className="bg-card border border-border rounded-2xl shadow-xl">
-            <div className="px-6 py-4 border-b border-border bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20 rounded-t-2xl">
+          <div className="bg-gray-800 border border-gray-700 rounded-2xl shadow-xl">
+            <div className="px-6 py-4 border-b border-gray-700 bg-gradient-to-r from-yellow-900/20 to-amber-900/20 rounded-t-2xl">
               <div className="flex items-center space-x-3">
                 <div className="w-8 h-8 bg-gradient-to-r from-yellow-400 to-amber-400 rounded-lg flex items-center justify-center">
                   <ShieldCheckIcon className="w-4 h-4 text-white" />
                 </div>
-                <h2 className="text-lg font-bold text-foreground">Company Values</h2>
+                <h2 className="text-lg font-bold text-white">Company Values</h2>
               </div>
             </div>
             <div className="p-6 space-y-8">
               {companyValues.map((value, index) => (
-                <div key={index} className="grid grid-cols-1 md:grid-cols-2 gap-8 p-4 bg-background border border-input rounded-xl">
+                <div key={index} className="grid grid-cols-1 md:grid-cols-2 gap-8 p-4 bg-gray-700 border border-gray-600 rounded-xl">
                   <div className="space-y-3">
-                    <label className="text-base font-semibold text-foreground">
+                    <label className="text-base font-semibold text-white">
                       Value Title
                     </label>
                     <input
                       type="text"
                       value={value.title || ''}
                       onChange={(e) => updateCompanyValue(index, 'title', e.target.value)}
-                      className="w-full px-4 py-4 bg-card border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all duration-200 text-base"
+                      className="w-full px-4 py-4 bg-gray-800 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all duration-200 text-base"
                       placeholder="e.g., Safety First"
                     />
                   </div>
                   <div className="space-y-3">
-                    <label className="text-base font-semibold text-foreground">
+                    <label className="text-base font-semibold text-white">
                       Icon (Optional)
                     </label>
                     <IconPicker
@@ -427,14 +427,14 @@ export default function CompanyInfoEditor() {
                     />
                   </div>
                   <div className="md:col-span-2 space-y-3">
-                    <label className="text-base font-semibold text-foreground">
+                    <label className="text-base font-semibold text-white">
                       Description
                     </label>
                     <textarea
                       value={value.description || ''}
                       onChange={(e) => updateCompanyValue(index, 'description', e.target.value)}
                       rows={4}
-                      className="w-full px-4 py-4 bg-card border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all duration-200 text-base"
+                      className="w-full px-4 py-4 bg-gray-800 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all duration-200 text-base"
                       placeholder="Describe this company value..."
                     />
                   </div>
@@ -444,26 +444,26 @@ export default function CompanyInfoEditor() {
           </div>
 
           {/* Why Choose Us */}
-          <div className="bg-card border border-border rounded-2xl shadow-xl">
-            <div className="px-6 py-4 border-b border-border bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20 rounded-t-2xl">
+          <div className="bg-gray-800 border border-gray-700 rounded-2xl shadow-xl">
+            <div className="px-6 py-4 border-b border-gray-700 bg-gradient-to-r from-yellow-900/20 to-amber-900/20 rounded-t-2xl">
               <div className="flex items-center space-x-3">
                 <div className="w-8 h-8 bg-gradient-to-r from-yellow-400 to-amber-400 rounded-lg flex items-center justify-center">
                   <Users className="w-4 h-4 text-white" />
                 </div>
-                <h2 className="text-lg font-bold text-foreground">Why Choose Us</h2>
+                <h2 className="text-lg font-bold text-white">Why Choose Us</h2>
               </div>
             </div>
             <div className="p-6 space-y-6">
               {whyChooseUs.map((item, index) => (
                 <div key={index} className="space-y-3">
-                  <label className="text-base font-semibold text-foreground">
+                  <label className="text-base font-semibold text-white">
                     Point {index + 1}
                   </label>
                   <input
                     type="text"
                     value={item.point}
                     onChange={(e) => updateWhyChooseUsItem(index, e.target.value)}
-                    className="w-full px-4 py-4 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all duration-200 text-base"
+                    className="w-full px-4 py-4 bg-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all duration-200 text-base"
                     placeholder="Enter a reason why customers should choose you..."
                   />
                 </div>
@@ -476,7 +476,7 @@ export default function CompanyInfoEditor() {
             <button
               type="submit"
               disabled={saving}
-              className="inline-flex items-center space-x-2 px-8 py-4 bg-gradient-to-r from-yellow-400 to-amber-400 hover:from-yellow-500 hover:to-amber-500 disabled:from-gray-400 disabled:to-gray-500 text-white font-semibold rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg disabled:transform-none text-base"
+              className="inline-flex items-center space-x-2 px-8 py-4 bg-gradient-to-r from-yellow-400 to-amber-400 hover:from-yellow-500 hover:to-amber-500 disabled:from-gray-600 disabled:to-gray-600 text-white font-semibold rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg disabled:transform-none text-base"
             >
               <Save className="w-5 h-5" />
               <span>{saving ? 'Saving...' : 'Save Changes'}</span>

@@ -7,7 +7,7 @@ import Image from 'next/image';
 import AboutIcon from './AboutIcons';
 import { useGsap } from '@/app/hooks/useGsap';
 import { gsap } from 'gsap';
-import type { TeamMember } from '../../../types/database';
+import type { TeamMember, Course } from '../../../types/database';
 
 const WhyChooseUsBento = dynamic(() => import('@/app/components/home/WhyChooseUsBento'), {
   loading: () => <div className="h-96 flex items-center justify-center"><div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-yellow-400"></div></div>,
@@ -49,12 +49,11 @@ interface AboutPageClientProps {
   teamMembers: TeamMember[];
 }
 
-
-
 export default function AboutPageClient({ teamMembers }: AboutPageClientProps) {
   const [companyInfo, setCompanyInfo] = useState<CompanyInfo | null>(null);
   const [companyValues, setCompanyValues] = useState<CompanyValue[]>([]);
   const [whyChooseUs, setWhyChooseUs] = useState<WhyChooseUs[]>([]);
+  const [courses, setCourses] = useState<Course[]>([]); // Added to store course data
   const [loading, setLoading] = useState(true);
   const [heroImage, setHeroImage] = useState<string | null>(null);
   const [heroImageAlt, setHeroImageAlt] = useState<string | null>(null);
@@ -77,9 +76,10 @@ export default function AboutPageClient({ teamMembers }: AboutPageClientProps) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [companyDataResponse, heroImageResponse] = await Promise.all([
+        const [companyDataResponse, heroImageResponse, coursesResponse] = await Promise.all([
           fetch('/api/about-snippet'),
-          fetch('/api/adm_f7f8556683f1cdc65391d8d2_8e91/files?category=other')
+          fetch('/api/adm_f7f8556683f1cdc65391d8d2_8e91/files?category=other'),
+          fetch('/api/adm_f7f8556683f1cdc65391d8d2_8e91/courses'), // Fetch courses
         ]);
 
         if (companyDataResponse.ok) {
@@ -100,6 +100,13 @@ export default function AboutPageClient({ teamMembers }: AboutPageClientProps) {
           setHeroImage('https://bluvpssu00ym8qv7.public.blob.vercel-storage.com/other/1750011620811-IMG_8439.JPG'); // Fallback
           setHeroImageAlt('Safety training in action');
         }
+
+        if (coursesResponse.ok) {
+          const { courses } = await coursesResponse.json();
+          setCourses(courses || []);
+        } else {
+          console.error('Failed to load courses');
+        }
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
@@ -111,7 +118,7 @@ export default function AboutPageClient({ teamMembers }: AboutPageClientProps) {
   }, []);
 
   if (loading) {
-    return <div className="h-screen  flex items-center justify-center"><div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-yellow-400"></div></div>;
+    return <div className="h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-yellow-400"></div></div>;
   }
 
   return (
@@ -179,7 +186,7 @@ export default function AboutPageClient({ teamMembers }: AboutPageClientProps) {
             {companyValues.map(value => (
               <div key={value.id} className="backdrop-blur-md bg-white/10 border border-white/20 p-8 rounded-xl shadow-xl text-center">
                 <div className="bg-yellow-400 text-white rounded-full p-4 w-20 h-20 mx-auto mb-6 flex items-center justify-center">
-                  <AboutIcon name={value.icon} className="h-10 w-10" />;
+                  <AboutIcon name={value.icon} className="h-10 w-10" />
                 </div>
                 <h3 className="text-2xl font-semibold mb-3 text-gray-300">{value.title}</h3>
                 <p className="text-gray-300">{value.description}</p>
@@ -195,7 +202,7 @@ export default function AboutPageClient({ teamMembers }: AboutPageClientProps) {
             <h2 className="text-4xl font-bold text-gray-200 dark:text-white">Why Choose Us</h2>
           </div>
           <Suspense fallback={<div className="h-96 flex items-center justify-center"><div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-yellow-400"></div></div>}>
-            <WhyChooseUsBento items={whyChooseUs} />
+            <WhyChooseUsBento items={whyChooseUs} courseImages={courses.filter(c => c.image_url).map(c => ({ url: c.image_url!, alt: c.image_alt || c.title }))} />
           </Suspense>
         </div>
       </section>

@@ -50,13 +50,13 @@ export default function AdminLogin() {
             <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-yellow-400 to-amber-400 rounded-full mb-6 shadow-lg">
               <ShieldCheckIcon className="w-8 h-8 text-white" />
             </div>
-            <h1 className="text-3xl font-bold text-foreground mb-2">
+            <h1 className="text-3xl font-bold text-white mb-2">
               Secure Access
             </h1>
-            <p className="text-muted-foreground text-sm mb-4">
+            <p className="text-gray-300 text-sm mb-4">
               Karma Training Management Portal
             </p>
-            <div className="inline-flex items-center px-3 py-1 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-full text-xs text-green-600 dark:text-green-400">
+            <div className="inline-flex items-center px-3 py-1 bg-green-900/20 border border-green-800 rounded-full text-xs text-green-400">
               <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></div>
               System Online • TLS 1.3 Encrypted
             </div>
@@ -66,7 +66,7 @@ export default function AdminLogin() {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Username Field */}
             <div className="space-y-2">
-              <label htmlFor="username" className="text-sm font-semibold text-foreground">
+              <label htmlFor="username" className="text-sm font-semibold text-white">
                 Username
               </label>
               <div className="relative">
@@ -75,7 +75,7 @@ export default function AdminLogin() {
                   name="username"
                   type="text"
                   required
-                  className="w-full px-4 py-3 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all duration-200"
+                  className="w-full px-4 py-3 bg-background border border-input rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all duration-200"
                   placeholder="Enter your username"
                   value={credentials.username}
                   onChange={(e) =>
@@ -83,14 +83,14 @@ export default function AdminLogin() {
                   }
                 />
                 <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
-                  <LockClosedIcon className="h-5 w-5 text-muted-foreground" />
+                  <LockClosedIcon className="h-5 w-5 text-gray-400" />
                 </div>
               </div>
             </div>
 
             {/* Password Field */}
             <div className="space-y-2">
-              <label htmlFor="password" className="text-sm font-semibold text-foreground">
+              <label htmlFor="password" className="text-sm font-semibold text-white">
                 Password
               </label>
               <div className="relative">
@@ -99,7 +99,7 @@ export default function AdminLogin() {
                   name="password"
                   type={showPassword ? 'text' : 'password'}
                   required
-                  className="w-full px-4 py-3 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all duration-200 pr-12"
+                  className="w-full px-4 py-3 bg-background border border-input rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all duration-200 pr-12"
                   placeholder="Enter your password"
                   value={credentials.password}
                   onChange={(e) =>
@@ -112,9 +112,9 @@ export default function AdminLogin() {
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? (
-                    <EyeSlashIcon className="h-5 w-5 text-muted-foreground hover:text-foreground transition-colors" />
+                    <EyeSlashIcon className="h-5 w-5 text-gray-400 hover:text-white transition-colors" />
                   ) : (
-                    <EyeIcon className="h-5 w-5 text-muted-foreground hover:text-foreground transition-colors" />
+                    <EyeIcon className="h-5 w-5 text-gray-400 hover:text-white transition-colors" />
                   )}
                 </button>
               </div>
@@ -122,7 +122,7 @@ export default function AdminLogin() {
 
             {/* Error Message */}
             {error && (
-              <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-3 text-red-600 dark:text-red-400 text-sm text-center">
+              <div className="bg-red-900/20 border border-red-800 rounded-xl p-3 text-red-400 text-sm text-center">
                 {error}
               </div>
             )}
@@ -131,7 +131,7 @@ export default function AdminLogin() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-yellow-400 to-amber-400 hover:from-yellow-500 hover:to-amber-500 disabled:from-gray-300 disabled:to-gray-300 dark:disabled:from-gray-600 dark:disabled:to-gray-600 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] disabled:scale-100 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
+              className="w-full bg-gradient-to-r from-yellow-400 to-amber-400 hover:from-yellow-500 hover:to-amber-500 disabled:from-gray-600 disabled:to-gray-600 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] disabled:scale-100 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
             >
               {loading ? (
                 <div className="flex items-center justify-center">
@@ -146,7 +146,7 @@ export default function AdminLogin() {
 
           {/* Footer */}
           <div className="mt-8 pt-6 border-t border-border">
-            <div className="text-center text-xs text-muted-foreground space-y-2">
+            <div className="text-center text-xs text-gray-300 space-y-2">
               <div className="flex items-center justify-center space-x-4">
                 <span className="flex items-center">
                   <span className="mr-1">🔒</span>
@@ -166,7 +166,7 @@ export default function AdminLogin() {
         </div>
 
         {/* Subtle Bottom Text */}
-        <p className="text-center text-xs text-muted-foreground mt-6">
+        <p className="text-center text-xs text-gray-300 mt-6">
           Karma Training • Secure Management Portal
         </p>
       </div>

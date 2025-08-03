@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
@@ -401,12 +402,12 @@ export default function AdminDashboard() {
   if (loading || !authenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
-        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-xl p-8 text-center">
+        <div className="bg-gray-800 border border-gray-700 rounded-2xl shadow-xl p-8 text-center">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-yellow-400 to-amber-400 rounded-full mb-6 shadow-lg">
             <div className="w-8 h-8 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
           </div>
-          <div className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Verifying Authentication</div>
-          <div className="text-sm text-gray-600 dark:text-gray-400">Securing your session...</div>
+          <div className="text-lg font-semibold text-white mb-2">Verifying Authentication</div>
+          <div className="text-sm text-gray-400">Securing your session...</div>
         </div>
       </div>
     );
@@ -415,7 +416,7 @@ export default function AdminDashboard() {
   return (
     <div className="min-h-screen pt-0">
       {/* Header */}
-      <header className="border-b border-gray-200 dark:border-gray-700 shadow-lg">
+      <header className="border-b border-gray-700 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-6 space-y-4 sm:space-y-0">
             <div className="flex items-center space-x-8">
@@ -423,12 +424,12 @@ export default function AdminDashboard() {
                 <ShieldCheckIcon className="w-10 h-10 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
+                <h1 className="text-2xl sm:text-3xl font-bold text-white">
                   Karma Training CMS
                 </h1>
                 <div className="flex items-center space-x-2">
-                  <p className="text-base text-gray-600 dark:text-gray-400">{user?.username}</p>
-                  <div className="inline-flex items-center px-2 py-1 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-full text-sm text-green-600 dark:text-green-400">
+                  <p className="text-base text-gray-400">{user?.username}</p>
+                  <div className="inline-flex items-center px-2 py-1 bg-green-900/20 border border-green-800 rounded-full text-sm text-green-400">
                     <div className="w-2.5 h-2.5 bg-green-500 rounded-full mr-2 animate-pulse"></div>
                     Online
                   </div>
@@ -437,7 +438,7 @@ export default function AdminDashboard() {
             </div>
             <button
               onClick={handleLogout}
-              className="inline-flex items-center px-8 py-3 bg-red-50 dark:bg-red-900/60 border border-red-300 dark:border-red-500 rounded-xl text-red-600 dark:text-red-500 hover:bg-red-100 dark:hover:bg-red-600/90 dark:hover:text-red-900 transition-all duration-200 font-medium text-xl"
+              className="inline-flex items-center px-8 py-3 bg-red-900/60 border border-red-500 rounded-xl text-red-500 hover:bg-red-600/90 hover:text-red-900 transition-all duration-200 font-medium text-xl"
             >
               <LogOut className="w-8 h8 mr-4" />
               Logout
@@ -451,8 +452,8 @@ export default function AdminDashboard() {
         {message && (
           <div className={`mb-8 p-4 rounded-xl border ${
             message.includes('✓') || message.includes('successfully') 
-              ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800 text-green-800 dark:text-green-200'
-              : 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800 text-red-800 dark:text-red-200'
+              ? 'bg-green-900/20 border-green-800 text-green-200'
+              : 'bg-red-900/20 border-red-800 text-red-200'
           }`}>
             <div className="flex items-center">
               <div className="flex-shrink-0">
@@ -476,7 +477,7 @@ export default function AdminDashboard() {
               <div className="ml-auto pl-3">
                 <button
                   onClick={() => setMessage('')}
-                  className="inline-flex text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 p-2"
+                  className="inline-flex text-gray-400 hover:text-gray-300 p-2"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -487,7 +488,7 @@ export default function AdminDashboard() {
 
         {/* Stats Overview */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-8 sm:mb-10">
-          <div className="border border-gray-200 dark:border-gray-700 rounded-2xl shadow-xl p-6">
+          <div className="border border-gray-700 rounded-2xl shadow-xl p-6">
             <div className="flex items-center">
               <div className="flex-shrink-0">
                 <div className="w-12 h-12 bg-gradient-to-r from-emerald-500 to-green-600 rounded-xl flex items-center justify-center shadow-lg">
@@ -496,10 +497,10 @@ export default function AdminDashboard() {
               </div>
               <div className="ml-5 w-0 flex-1">
                 <dl>
-                  <dt className="text-base font-semibold text-gray-600 dark:text-gray-400 truncate">
+                  <dt className="text-base font-semibold text-gray-400 truncate">
                     Total Courses
                   </dt>
-                  <dd className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
+                  <dd className="text-2xl sm:text-3xl font-bold text-white">
                     {stats.courses}
                   </dd>
                 </dl>
@@ -507,7 +508,7 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          <div className="border border-gray-200 dark:border-gray-700 rounded-2xl shadow-xl p-6">
+          <div className="border border-gray-700 rounded-2xl shadow-xl p-6">
             <div className="flex items-center">
               <div className="flex-shrink-0">
                 <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-violet-600 rounded-xl flex items-center justify-center shadow-lg">
@@ -516,10 +517,10 @@ export default function AdminDashboard() {
               </div>
               <div className="ml-5 w-0 flex-1">
                 <dl>
-                  <dt className="text-base font-semibold text-gray-600 dark:text-gray-400 truncate">
+                  <dt className="text-base font-semibold text-gray-400 truncate">
                     Team Members
                   </dt>
-                  <dd className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
+                  <dd className="text-2xl sm:text-3xl font-bold text-white">
                     {stats.teamMembers}
                   </dd>
                 </dl>
@@ -530,16 +531,16 @@ export default function AdminDashboard() {
 
         {/* Management Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          <div className="border border-gray-200 dark:border-gray-700 rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-200">
+          <div className="border border-gray-700 rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-200">
             <div className="flex items-center mb-4">
               <div className="w-10 h-10 bg-gradient-to-r from-yellow-400 to-amber-400 rounded-xl flex items-center justify-center shadow-lg mr-3">
                 <Building2 className="h-5 w-5 text-white" />
               </div>
-              <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
+              <h3 className="text-lg sm:text-xl font-bold text-white">
                 Company Information
               </h3>
             </div>
-            <p className="text-base text-gray-600 dark:text-gray-400 mb-6">
+            <p className="text-base text-gray-400 mb-6">
               Manage company details, mission, and core values
             </p>
             <Link
@@ -550,16 +551,16 @@ export default function AdminDashboard() {
             </Link>
           </div>
 
-          <div className="border border-gray-200 dark:border-gray-700 rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-200">
+          <div className="border border-gray-700 rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-200">
             <div className="flex items-center mb-4">
               <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg mr-3">
                 <Home className="h-5 w-5 text-white" />
               </div>
-              <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
+              <h3 className="text-lg sm:text-xl font-bold text-white">
                 Hero Section
               </h3>
             </div>
-            <p className="text-base text-gray-600 dark:text-gray-400 mb-6">
+            <p className="text-base text-gray-400 mb-6">
               Update homepage hero content and statistics
             </p>
             <Link
@@ -570,16 +571,16 @@ export default function AdminDashboard() {
             </Link>
           </div>
 
-          <div className="border border-gray-200 dark:border-gray-700 rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-200">
+          <div className="border border-gray-700 rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-200">
             <div className="flex items-center mb-4">
               <div className="w-10 h-10 bg-gradient-to-r from-slate-500 to-gray-600 rounded-xl flex items-center justify-center shadow-lg mr-3">
                 <Folder className="h-5 w-5 text-white" />
               </div>
-              <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
+              <h3 className="text-lg sm:text-xl font-bold text-white">
                 Footer Content
               </h3>
             </div>
-            <p className="text-base text-gray-600 dark:text-gray-400 mb-6">
+            <p className="text-base text-gray-400 mb-6">
               Manage footer information, links, and certifications
             </p>
             <Link
@@ -590,16 +591,16 @@ export default function AdminDashboard() {
             </Link>
           </div>
 
-          <div className="border border-gray-200 dark:border-gray-700 rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-200">
+          <div className="border border-gray-700 rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-200">
             <div className="flex items-center mb-4">
               <div className="w-10 h-10 bg-gradient-to-r from-emerald-500 to-green-600 rounded-xl flex items-center justify-center shadow-lg mr-3">
                 <BookOpen className="h-5 w-5 text-white" />
               </div>
-              <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
+              <h3 className="text-lg sm:text-xl font-bold text-white">
                 Courses
               </h3>
             </div>
-            <p className="text-base text-gray-600 dark:text-gray-400 mb-6">
+            <p className="text-base text-gray-400 mb-6">
               Add, edit, and manage training courses
             </p>
             <div className="space-y-3">
@@ -618,16 +619,16 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          <div className="border border-gray-200 dark:border-gray-700 rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-200">
+          <div className="border border-gray-700 rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-200">
             <div className="flex items-center mb-4">
               <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-violet-600 rounded-xl flex items-center justify-center shadow-lg mr-3">
                 <Users className="h-5 w-5 text-white" />
               </div>
-              <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
+              <h3 className="text-lg sm:text-xl font-bold text-white">
                 Team Members
               </h3>
             </div>
-            <p className="text-base text-gray-600 dark:text-gray-400 mb-6">
+            <p className="text-base text-gray-400 mb-6">
               Add and manage team member profiles
             </p>
             <div className="space-y-3">
@@ -646,16 +647,16 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          <div className="border border-gray-200 dark:border-gray-700 rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-200">
+          <div className="border border-gray-700 rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-200">
             <div className="flex items-center mb-4">
               <div className="w-10 h-10 bg-gradient-to-r from-teal-500 to-cyan-600 rounded-xl flex items-center justify-center shadow-lg mr-3">
                 <Folder className="h-5 w-5 text-white" />
               </div>
-              <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
+              <h3 className="text-lg sm:text-xl font-bold text-white">
                 File Management
               </h3>
             </div>
-            <p className="text-base text-gray-600 dark:text-gray-400 mb-6">
+            <p className="text-base text-gray-400 mb-6">
               Upload and organize images and documents
             </p>
             <Link
@@ -672,12 +673,12 @@ export default function AdminDashboard() {
       {showCourseModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 sm:p-6 z-50">
           <div className="rounded-2xl shadow-2xl w-full max-w-md sm:max-w-lg md:max-w-2xl max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+            <div className="p-6 border-b border-gray-700">
               <div className="flex items-center justify-between">
-                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Add Course</h2>
+                <h2 className="text-xl sm:text-2xl font-bold text-white">Add Course</h2>
                 <button
                   onClick={resetCourseForm}
-                  className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 p-2"
+                  className="text-gray-400 hover:text-gray-300 p-2"
                 >
                   <X className="w-6 h-6" />
                 </button>
@@ -686,69 +687,69 @@ export default function AdminDashboard() {
             
             <form onSubmit={handleCourseSubmit} className="p-6 space-y-6 sm:space-y-8">
               <div>
-                <label className="block text-base font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-base font-medium text-gray-300 mb-2">
                   Course Title *
                 </label>
                 <input
                   type="text"
                   value={courseFormData.title}
                   onChange={(e) => handleCourseTitleChange(e.target.value)}
-                  className="w-full px-4 py-3 sm:py-4 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-base"
+                  className="w-full px-4 py-3 sm:py-4 border border-gray-600 rounded-lg bg-gray-700 text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-base"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-base font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-base font-medium text-gray-300 mb-2">
                   URL Slug
                 </label>
                 <input
                   type="text"
                   value={courseFormData.slug}
                   onChange={(e) => setCourseFormData(prev => ({ ...prev, slug: e.target.value }))}
-                  className="w-full px-4 py-3 sm:py-4 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-base"
+                  className="w-full px-4 py-3 sm:py-4 border border-gray-600 rounded-lg bg-gray-700 text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-base"
                   placeholder="auto-generated-from-title"
                 />
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                <p className="text-sm text-gray-400 mt-1">
                   Auto-generated from title. Used in URLs.
                 </p>
               </div>
 
               <div>
-                <label className="block text-base font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-base font-medium text-gray-300 mb-2">
                   Description *
                 </label>
                 <textarea
                   value={courseFormData.description}
                   onChange={(e) => setCourseFormData(prev => ({ ...prev, description: e.target.value }))}
                   rows={6}
-                  className="w-full px-4 py-3 sm:py-4 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-base"
+                  className="w-full px-4 py-3 sm:py-4 border border-gray-600 rounded-lg bg-gray-700 text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-base"
                   required
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
                 <div>
-                  <label className="block text-base font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label className="block text-base font-medium text-gray-300 mb-2">
                     Duration
                   </label>
                   <input
                     type="text"
                     value={courseFormData.duration}
                     onChange={(e) => setCourseFormData(prev => ({ ...prev, duration: e.target.value }))}
-                    className="w-full px-4 py-3 sm:py-4 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-base"
+                    className="w-full px-4 py-3 sm:py-4 border border-gray-600 rounded-lg bg-gray-700 text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-base"
                     placeholder="e.g., 2 days, 16 hours"
                   />
                 </div>
                 
                 <div>
-                  <label className="block text-base font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label className="block text-base font-medium text-gray-300 mb-2">
                     Category
                   </label>
                   <select
                     value={courseFormData.category_id}
                     onChange={(e) => setCourseFormData(prev => ({ ...prev, category_id: e.target.value }))}
-                    className="w-full px-4 py-3 sm:py-4 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-base"
+                    className="w-full px-4 py-3 sm:py-4 border border-gray-600 rounded-lg bg-gray-700 text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-base"
                   >
                     <option value="">Select Category</option>
                     {categories.map(category => (
@@ -761,20 +762,20 @@ export default function AdminDashboard() {
               </div>
 
               <div>
-                <label className="block text-base font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-base font-medium text-gray-300 mb-2">
                   Target Audience
                 </label>
                 <input
                   type="text"
                   value={courseFormData.audience}
                   onChange={(e) => setCourseFormData(prev => ({ ...prev, audience: e.target.value }))}
-                  className="w-full px-4 py-3 sm:py-4 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-base"
+                  className="w-full px-4 py-3 sm:py-4 border border-gray-600 rounded-lg bg-gray-700 text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-base"
                   placeholder="e.g., Beginners, Professionals, Managers"
                 />
               </div>
 
               <div>
-                <label className="block text-base font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-base font-medium text-gray-300 mb-2">
                   Course Image
                 </label>
                 <FileSelectionButton
@@ -787,20 +788,20 @@ export default function AdminDashboard() {
               </div>
 
               <div>
-                <label className="block text-base font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-base font-medium text-gray-300 mb-2">
                   Image Alt Text
                 </label>
                 <input
                   type="text"
                   value={courseFormData.image_alt}
                   onChange={(e) => setCourseFormData(prev => ({ ...prev, image_alt: e.target.value }))}
-                  className="w-full px-4 py-3 sm:py-4 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-base"
+                  className="w-full px-4 py-3 sm:py-4 border border-gray-600 rounded-lg bg-gray-700 text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-base"
                   placeholder="Describe the image for accessibility"
                 />
               </div>
 
               <div>
-                <label className="block text-base font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-base font-medium text-gray-300 mb-2">
                   Course Features
                 </label>
                 <div className="space-y-3">
@@ -810,14 +811,14 @@ export default function AdminDashboard() {
                         type="text"
                         value={feature}
                         onChange={(e) => handleCourseFeatureChange(index, e.target.value)}
-                        className="flex-1 px-4 py-3 sm:py-4 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-base"
+                        className="flex-1 px-4 py-3 sm:py-4 border border-gray-600 rounded-lg bg-gray-700 text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-base"
                         placeholder="Enter a course feature"
                       />
                       {courseFormData.features.length > 1 && (
                         <button
                           type="button"
                           onClick={() => handleRemoveCourseFeature(index)}
-                          className="p-3 text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20"
+                          className="p-3 text-red-400 hover:text-red-300 rounded-lg hover:bg-red-900/20"
                         >
                           <Trash2 className="w-5 h-5" />
                         </button>
@@ -827,7 +828,7 @@ export default function AdminDashboard() {
                   <button
                     type="button"
                     onClick={handleAddCourseFeature}
-                    className="inline-flex items-center space-x-2 px-6 py-3 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 rounded-xl hover:bg-emerald-100 dark:hover:bg-emerald-900/30 transition-colors text-base"
+                    className="inline-flex items-center space-x-2 px-6 py-3 bg-emerald-900/20 text-emerald-400 border border-emerald-800 rounded-xl hover:bg-emerald-900/30 transition-colors text-base"
                   >
                     <BookOpen className="w-5 h-5" />
                     <span>Add Feature</span>
@@ -841,18 +842,18 @@ export default function AdminDashboard() {
                   id="popular"
                   checked={courseFormData.popular}
                   onChange={(e) => setCourseFormData(prev => ({ ...prev, popular: e.target.checked }))}
-                  className="w-5 h-5 text-emerald-600 bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded focus:ring-emerald-500 focus:ring-2"
+                  className="w-5 h-5 text-emerald-600 bg-gray-700 border-gray-600 rounded focus:ring-emerald-500 focus:ring-2"
                 />
-                <label htmlFor="popular" className="ml-2 text-base font-medium text-gray-700 dark:text-gray-300">
+                <label htmlFor="popular" className="ml-2 text-base font-medium text-gray-300">
                   Mark as popular course
                 </label>
               </div>
 
-              <div className="flex flex-col sm:flex-row justify-end space-y-4 sm:space-y-0 sm:space-x-4 pt-6 sm:pt-8 border-t border-gray-200 dark:border-gray-700">
+              <div className="flex flex-col sm:flex-row justify-end space-y-4 sm:space-y-0 sm:space-x-4 pt-6 sm:pt-8 border-t border-gray-700">
                 <button
                   type="button"
                   onClick={resetCourseForm}
-                  className="px-6 py-3 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors text-base"
+                  className="px-6 py-3 text-gray-300 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors text-base"
                 >
                   Cancel
                 </button>
@@ -883,12 +884,12 @@ export default function AdminDashboard() {
       {showTeamModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 sm:p-6 z-50">
           <div className="rounded-2xl shadow-2xl w-full max-w-md sm:max-w-lg md:max-w-2xl max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+            <div className="p-6 border-b border-gray-700">
               <div className="flex items-center justify-between">
-                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Add Team Member</h2>
+                <h2 className="text-xl sm:text-2xl font-bold text-white">Add Team Member</h2>
                 <button
                   onClick={resetTeamForm}
-                  className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 p-2"
+                  className="text-gray-400 hover:text-gray-300 p-2"
                 >
                   <X className="w-6 h-6" />
                 </button>
@@ -898,48 +899,48 @@ export default function AdminDashboard() {
             <form onSubmit={handleTeamSubmit} className="p-6 space-y-6 sm:space-y-8">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
                 <div>
-                  <label className="block text-base font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label className="block text-base font-medium text-gray-300 mb-2">
                     Full Name *
                   </label>
                   <input
                     type="text"
                     value={teamFormData.name}
                     onChange={(e) => setTeamFormData(prev => ({ ...prev, name: e.target.value }))}
-                    className="w-full px-4 py-3 sm:py-4 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-base"
+                    className="w-full px-4 py-3 sm:py-4 border border-gray-600 rounded-lg bg-gray-700 text-white focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-base"
                     required
                   />
                 </div>
                 
                 <div>
-                  <label className="block text-base font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label className="block text-base font-medium text-gray-300 mb-2">
                     Role/Position *
                   </label>
                   <input
                     type="text"
                     value={teamFormData.role}
                     onChange={(e) => setTeamFormData(prev => ({ ...prev, role: e.target.value }))}
-                    className="w-full px-4 py-3 sm:py-4 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-base"
+                    className="w-full px-4 py-3 sm:py-4 border border-gray-600 rounded-lg bg-gray-700 text-white focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-base"
                     required
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-base font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-base font-medium text-gray-300 mb-2">
                   Bio
                 </label>
                 <textarea
                   value={teamFormData.bio}
                   onChange={(e) => setTeamFormData(prev => ({ ...prev, bio: e.target.value }))}
                   rows={6}
-                  className="w-full px-4 py-3 sm:py-4 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-base"
+                  className="w-full px-4 py-3 sm:py-4 border border-gray-600 rounded-lg bg-gray-700 text-white focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-base"
                   placeholder="Brief biography or description"
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
                 <div>
-                  <label className="block text-base font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label className="block text-base font-medium text-gray-300 mb-2">
                     Team Member Photo
                   </label>
                   <FileSelectionButton
@@ -950,7 +951,7 @@ export default function AdminDashboard() {
                     placeholder="No photo selected"
                   />
                   <div className="mt-4">
-                    <label className="block text-base font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label className="block text-base font-medium text-gray-300 mb-2">
                       Or upload new photo:
                     </label>
                     <input
@@ -960,11 +961,11 @@ export default function AdminDashboard() {
                         const file = e.target.files?.[0];
                         if (file) handleTeamFileUpload(file);
                       }}
-                      className="text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-3 file:px-6 file:rounded-lg file:border-0 file:text-base file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100 dark:file:bg-purple-900/20 dark:file:text-purple-400 dark:hover:file:bg-purple-900/30"
+                      className="text-sm text-gray-400 file:mr-4 file:py-3 file:px-6 file:rounded-lg file:border-0 file:text-base file:font-semibold file:bg-purple-900/20 file:text-purple-400 hover:file:bg-purple-900/30"
                       disabled={uploading}
                     />
                     {uploading && (
-                      <div className="mt-2 text-base text-purple-600 dark:text-purple-400">
+                      <div className="mt-2 text-base text-purple-400">
                         Uploading...
                       </div>
                     )}
@@ -972,7 +973,7 @@ export default function AdminDashboard() {
                 </div>
                 
                 <div>
-                  <label className="block text-base font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label className="block text-base font-medium text-gray-300 mb-2">
                     Experience Years
                   </label>
                   <input
@@ -980,13 +981,13 @@ export default function AdminDashboard() {
                     value={teamFormData.experience_years}
                     onChange={(e) => setTeamFormData(prev => ({ ...prev, experience_years: e.target.value }))}
                     min="0"
-                    className="w-full px-4 py-3 sm:py-4 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-base"
+                    className="w-full px-4 py-3 sm:py-4 border border-gray-600 rounded-lg bg-gray-700 text-white focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-base"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-base font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-base font-medium text-gray-300 mb-2">
                   Specializations
                 </label>
                 <div className="space-y-3">
@@ -996,14 +997,14 @@ export default function AdminDashboard() {
                         type="text"
                         value={specialization}
                         onChange={(e) => handleTeamSpecializationChange(index, e.target.value)}
-                        className="flex-1 px-4 py-3 sm:py-4 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-base"
+                        className="flex-1 px-4 py-3 sm:py-4 border border-gray-600 rounded-lg bg-gray-700 text-white focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-base"
                         placeholder="Enter a specialization"
                       />
                       {teamFormData.specializations.length > 1 && (
                         <button
                           type="button"
                           onClick={() => handleRemoveTeamSpecialization(index)}
-                          className="p-3 text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20"
+                          className="p-3 text-red-400 hover:text-red-300 rounded-lg hover:bg-red-900/20"
                         >
                           <Trash2 className="w-5 h-5" />
                         </button>
@@ -1013,7 +1014,7 @@ export default function AdminDashboard() {
                   <button
                     type="button"
                     onClick={handleAddTeamSpecialization}
-                    className="inline-flex items-center space-x-2 px-6 py-3 bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 border border-purple-200 dark:border-purple-800 rounded-xl hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors text-base"
+                    className="inline-flex items-center space-x-2 px-6 py-3 bg-purple-900/20 text-purple-400 border border-purple-800 rounded-xl hover:bg-purple-900/30 transition-colors text-base"
                   >
                     <Users className="w-5 h-5" />
                     <span>Add Specialization</span>
@@ -1028,15 +1029,15 @@ export default function AdminDashboard() {
                     id="featured"
                     checked={teamFormData.featured}
                     onChange={(e) => setTeamFormData(prev => ({ ...prev, featured: e.target.checked }))}
-                    className="w-5 h-5 text-purple-600 bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded focus:ring-purple-500 focus:ring-2"
+                    className="w-5 h-5 text-purple-600 bg-gray-700 border-gray-600 rounded focus:ring-purple-500 focus:ring-2"
                   />
-                  <label htmlFor="featured" className="ml-2 text-base font-medium text-gray-700 dark:text-gray-300">
+                  <label htmlFor="featured" className="ml-2 text-base font-medium text-gray-300">
                     Featured team member
                   </label>
                 </div>
                 
                 <div>
-                  <label className="block text-base font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label className="block text-base font-medium text-gray-300 mb-2">
                     Display Order
                   </label>
                   <input
@@ -1044,16 +1045,16 @@ export default function AdminDashboard() {
                     value={teamFormData.display_order}
                     onChange={(e) => setTeamFormData(prev => ({ ...prev, display_order: e.target.value }))}
                     min="0"
-                    className="w-full px-4 py-3 sm:py-4 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-base"
+                    className="w-full px-4 py-3 sm:py-4 border border-gray-600 rounded-lg bg-gray-700 text-white focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-base"
                   />
                 </div>
               </div>
 
-              <div className="flex flex-col sm:flex-row justify-end space-y-4 sm:space-y-0 sm:space-x-4 pt-6 sm:pt-8 border-t border-gray-200 dark:border-gray-700">
+              <div className="flex flex-col sm:flex-row justify-end space-y-4 sm:space-y-0 sm:space-x-4 pt-6 sm:pt-8 border-t border-gray-700">
                 <button
                   type="button"
                   onClick={resetTeamForm}
-                  className="px-6 py-3 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors text-base"
+                  className="px-6 py-3 text-gray-300 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors text-base"
                 >
                   Cancel
                 </button>

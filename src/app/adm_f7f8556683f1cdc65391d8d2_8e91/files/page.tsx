@@ -486,25 +486,25 @@ export default function FileManagement() {
 
   const getCategoryColor = (category: string) => {
     const colors = {
-      'general': 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-300',
-      'team-photos': 'bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-400',
-      'course-images': 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-400',
-      'testimonials': 'bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-400',
-      'company': 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-400',
-      'other': 'bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-300'
+      'general': 'bg-gray-700 text-gray-300',
+      'team-photos': 'bg-purple-900/30 text-purple-400',
+      'course-images': 'bg-emerald-900/30 text-emerald-400',
+      'testimonials': 'bg-orange-900/30 text-orange-400',
+      'company': 'bg-blue-900/30 text-blue-400',
+      'other': 'bg-slate-700 text-slate-300'
     };
     return colors[category as keyof typeof colors] || colors.general;
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-4">
-        <div className="bg-card border border-border rounded-2xl shadow-xl p-8 text-center">
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
+        <div className="bg-gray-800 border border-gray-700 rounded-2xl shadow-xl p-8 text-center">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-teal-500 to-cyan-600 rounded-full mb-6 shadow-lg">
             <div className="w-8 h-8 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
           </div>
-          <div className="text-lg font-semibold text-foreground mb-2">Loading Files</div>
-          <div className="text-sm text-muted-foreground">Verifying authentication...</div>
+          <div className="text-lg font-semibold text-white mb-2">Loading Files</div>
+          <div className="text-sm text-gray-400">Verifying authentication...</div>
         </div>
       </div>
     );
@@ -513,15 +513,15 @@ export default function FileManagement() {
   const categoryStats = getCategoryStats();
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gray-900">
       {/* Header */}
-      <header className="bg-card border-b border-border shadow-lg">
+      <header className="bg-gray-800 border-b border-gray-700 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-6 space-y-4 sm:space-y-0">
             <div className="flex items-center space-x-4 w-full sm:w-auto">
               <Link 
                 href="/adm_f7f8556683f1cdc65391d8d2_8e91/dashboard"
-                className="text-sm inline-flex items-center space-x-2 px-4 py-3 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all duration-200 text-base"
+                className="inline-flex items-center space-x-2 px-4 py-3 bg-gray-700 border border-gray-600 rounded-xl text-gray-400 hover:text-gray-100 hover:bg-gray-600 transition-all duration-200 text-base"
               >
                 <ArrowLeft className="h-4 w-4" />
                 <span className="font-medium">Dashboard</span>
@@ -531,8 +531,8 @@ export default function FileManagement() {
                   <Folder className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-base font-bold text-foreground">File Management</h1>
-                  <p className="text-sm text-muted-foreground">Manage your media files</p>
+                  <h1 className="text-base font-bold text-white">File Management</h1>
+                  <p className="text-sm text-gray-400">Manage your media files</p>
                 </div>
               </div>
             </div>
@@ -542,8 +542,8 @@ export default function FileManagement() {
                   <div className="inline-flex items-center justify-center w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full">
                     <User className="h-3 w-3 text-white" />
                   </div>
-                  <span className="text-sm text-muted-foreground">{user.username}</span>
-                  <div className="inline-flex items-center px-2 py-1 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-full text-sm text-green-600 dark:text-green-400">
+                  <span className="text-sm text-gray-400">{user.username}</span>
+                  <div className="inline-flex items-center px-2 py-1 bg-green-900/20 border border-green-800 rounded-full text-sm text-green-400">
                     <div className="w-2.5 h-2.5 bg-green-500 rounded-full mr-1 animate-pulse"></div>
                     Online
                   </div>
@@ -551,7 +551,7 @@ export default function FileManagement() {
               )}
               <button
                 onClick={() => setShowUploadForm(true)}
-                className="text-sm bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 text-white px-4 py-3 rounded-xl flex items-center space-x-2 font-semibold transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl"
+                className="bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 text-white px-4 py-3 rounded-xl flex items-center space-x-2 font-semibold transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl"
               >
                 <Plus className="h-5 w-5" />
                 <span>Upload File</span>
@@ -566,8 +566,8 @@ export default function FileManagement() {
         {message && (
           <div className={`mb-8 p-4 rounded-xl border ${
             message.includes('✓') 
-              ? 'bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-400 border-green-200 dark:border-green-800' 
-              : 'bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-400 border-red-200 dark:border-red-800'
+              ? 'bg-green-900/20 text-green-400 border-green-800' 
+              : 'bg-red-900/20 text-red-400 border-red-800'
           }`}>
             <div className="flex items-center space-x-2">
               <span className="font-medium text-base">{message}</span>
@@ -576,19 +576,19 @@ export default function FileManagement() {
         )}
 
         {/* Filters and Search */}
-        <div className="bg-card border border-border rounded-2xl shadow-lg mb-8">
+        <div className="bg-gray-800 border border-gray-700 rounded-2xl shadow-lg mb-8">
           <div className="p-6">
             <div className="flex flex-col lg:flex-row gap-6">
               {/* Search */}
               <div className="flex-1">
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                   <input
                     type="text"
                     placeholder="Search files by name, alt text, title, or tags..."
                     value={filters.search}
                     onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
-                    className="w-full pl-10 pr-4 py-3 bg-background border border-gray-300 dark:border-gray-600 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
+                    className="w-full pl-10 pr-4 py-3 bg-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
                   />
                 </div>
               </div>
@@ -596,7 +596,7 @@ export default function FileManagement() {
               {/* Filters Toggle */}
               <button
                 onClick={() => setShowFilters(!showFilters)}
-                className="flex items-center space-x-2 px-4 py-3 bg-background border border-gray-300 dark:border-gray-600 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+                className="flex items-center space-x-2 px-4 py-3 bg-gray-700 border border-gray-600 rounded-xl text-gray-400 hover:bg-gray-600 hover:text-gray-100 transition-colors"
               >
                 <Filter className="h-5 w-5" />
                 <span className="font-medium">Filters</span>
@@ -605,14 +605,14 @@ export default function FileManagement() {
 
             {/* Expanded Filters */}
             {showFilters && (
-              <div className="mt-6 pt-6 border-t border-border">
+              <div className="mt-6 pt-6 border-t border-gray-700">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-foreground mb-2">Category</label>
+                    <label className="block text-sm font-medium text-white mb-2">Category</label>
                     <select
                       value={filters.category}
                       onChange={(e) => setFilters(prev => ({ ...prev, category: e.target.value }))}
-                      className="w-full px-3 py-2 bg-background border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                      className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
                     >
                       <option value="all">All Categories</option>
                       {Object.entries(categoryStats).map(([category, count]) => (
@@ -624,11 +624,11 @@ export default function FileManagement() {
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-foreground mb-2">Sort By</label>
+                    <label className="block text-sm font-medium text-white mb-2">Sort By</label>
                     <select
                       value={sortBy}
                       onChange={(e) => setSortBy(e.target.value)}
-                      className="w-full px-3 py-2 bg-background border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                      className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
                     >
                       <option value="uploaded_at">Upload Date</option>
                       <option value="original_name">Name</option>
@@ -638,10 +638,10 @@ export default function FileManagement() {
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-foreground mb-2">Order</label>
+                    <label className="block text-sm font-medium text-white mb-2">Order</label>
                     <button
                       onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-                      className="w-full flex items-center justify-center space-x-2 px-3 py-2 bg-background border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+                      className="w-full flex items-center justify-center space-x-2 px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white hover:bg-gray-600 transition-colors"
                     >
                       {sortOrder === 'asc' ? <SortAsc className="h-4 w-4" /> : <SortDesc className="h-4 w-4" />}
                       <span>{sortOrder === 'asc' ? 'Ascending' : 'Descending'}</span>
@@ -649,16 +649,16 @@ export default function FileManagement() {
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-foreground mb-2">Featured</label>
+                    <label className="block text-sm font-medium text-white mb-2">Featured</label>
                     <div className="flex items-center space-x-2 py-2">
                       <input
                         type="checkbox"
                         id="featured-filter"
                         checked={filters.featured}
                         onChange={(e) => setFilters(prev => ({ ...prev, featured: e.target.checked }))}
-                        className="rounded border-gray-300 dark:border-gray-600 text-teal-600 focus:ring-teal-500"
+                        className="rounded border-gray-600 text-teal-600 focus:ring-teal-500"
                       />
-                      <label htmlFor="featured-filter" className="text-sm text-foreground">
+                      <label htmlFor="featured-filter" className="text-sm text-white">
                         Featured files only
                       </label>
                     </div>
@@ -671,9 +671,9 @@ export default function FileManagement() {
 
         {/* Bulk Actions */}
         {showBulkActions && (
-          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4 mb-6">
+          <div className="bg-blue-900/20 border border-blue-800 rounded-xl p-4 mb-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <span className="text-sm font-medium text-blue-800 dark:text-blue-400">
+              <span className="text-sm font-medium text-blue-400">
                 {selectedFiles.length} file{selectedFiles.length !== 1 ? 's' : ''} selected
               </span>
               <div className="flex items-center space-x-3">
@@ -690,7 +690,7 @@ export default function FileManagement() {
                     setSelectedFiles([]);
                     setShowBulkActions(false);
                   }}
-                  className="px-4 py-2 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors"
+                  className="px-4 py-2 bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600 transition-colors"
                 >
                   Cancel
                 </button>
@@ -702,11 +702,11 @@ export default function FileManagement() {
         {/* Files Grid */}
         {filteredAndSortedFiles.length === 0 ? (
           <div className="text-center py-12">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-full mb-4">
-              <FileText className="h-8 w-8 text-slate-400" />
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-700 rounded-full mb-4">
+              <FileText className="h-8 w-8 text-gray-400" />
             </div>
-            <h3 className="text-lg font-semibold text-foreground mb-2">No files found</h3>
-            <p className="text-muted-foreground mb-4">
+            <h3 className="text-lg font-semibold text-white mb-2">No files found</h3>
+            <p className="text-gray-400 mb-4">
               {filters.search || filters.category !== 'all' || filters.featured 
                 ? 'Try adjusting your filters or search terms.'
                 : 'Upload your first file to get started.'
@@ -728,7 +728,7 @@ export default function FileManagement() {
             <div className="flex items-center justify-between mb-6">
               <button
                 onClick={handleSelectAll}
-                className="flex items-center space-x-2 px-4 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                className="flex items-center space-x-2 px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-gray-300 hover:bg-gray-600 transition-colors"
               >
                 {selectedFiles.length === filteredAndSortedFiles.length ? (
                   <CheckSquare className="h-5 w-5" />
@@ -740,7 +740,7 @@ export default function FileManagement() {
                 </span>
               </button>
               
-              <span className="text-sm text-muted-foreground">
+              <span className="text-sm text-gray-400">
                 {filteredAndSortedFiles.length} file{filteredAndSortedFiles.length !== 1 ? 's' : ''}
               </span>
             </div>
@@ -749,21 +749,21 @@ export default function FileManagement() {
               {filteredAndSortedFiles.map((file) => (
                 <div
                   key={file.id}
-                  className={`bg-card border border-border rounded-xl overflow-hidden hover:shadow-lg transition-all duration-200 ${
+                  className={`bg-gray-800 border border-gray-700 rounded-xl overflow-hidden hover:shadow-lg transition-all duration-200 ${
                     selectedFiles.includes(file.id) ? 'ring-2 ring-teal-500 border-teal-500' : ''
                   }`}
                 >
                   {/* File Preview */}
-                  <div className="relative aspect-square bg-slate-100 dark:bg-slate-800">
+                  <div className="relative aspect-square bg-gray-700">
                     {/* Selection Checkbox */}
                     <button
                       onClick={() => handleSelectFile(file.id)}
-                      className="absolute top-2 left-2 z-10 p-1 bg-white/90 dark:bg-black/90 rounded-md hover:bg-white dark:hover:bg-black transition-colors"
+                      className="absolute top-2 left-2 z-10 p-1 bg-black/90 rounded-md hover:bg-black transition-colors"
                     >
                       {selectedFiles.includes(file.id) ? (
                         <CheckSquare className="h-4 w-4 text-teal-600" />
                       ) : (
-                        <Square className="h-4 w-4 text-slate-400" />
+                        <Square className="h-4 w-4 text-gray-400" />
                       )}
                     </button>
 
@@ -786,8 +786,8 @@ export default function FileManagement() {
                         />
                       ) : (
                         <div className="flex flex-col items-center space-y-2">
-                          <FileText className="h-12 w-12 text-slate-400" />
-                          <span className="text-xs text-slate-500 font-medium">
+                          <FileText className="h-12 w-12 text-gray-400" />
+                          <span className="text-xs text-gray-400 font-medium">
                             {file.file_extension.toUpperCase()}
                           </span>
                         </div>
@@ -803,11 +803,11 @@ export default function FileManagement() {
                       </span>
                     </div>
                     
-                    <h3 className="font-semibold text-foreground text-sm mb-1 truncate">
+                    <h3 className="font-semibold text-white text-sm mb-1 truncate">
                       {file.title || file.original_name}
                     </h3>
                     
-                    <div className="text-xs text-muted-foreground space-y-1 mb-3">
+                    <div className="text-xs text-gray-400 space-y-1 mb-3">
                       <div>{formatFileSize(file.file_size)}</div>
                       <div>{formatDate(file.uploaded_at)}</div>
                     </div>
@@ -816,7 +816,7 @@ export default function FileManagement() {
                     <div className="flex items-center space-x-1">
                       <button
                         onClick={() => handleEdit(file)}
-                        className="flex-1 flex items-center justify-center space-x-1 px-2 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors text-xs"
+                        className="flex-1 flex items-center justify-center space-x-1 px-2 py-1.5 bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600 transition-colors text-xs"
                       >
                         <Edit className="h-3 w-3" />
                         <span>Edit</span>
@@ -826,7 +826,7 @@ export default function FileManagement() {
                         href={file.blob_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center justify-center p-1.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                        className="flex items-center justify-center p-1.5 bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600 transition-colors"
                       >
                         <Eye className="h-3 w-3" />
                       </a>
@@ -834,14 +834,14 @@ export default function FileManagement() {
                       <a
                         href={file.blob_url}
                         download={file.original_name}
-                        className="flex items-center justify-center p-1.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                        className="flex items-center justify-center p-1.5 bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600 transition-colors"
                       >
                         <Download className="h-3 w-3" />
                       </a>
                       
                       <button
                         onClick={() => handleDelete(file.id, file.original_name)}
-                        className="flex items-center justify-center p-1.5 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-200 dark:hover:bg-red-900/50 transition-colors"
+                        className="flex items-center justify-center p-1.5 bg-red-900/30 text-red-400 rounded-lg hover:bg-red-900/50 transition-colors"
                       >
                         <Trash2 className="h-3 w-3" />
                       </button>
@@ -857,12 +857,12 @@ export default function FileManagement() {
       {/* Upload Form Modal */}
       {showUploadForm && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white dark:bg-gray-800 border border-border rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-card border-b border-border px-6 py-4 flex items-center justify-between rounded-t-2xl">
-              <h2 className="text-xl font-bold text-foreground">Upload File</h2>
+          <div className="bg-gray-800 border border-gray-700 rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-gray-800 border-b border-gray-700 px-6 py-4 flex items-center justify-between rounded-t-2xl">
+              <h2 className="text-xl font-bold text-white">Upload File</h2>
               <button
                 onClick={resetUploadForm}
-                className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+                className="p-2 text-gray-400 hover:bg-gray-600 hover:text-gray-100 rounded-lg transition-colors"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -873,7 +873,7 @@ export default function FileManagement() {
               <div
                 onDragOver={handleDragOver}
                 onDrop={handleDrop}
-                className="relative border-2 border-dashed border-border rounded-xl p-8 text-center hover:border-teal-500 transition-colors"
+                className="relative border-2 border-dashed border-gray-600 rounded-xl p-8 text-center hover:border-teal-500 transition-colors"
               >
                 {uploadPreview ? (
                   <div className="space-y-4">
@@ -886,16 +886,16 @@ export default function FileManagement() {
                         className="max-w-full h-auto max-h-48 rounded-lg shadow-lg"
                       />
                     </div>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-gray-400">
                       {selectedFile?.name} ({formatFileSize(selectedFile?.size || 0)})
                     </p>
                   </div>
                 ) : selectedFile ? (
                   <div className="space-y-4">
-                    <div className="inline-flex items-center justify-center w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-xl">
-                      <FileText className="h-8 w-8 text-slate-400" />
+                    <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-700 rounded-xl">
+                      <FileText className="h-8 w-8 text-gray-400" />
                     </div>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-gray-400">
                       {selectedFile.name} ({formatFileSize(selectedFile.size)})
                     </p>
                   </div>
@@ -905,10 +905,10 @@ export default function FileManagement() {
                       <Upload className="h-8 w-8 text-white" />
                     </div>
                     <div>
-                      <p className="text-lg font-semibold text-foreground mb-2">
+                      <p className="text-lg font-semibold text-white mb-2">
                         Drop files here or click to browse
                       </p>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-sm text-gray-400">
                         Supports images, documents, and other file types
                       </p>
                     </div>
@@ -926,39 +926,39 @@ export default function FileManagement() {
               {/* Form Fields */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-foreground mb-2">
+                  <label className="block text-sm font-medium text-white mb-2">
                     Alt Text / Title
                   </label>
                   <input
                     type="text"
                     value={uploadFormData.alt_text}
                     onChange={(e) => setUploadFormData(prev => ({ ...prev, alt_text: e.target.value }))}
-                    className="w-full px-4 py-3 bg-background border border-gray-300 dark:border-gray-600 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
+                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
                     placeholder="Enter descriptive text for the file"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">
+                  <label className="block text-sm font-medium text-white mb-2">
                     Display Title
                   </label>
                   <input
                     type="text"
                     value={uploadFormData.title}
                     onChange={(e) => setUploadFormData(prev => ({ ...prev, title: e.target.value }))}
-                    className="w-full px-4 py-3 bg-background border border-gray-300 dark:border-gray-600 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
+                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
                     placeholder="Optional display title"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">
+                  <label className="block text-sm font-medium text-white mb-2">
                     Category
                   </label>
                   <select
                     value={uploadFormData.category}
                     onChange={(e) => setUploadFormData(prev => ({ ...prev, category: e.target.value }))}
-                    className="w-full px-4 py-3 bg-background border border-gray-300 dark:border-gray-600 rounded-xl text-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
+                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
                   >
                     <option value="general">General</option>
                     <option value="team-photos">Team Photos</option>
@@ -970,27 +970,27 @@ export default function FileManagement() {
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-foreground mb-2">
+                  <label className="block text-sm font-medium text-white mb-2">
                     Description
                   </label>
                   <textarea
                     value={uploadFormData.description}
                     onChange={(e) => setUploadFormData(prev => ({ ...prev, description: e.target.value }))}
                     rows={3}
-                    className="w-full px-4 py-3 bg-background border border-gray-300 dark:border-gray-600 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 resize-none"
+                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 resize-none"
                     placeholder="Optional description"
                   />
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-foreground mb-2">
+                  <label className="block text-sm font-medium text-white mb-2">
                     Tags
                   </label>
                   <input
                     type="text"
                     value={uploadFormData.tags}
                     onChange={(e) => setUploadFormData(prev => ({ ...prev, tags: e.target.value }))}
-                    className="w-full px-4 py-3 bg-background border border-gray-300 dark:border-gray-600 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
+                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
                     placeholder="Comma-separated tags"
                   />
                 </div>
@@ -1002,9 +1002,9 @@ export default function FileManagement() {
                       id="upload-featured"
                       checked={uploadFormData.is_featured}
                       onChange={(e) => setUploadFormData(prev => ({ ...prev, is_featured: e.target.checked }))}
-                      className="rounded border-gray-300 dark:border-gray-600 text-teal-600 focus:ring-teal-500"
+                      className="rounded border-gray-600 text-teal-600 focus:ring-teal-500"
                     />
-                    <label htmlFor="upload-featured" className="text-sm font-medium text-foreground">
+                    <label htmlFor="upload-featured" className="text-sm font-medium text-white">
                       Mark as featured
                     </label>
                   </div>
@@ -1012,7 +1012,7 @@ export default function FileManagement() {
               </div>
 
               {/* Form Actions */}
-              <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-border">
+              <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-gray-700">
                 <button
                   type="submit"
                   disabled={!selectedFile || uploading}
@@ -1034,7 +1034,7 @@ export default function FileManagement() {
                 <button
                   type="button"
                   onClick={resetUploadForm}
-                  className="flex-1 sm:flex-none px-6 py-3 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors font-semibold"
+                  className="flex-1 sm:flex-none px-6 py-3 bg-gray-700 text-gray-300 rounded-xl hover:bg-gray-600 transition-colors font-semibold"
                 >
                   Cancel
                 </button>
@@ -1047,12 +1047,12 @@ export default function FileManagement() {
       {/* Edit Form Modal */}
       {showEditForm && editingFile && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white dark:bg-gray-800 border border-border rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-card border-b border-border px-6 py-4 flex items-center justify-between rounded-t-2xl">
-              <h2 className="text-xl font-bold text-foreground">Edit File</h2>
+          <div className="bg-gray-800 border border-gray-700 rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-gray-800 border-b border-gray-700 px-6 py-4 flex items-center justify-between rounded-t-2xl">
+              <h2 className="text-xl font-bold text-white">Edit File</h2>
               <button
                 onClick={resetEditForm}
-                className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+                className="p-2 text-gray-400 hover:bg-gray-600 hover:text-gray-100 rounded-lg transition-colors"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -1061,7 +1061,7 @@ export default function FileManagement() {
             <form onSubmit={handleEditSubmit} className="p-6 space-y-6">
               {/* File Preview */}
               <div className="text-center">
-                <div className="inline-block bg-slate-100 dark:bg-slate-800 rounded-xl p-4">
+                <div className="inline-block bg-gray-700 rounded-xl p-4">
                   {editingFile.mime_type.startsWith('image/') ? (
                     <Image
                       src={editingFile.blob_url}
@@ -1072,14 +1072,14 @@ export default function FileManagement() {
                     />
                   ) : (
                     <div className="flex flex-col items-center space-y-2 p-8">
-                      <FileText className="h-12 w-12 text-slate-400" />
-                      <span className="text-sm font-medium text-slate-600 dark:text-slate-400">
+                      <FileText className="h-12 w-12 text-gray-400" />
+                      <span className="text-sm font-medium text-gray-400">
                         {editingFile.file_extension.toUpperCase()}
                       </span>
                     </div>
                   )}
                 </div>
-                <p className="text-sm text-muted-foreground mt-2">
+                <p className="text-sm text-gray-400 mt-2">
                   {editingFile.original_name} ({formatFileSize(editingFile.file_size)})
                 </p>
               </div>
@@ -1087,39 +1087,39 @@ export default function FileManagement() {
               {/* Form Fields */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-foreground mb-2">
+                  <label className="block text-sm font-medium text-white mb-2">
                     Alt Text
                   </label>
                   <input
                     type="text"
                     value={editFormData.alt_text}
                     onChange={(e) => setEditFormData(prev => ({ ...prev, alt_text: e.target.value }))}
-                    className="w-full px-4 py-3 bg-background border border-gray-300 dark:border-gray-600 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
+                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
                     placeholder="Enter descriptive text for the file"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">
+                  <label className="block text-sm font-medium text-white mb-2">
                     Display Title
                   </label>
                   <input
                     type="text"
                     value={editFormData.title}
                     onChange={(e) => setEditFormData(prev => ({ ...prev, title: e.target.value }))}
-                    className="w-full px-4 py-3 bg-background border border-gray-300 dark:border-gray-600 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
+                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
                     placeholder="Optional display title"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">
+                  <label className="block text-sm font-medium text-white mb-2">
                     Category
                   </label>
                   <select
                     value={editFormData.category}
                     onChange={(e) => setEditFormData(prev => ({ ...prev, category: e.target.value }))}
-                    className="w-full px-4 py-3 bg-background border border-gray-300 dark:border-gray-600 rounded-xl text-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
+                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
                   >
                     <option value="general">General</option>
                     <option value="team-photos">Team Photos</option>
@@ -1131,27 +1131,27 @@ export default function FileManagement() {
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-foreground mb-2">
+                  <label className="block text-sm font-medium text-white mb-2">
                     Description
                   </label>
                   <textarea
                     value={editFormData.description}
                     onChange={(e) => setEditFormData(prev => ({ ...prev, description: e.target.value }))}
                     rows={3}
-                    className="w-full px-4 py-3 bg-background border border-gray-300 dark:border-gray-600 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 resize-none"
+                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 resize-none"
                     placeholder="Optional description"
                   />
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-foreground mb-2">
+                  <label className="block text-sm font-medium text-white mb-2">
                     Tags
                   </label>
                   <input
                     type="text"
                     value={editFormData.tags}
                     onChange={(e) => setEditFormData(prev => ({ ...prev, tags: e.target.value }))}
-                    className="w-full px-4 py-3 bg-background border border-gray-300 dark:border-gray-600 rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
+                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
                     placeholder="Comma-separated tags"
                   />
                 </div>
@@ -1163,9 +1163,9 @@ export default function FileManagement() {
                       id="edit-featured"
                       checked={editFormData.is_featured}
                       onChange={(e) => setEditFormData(prev => ({ ...prev, is_featured: e.target.checked }))}
-                      className="rounded border-gray-300 dark:border-gray-600 text-teal-600 focus:ring-teal-500"
+                      className="rounded border-gray-600 text-teal-600 focus:ring-teal-500"
                     />
-                    <label htmlFor="edit-featured" className="text-sm font-medium text-foreground">
+                    <label htmlFor="edit-featured" className="text-sm font-medium text-white">
                       Mark as featured
                     </label>
                   </div>
@@ -1173,7 +1173,7 @@ export default function FileManagement() {
               </div>
 
               {/* Form Actions */}
-              <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-border">
+              <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-gray-700">
                 <button
                   type="submit"
                   disabled={saving}
@@ -1195,7 +1195,7 @@ export default function FileManagement() {
                 <button
                   type="button"
                   onClick={resetEditForm}
-                  className="flex-1 sm:flex-none px-6 py-3 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors font-semibold"
+                  className="flex-1 sm:flex-none px-6 py-3 bg-gray-700 text-gray-300 rounded-xl hover:bg-gray-600 transition-colors font-semibold"
                 >
                   Cancel
                 </button>
@@ -1207,4 +1207,3 @@ export default function FileManagement() {
     </div>
   );
 }
-

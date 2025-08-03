@@ -246,28 +246,28 @@ export default function FooterEditor() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4">
-        <div className="bg-card border border-border rounded-2xl shadow-xl p-8 text-center">
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
+        <div className="bg-gray-800 border border-gray-700 rounded-2xl shadow-xl p-8 text-center">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-slate-500 to-gray-600 rounded-full mb-6 shadow-lg">
             <div className="w-8 h-8 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
           </div>
-          <div className="text-lg font-semibold text-foreground mb-2">Loading Footer Content</div>
-          <div className="text-base text-muted-foreground">Please wait...</div>
+          <div className="text-lg font-semibold text-white mb-2">Loading Footer Content</div>
+          <div className="text-base text-gray-400">Please wait...</div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-gray-900">
       {/* Header */}
-      <header className="border-b border-border shadow-lg">
+      <header className="bg-gray-800 border-b border-gray-700 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-6 space-y-4 sm:space-y-0">
             <div className="flex items-center space-x-4 w-full sm:w-auto">
               <Link 
                 href="/adm_f7f8556683f1cdc65391d8d2_8e91/dashboard"
-                className="inline-flex items-center space-x-2 px-4 py-3 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all duration-200 text-base"
+                className="inline-flex items-center space-x-2 px-4 py-3 bg-gray-700 border border-gray-600 rounded-xl text-gray-400 hover:text-gray-100 hover:bg-gray-600 transition-all duration-200 text-base"
               >
                 <ArrowLeft className="h-5 w-5" />
                 <span className="font-medium">Dashboard</span>
@@ -277,15 +277,15 @@ export default function FooterEditor() {
                   <Folder className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold text-foreground">Footer Content</h1>
-                  <p className="text-base text-muted-foreground">Manage footer information</p>
+                  <h1 className="text-2xl font-bold text-white">Footer Content</h1>
+                  <p className="text-base text-gray-400">Manage footer information</p>
                 </div>
               </div>
             </div>
             <div className="flex items-center space-x-4 w-full sm:w-auto justify-between sm:justify-end">
               <div className="flex items-center space-x-2">
-                <span className="text-base text-muted-foreground">{user?.username}</span>
-                <div className="inline-flex items-center px-2 py-1 bg-slate-50 dark:bg-slate-900/20 border border-slate-200 dark:border-slate-800 rounded-full text-sm text-slate-600 dark:text-slate-400">
+                <span className="text-base text-gray-400">{user?.username}</span>
+                <div className="inline-flex items-center px-2 py-1 bg-slate-900/20 border border-slate-800 rounded-full text-sm text-slate-400">
                   <div className="w-1.5 h-1.5 bg-slate-500 rounded-full mr-1 animate-pulse"></div>
                   Online
                 </div>
@@ -300,8 +300,8 @@ export default function FooterEditor() {
         {message && (
           <div className={`mb-8 p-4 rounded-xl border ${
             message.includes('successfully') || message.includes('✓')
-              ? 'bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-400 border-green-200 dark:border-green-800' 
-              : 'bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-400 border-red-200 dark:border-red-800'
+              ? 'bg-green-900/20 text-green-400 border-green-800' 
+              : 'bg-red-900/20 text-red-400 border-red-800'
           }`}>
             <div className="flex items-center space-x-2">
               <ShieldCheckIcon className="w-6 h-6" />
@@ -312,146 +312,146 @@ export default function FooterEditor() {
 
         <div className="space-y-10">
           {/* Company Information */}
-          <div className="border border-border rounded-2xl shadow-xl">
-            <div className="px-6 py-4 border-b border-border rounded-t-2xl">
+          <div className="border border-gray-700 rounded-2xl shadow-xl">
+            <div className="px-6 py-4 border-b border-gray-700 rounded-t-2xl">
               <div className="flex items-center space-x-3">
                 <div className="w-8 h-8 bg-gradient-to-r from-slate-500 to-gray-600 rounded-lg flex items-center justify-center">
                   <Folder className="w-4 h-4 text-white" />
                 </div>
-                <h2 className="text-lg font-bold text-foreground">Company Information</h2>
+                <h2 className="text-lg font-bold text-white">Company Information</h2>
               </div>
             </div>
             <div className="p-6 space-y-8">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-3">
-                  <label className="text-base font-semibold text-foreground">
+                  <label className="text-base font-semibold text-white">
                     Company Name
                   </label>
                   <input
                     type="text"
                     value={footerContent.company_name || ''}
                     onChange={(e) => setFooterContent({...footerContent, company_name: e.target.value})}
-                    className="w-full px-4 py-4 border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
+                    className="w-full px-4 py-4 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
                     placeholder="Karma Training"
                   />
                 </div>
                 <div className="space-y-3">
-                  <label className="text-base font-semibold text-foreground">
+                  <label className="text-base font-semibold text-white">
                     Tagline
                   </label>
                   <input
                     type="text"
                     value={footerContent.tagline || ''}
                     onChange={(e) => setFooterContent({...footerContent, tagline: e.target.value})}
-                    className="w-full px-4 py-4 border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
+                    className="w-full px-4 py-4 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
                     placeholder="Industrial Safety Northwestern BC"
                   />
                 </div>
                 <div className="md:col-span-2 space-y-3">
-                  <label className="text-base font-semibold text-foreground">
+                  <label className="text-base font-semibold text-white">
                     Company Slogan
                   </label>
                   <input
                     type="text"
                     value={footerContent.slogan || ''}
                     onChange={(e) => setFooterContent({...footerContent, slogan: e.target.value})}
-                    className="w-full px-4 py-4 border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
+                    className="w-full px-4 py-4 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
                     placeholder="We believe the choices you make today will define your tomorrow"
                   />
                 </div>
                 <div className="md:col-span-2 space-y-3">
-                  <label className="text-base font-semibold text-foreground">
+                  <label className="text-base font-semibold text-white">
                     Description
                   </label>
                   <textarea
                     value={footerContent.description || ''}
                     onChange={(e) => setFooterContent({...footerContent, description: e.target.value})}
                     rows={4}
-                    className="w-full px-4 py-4 border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
+                    className="w-full px-4 py-4 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
                     placeholder="Karma Training is Northwestern British Columbia's premier provider of workplace safety training..."
                   />
                 </div>
                 <div className="space-y-3">
-                  <label className="text-base font-semibold text-foreground">
+                  <label className="text-base font-semibold text-white">
                     Phone Number
                   </label>
                   <input
                     type="text"
                     value={footerContent.phone || ''}
                     onChange={(e) => setFooterContent({...footerContent, phone: e.target.value})}
-                    className="w-full px-4 py-4 border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
+                    className="w-full px-4 py-4 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
                     placeholder="250-615-3727"
                   />
                 </div>
                 <div className="space-y-3">
-                  <label className="text-base font-semibold text-foreground">
+                  <label className="text-base font-semibold text-white">
                     Email Address
                   </label>
                   <input
                     type="email"
                     value={footerContent.email || ''}
                     onChange={(e) => setFooterContent({...footerContent, email: e.target.value})}
-                    className="w-full px-4 py-4 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
+                    className="w-full px-4 py-4 bg-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
                     placeholder="info@karmatraining.ca"
                   />
                 </div>
                 <div className="md:col-span-2 space-y-3">
-                  <label className="text-base font-semibold text-foreground">
+                  <label className="text-base font-semibold text-white">
                     Location
                   </label>
                   <input
                     type="text"
                     value={footerContent.location || ''}
                     onChange={(e) => setFooterContent({...footerContent, location: e.target.value})}
-                    className="w-full px-4 py-4 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
+                    className="w-full px-4 py-4 bg-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
                     placeholder="Prince George, BC"
                   />
                 </div>
                 <div className="space-y-3">
-                  <label className="text-base font-semibold text-foreground">
+                  <label className="text-base font-semibold text-white">
                     Logo URL
                   </label>
                   <input
                     type="url"
                     value={footerContent.logo_url || ''}
                     onChange={(e) => setFooterContent({...footerContent, logo_url: e.target.value})}
-                    className="w-full px-4 py-4 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
+                    className="w-full px-4 py-4 bg-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
                     placeholder="/images/logo.png"
                   />
                 </div>
                 <div className="space-y-3">
-                  <label className="text-base font-semibold text-foreground">
+                  <label className="text-base font-semibold text-white">
                     Logo Alt Text
                   </label>
                   <input
                     type="text"
                     value={footerContent.logo_alt || ''}
                     onChange={(e) => setFooterContent({...footerContent, logo_alt: e.target.value})}
-                    className="w-full px-4 py-4 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
+                    className="w-full px-4 py-4 bg-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
                     placeholder="Karma Training Logo"
                   />
                 </div>
                 <div className="space-y-3">
-                  <label className="text-base font-semibold text-foreground">
+                  <label className="text-base font-semibold text-white">
                     Copyright Text
                   </label>
                   <input
                     type="text"
                     value={footerContent.copyright_text || ''}
                     onChange={(e) => setFooterContent({...footerContent, copyright_text: e.target.value})}
-                    className="w-full px-4 py-4 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
+                    className="w-full px-4 py-4 bg-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
                     placeholder="© 2024 Karma Training. All rights reserved."
                   />
                 </div>
                 <div className="space-y-3">
-                  <label className="text-base font-semibold text-foreground">
+                  <label className="text-base font-semibold text-white">
                     Bottom Tagline
                   </label>
                   <input
                     type="text"
                     value={footerContent.tagline_bottom || ''}
                     onChange={(e) => setFooterContent({...footerContent, tagline_bottom: e.target.value})}
-                    className="w-full px-4 py-4 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
+                    className="w-full px-4 py-4 bg-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
                     placeholder="Building safer workplaces, one training at a time"
                   />
                 </div>
@@ -460,51 +460,51 @@ export default function FooterEditor() {
           </div>
 
           {/* Footer Statistics */}
-          <div className="bg-card border border-border rounded-2xl shadow-xl">
-            <div className="px-6 py-4 border-b border-border bg-gradient-to-r from-slate-50 to-gray-50 dark:from-slate-900/20 dark:to-gray-900/20 rounded-t-2xl">
+          <div className="bg-gray-800 border border-gray-700 rounded-2xl shadow-xl">
+            <div className="px-6 py-4 border-b border-gray-700 bg-gradient-to-r from-slate-900/20 to-gray-900/20 rounded-t-2xl">
               <div className="flex items-center space-x-3">
                 <div className="w-8 h-8 bg-gradient-to-r from-slate-500 to-gray-600 rounded-lg flex items-center justify-center">
                   <Award className="w-4 h-4 text-white" />
                 </div>
-                <h2 className="text-lg font-bold text-foreground">Footer Statistics</h2>
+                <h2 className="text-lg font-bold text-white">Footer Statistics</h2>
               </div>
             </div>
             <div className="p-6 space-y-6">
               {footerStats.map((stat, index) => (
-                <div key={index} className="grid grid-cols-1 md:grid-cols-3 gap-6 p-4 bg-background border border-input rounded-xl">
+                <div key={index} className="grid grid-cols-1 md:grid-cols-3 gap-6 p-4 bg-gray-700 border border-gray-600 rounded-xl">
                   <div className="space-y-3">
-                    <label className="text-base font-semibold text-foreground">
+                    <label className="text-base font-semibold text-white">
                       Number/Text
                     </label>
                     <input
                       type="text"
                       value={stat.number_text || ''}
                       onChange={(e) => updateStat(index, 'number_text', e.target.value)}
-                      className="w-full px-4 py-4 bg-card border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
+                      className="w-full px-4 py-4 bg-gray-800 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
                       placeholder="500+"
                     />
                   </div>
                   <div className="space-y-3">
-                    <label className="text-base font-semibold text-foreground">
+                    <label className="text-base font-semibold text-white">
                       Label
                     </label>
                     <input
                       type="text"
                       value={stat.label || ''}
                       onChange={(e) => updateStat(index, 'label', e.target.value)}
-                      className="w-full px-4 py-4 bg-card border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
+                      className="w-full px-4 py-4 bg-gray-800 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
                       placeholder="Students Trained"
                     />
                   </div>
                   <div className="space-y-3">
-                    <label className="text-base font-semibold text-foreground">
+                    <label className="text-base font-semibold text-white">
                       Display Order
                     </label>
                     <input
                       type="number"
                       value={stat.display_order || 0}
                       onChange={(e) => updateStat(index, 'display_order', parseInt(e.target.value))}
-                      className="w-full px-4 py-4 bg-card border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
+                      className="w-full px-4 py-4 bg-gray-800 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
                       placeholder="1"
                     />
                   </div>
@@ -514,56 +514,56 @@ export default function FooterEditor() {
           </div>
 
           {/* Quick Links */}
-          <div className="bg-card border border-border rounded-2xl shadow-xl">
-            <div className="px-6 py-4 border-b border-border bg-gradient-to-r from-slate-50 to-gray-50 dark:from-slate-900/20 dark:to-gray-900/20 rounded-t-2xl">
+          <div className="bg-gray-800 border border-gray-700 rounded-2xl shadow-xl">
+            <div className="px-6 py-4 border-b border-gray-700 bg-gradient-to-r from-slate-900/20 to-gray-900/20 rounded-t-2xl">
               <div className="flex items-center space-x-3">
                 <div className="w-8 h-8 bg-gradient-to-r from-slate-500 to-gray-600 rounded-lg flex items-center justify-center">
                   <LinkIcon className="w-4 h-4 text-white" />
                 </div>
-                <h2 className="text-lg font-bold text-foreground">Quick Links</h2>
+                <h2 className="text-lg font-bold text-white">Quick Links</h2>
               </div>
             </div>
             <div className="p-6 space-y-6">
               {footerQuickLinks.map((link, index) => (
-                <div key={index} className="grid grid-cols-1 md:grid-cols-4 gap-6 p-4 bg-background border border-input rounded-xl">
+                <div key={index} className="grid grid-cols-1 md:grid-cols-4 gap-6 p-4 bg-gray-700 border border-gray-600 rounded-xl">
                   <div className="space-y-3">
-                    <label className="text-base font-semibold text-foreground">
+                    <label className="text-base font-semibold text-white">
                       Title
                     </label>
                     <input
                       type="text"
                       value={link.title || ''}
                       onChange={(e) => updateQuickLink(index, 'title', e.target.value)}
-                      className="w-full px-4 py-4 bg-card border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
+                      className="w-full px-4 py-4 bg-gray-800 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
                       placeholder="About Us"
                     />
                   </div>
                   <div className="space-y-3">
-                    <label className="text-base font-semibold text-foreground">
+                    <label className="text-base font-semibold text-white">
                       URL
                     </label>
                     <input
                       type="text"
                       value={link.url || ''}
                       onChange={(e) => updateQuickLink(index, 'url', e.target.value)}
-                      className="w-full px-4 py-4 bg-card border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
+                      className="w-full px-4 py-4 bg-gray-800 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
                       placeholder="/about"
                     />
                   </div>
                   <div className="space-y-3">
-                    <label className="text-base font-semibold text-foreground">
+                    <label className="text-base font-semibold text-white">
                       Display Order
                     </label>
                     <input
                       type="number"
                       value={link.display_order || 0}
                       onChange={(e) => updateQuickLink(index, 'display_order', parseInt(e.target.value))}
-                      className="w-full px-4 py-4 bg-card border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
+                      className="w-full px-4 py-4 bg-gray-800 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
                       placeholder="1"
                     />
                   </div>
                   <div className="space-y-3">
-                    <label className="text-base font-semibold text-foreground">
+                    <label className="text-base font-semibold text-white">
                       Active
                     </label>
                     <div className="flex items-center h-14">
@@ -571,9 +571,9 @@ export default function FooterEditor() {
                         type="checkbox"
                         checked={link.is_active !== false}
                         onChange={(e) => updateQuickLink(index, 'is_active', e.target.checked)}
-                        className="w-5 h-5 text-slate-600 bg-background border-input rounded focus:ring-slate-500 focus:ring-2"
+                        className="w-5 h-5 text-slate-600 bg-gray-700 border-gray-600 rounded focus:ring-slate-500 focus:ring-2"
                       />
-                      <span className="ml-2 text-base text-muted-foreground">Show link</span>
+                      <span className="ml-2 text-base text-gray-400">Show link</span>
                     </div>
                   </div>
                 </div>
@@ -582,56 +582,56 @@ export default function FooterEditor() {
           </div>
 
           {/* Certifications */}
-          <div className="bg-card border border-border rounded-2xl shadow-xl">
-            <div className="px-6 py-4 border-b border-border bg-gradient-to-r from-slate-50 to-gray-50 dark:from-slate-900/20 dark:to-gray-900/20 rounded-t-2xl">
+          <div className="bg-gray-800 border border-gray-700 rounded-2xl shadow-xl">
+            <div className="px-6 py-4 border-b border-gray-700 bg-gradient-to-r from-slate-900/20 to-gray-900/20 rounded-t-2xl">
               <div className="flex items-center space-x-3">
                 <div className="w-8 h-8 bg-gradient-to-r from-slate-500 to-gray-600 rounded-lg flex items-center justify-center">
                   <Shield className="w-4 h-4 text-white" />
                 </div>
-                <h2 className="text-lg font-bold text-foreground">Certifications</h2>
+                <h2 className="text-lg font-bold text-white">Certifications</h2>
               </div>
             </div>
             <div className="p-6 space-y-6">
               {footerCertifications.map((cert, index) => (
-                <div key={index} className="grid grid-cols-1 md:grid-cols-4 gap-6 p-4 bg-background border border-input rounded-xl">
+                <div key={index} className="grid grid-cols-1 md:grid-cols-4 gap-6 p-4 bg-gray-700 border border-gray-600 rounded-xl">
                   <div className="space-y-3">
-                    <label className="text-base font-semibold text-foreground">
+                    <label className="text-base font-semibold text-white">
                       Title
                     </label>
                     <input
                       type="text"
                       value={cert.title || ''}
                       onChange={(e) => updateCertification(index, 'title', e.target.value)}
-                      className="w-full px-4 py-4 bg-card border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
+                      className="w-full px-4 py-4 bg-gray-800 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
                       placeholder="WorkSafeBC Approved"
                     />
                   </div>
                   <div className="space-y-3">
-                    <label className="text-base font-semibold text-foreground">
+                    <label className="text-base font-semibold text-white">
                       Icon
                     </label>
                     <input
                       type="text"
                       value={cert.icon || ''}
                       onChange={(e) => updateCertification(index, 'icon', e.target.value)}
-                      className="w-full px-4 py-4 bg-card border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
+                      className="w-full px-4 py-4 bg-gray-800 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
                       placeholder="Award"
                     />
                   </div>
                   <div className="space-y-3">
-                    <label className="text-base font-semibold text-foreground">
+                    <label className="text-base font-semibold text-white">
                       Display Order
                     </label>
                     <input
                       type="number"
                       value={cert.display_order || 0}
                       onChange={(e) => updateCertification(index, 'display_order', parseInt(e.target.value))}
-                      className="w-full px-4 py-4 bg-card border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
+                      className="w-full px-4 py-4 bg-gray-800 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
                       placeholder="1"
                     />
                   </div>
                   <div className="space-y-3">
-                    <label className="text-base font-semibold text-foreground">
+                    <label className="text-base font-semibold text-white">
                       Active
                     </label>
                     <div className="flex items-center h-14">
@@ -639,9 +639,9 @@ export default function FooterEditor() {
                         type="checkbox"
                         checked={cert.is_active !== false}
                         onChange={(e) => updateCertification(index, 'is_active', e.target.checked)}
-                        className="w-5 h-5 text-slate-600 bg-background border-input rounded focus:ring-slate-500 focus:ring-2"
+                        className="w-5 h-5 text-slate-600 bg-gray-700 border-gray-600 rounded focus:ring-slate-500 focus:ring-2"
                       />
-                      <span className="ml-2 text-base text-muted-foreground">Show certification</span>
+                      <span className="ml-2 text-base text-gray-400">Show certification</span>
                     </div>
                   </div>
                 </div>
@@ -650,56 +650,56 @@ export default function FooterEditor() {
           </div>
 
           {/* Bottom Badges */}
-          <div className="bg-card border border-border rounded-2xl shadow-xl">
-            <div className="px-6 py-4 border-b border-border bg-gradient-to-r from-slate-50 to-gray-50 dark:from-slate-900/20 dark:to-gray-900/20 rounded-t-2xl">
+          <div className="bg-gray-800 border border-gray-700 rounded-2xl shadow-xl">
+            <div className="px-6 py-4 border-b border-gray-700 bg-gradient-to-r from-slate-900/20 to-gray-900/20 rounded-t-2xl">
               <div className="flex items-center space-x-3">
                 <div className="w-8 h-8 bg-gradient-to-r from-slate-500 to-gray-600 rounded-lg flex items-center justify-center">
                   <Award className="w-4 h-4 text-white" />
                 </div>
-                <h2 className="text-lg font-bold text-foreground">Bottom Badges</h2>
+                <h2 className="text-lg font-bold text-white">Bottom Badges</h2>
               </div>
             </div>
             <div className="p-6 space-y-6">
               {footerBottomBadges.map((badge, index) => (
-                <div key={index} className="grid grid-cols-1 md:grid-cols-4 gap-6 p-4 bg-background border border-input rounded-xl">
+                <div key={index} className="grid grid-cols-1 md:grid-cols-4 gap-6 p-4 bg-gray-700 border border-gray-600 rounded-xl">
                   <div className="space-y-3">
-                    <label className="text-base font-semibold text-foreground">
+                    <label className="text-base font-semibold text-white">
                       Title
                     </label>
                     <input
                       type="text"
                       value={badge.title || ''}
                       onChange={(e) => updateBottomBadge(index, 'title', e.target.value)}
-                      className="w-full px-4 py-4 bg-card border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
+                      className="w-full px-4 py-4 bg-gray-800 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
                       placeholder="Certified Training Provider"
                     />
                   </div>
                   <div className="space-y-3">
-                    <label className="text-base font-semibold text-foreground">
+                    <label className="text-base font-semibold text-white">
                       Icon
                     </label>
                     <input
                       type="text"
                       value={badge.icon || ''}
                       onChange={(e) => updateBottomBadge(index, 'icon', e.target.value)}
-                      className="w-full px-4 py-4 bg-card border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
+                      className="w-full px-4 py-4 bg-gray-800 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
                       placeholder="Award"
                     />
                   </div>
                   <div className="space-y-3">
-                    <label className="text-base font-semibold text-foreground">
+                    <label className="text-base font-semibold text-white">
                       Display Order
                     </label>
                     <input
                       type="number"
                       value={badge.display_order || 0}
                       onChange={(e) => updateBottomBadge(index, 'display_order', parseInt(e.target.value))}
-                      className="w-full px-4 py-4 bg-card border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
+                      className="w-full px-4 py-4 bg-gray-800 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 text-base"
                       placeholder="1"
                     />
                   </div>
                   <div className="space-y-3">
-                    <label className="text-base font-semibold text-foreground">
+                    <label className="text-base font-semibold text-white">
                       Active
                     </label>
                     <div className="flex items-center h-14">
@@ -707,9 +707,9 @@ export default function FooterEditor() {
                         type="checkbox"
                         checked={badge.is_active !== false}
                         onChange={(e) => updateBottomBadge(index, 'is_active', e.target.checked)}
-                        className="w-5 h-5 text-slate-600 bg-background border-input rounded focus:ring-slate-500 focus:ring-2"
+                        className="w-5 h-5 text-slate-600 bg-gray-700 border-gray-600 rounded focus:ring-slate-500 focus:ring-2"
                       />
-                      <span className="ml-2 text-base text-muted-foreground">Show badge</span>
+                      <span className="ml-2 text-base text-gray-400">Show badge</span>
                     </div>
                   </div>
                 </div>
@@ -722,7 +722,7 @@ export default function FooterEditor() {
             <button
               onClick={handleSave}
               disabled={saving}
-              className="inline-flex items-center space-x-2 px-8 py-4 bg-gradient-to-r from-slate-500 to-gray-600 hover:from-slate-600 hover:to-gray-700 disabled:from-gray-400 disabled:to-gray-500 text-white font-semibold rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg disabled:transform-none text-base"
+              className="inline-flex items-center space-x-2 px-8 py-4 bg-gradient-to-r from-slate-500 to-gray-600 hover:from-slate-600 hover:to-gray-700 disabled:from-gray-600 disabled:to-gray-600 text-white font-semibold rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg disabled:transform-none text-base"
             >
               <Save className="w-5 h-5" />
               <span>{saving ? 'Saving...' : 'Save Footer Content'}</span>

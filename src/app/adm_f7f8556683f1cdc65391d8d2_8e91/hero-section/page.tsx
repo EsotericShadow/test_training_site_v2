@@ -216,28 +216,28 @@ export default function HeroSectionEditor() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-4">
-        <div className="bg-card border border-border rounded-2xl shadow-xl p-8 text-center">
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
+        <div className="bg-gray-800 border border-gray-700 rounded-2xl shadow-xl p-8 text-center">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full mb-6 shadow-lg">
             <div className="w-8 h-8 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
           </div>
-          <div className="text-lg font-semibold text-foreground mb-2">Loading Hero Section</div>
-          <div className="text-base text-muted-foreground">Please wait...</div>
+          <div className="text-lg font-semibold text-white mb-2">Loading Hero Section</div>
+          <div className="text-base text-gray-400">Please wait...</div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gray-900">
       {/* Header */}
-      <header className="bg-card border-b border-border shadow-lg">
+      <header className="bg-gray-800 border-b border-gray-700 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-6 space-y-4 sm:space-y-0">
             <div className="flex items-center space-x-4 w-full sm:w-auto">
               <Link 
                 href="/adm_f7f8556683f1cdc65391d8d2_8e91/dashboard"
-                className="inline-flex items-center space-x-2 px-4 py-3 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all duration-200 text-base"
+                className="inline-flex items-center space-x-2 px-4 py-3 bg-gray-700 border border-gray-600 rounded-xl text-gray-400 hover:text-gray-100 hover:bg-gray-600 transition-all duration-200 text-base"
               >
                 <ArrowLeft className="h-5 w-5" />
                 <span className="font-medium">Dashboard</span>
@@ -247,15 +247,15 @@ export default function HeroSectionEditor() {
                   <Home className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold text-foreground">Hero Section</h1>
-                  <p className="text-base text-muted-foreground">Manage homepage hero content and statistics</p>
+                  <h1 className="text-2xl font-bold text-white">Hero Section</h1>
+                  <p className="text-base text-gray-400">Manage homepage hero content and statistics</p>
                 </div>
               </div>
             </div>
             <div className="flex items-center space-x-4 w-full sm:w-auto justify-between sm:justify-end">
               <div className="flex items-center space-x-2">
-                <span className="text-base text-muted-foreground">{user?.username}</span>
-                <div className="inline-flex items-center px-2 py-1 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-full text-sm text-blue-600 dark:text-blue-400">
+                <span className="text-base text-gray-400">{user?.username}</span>
+                <div className="inline-flex items-center px-2 py-1 bg-blue-900/20 border border-blue-800 rounded-full text-sm text-blue-400">
                   <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mr-1 animate-pulse"></div>
                   Online
                 </div>
@@ -270,8 +270,8 @@ export default function HeroSectionEditor() {
         {message && (
           <div className={`mb-8 p-4 rounded-xl border ${
             message.includes('successfully') || message.includes('✓')
-              ? 'bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-400 border-green-200 dark:border-green-800' 
-              : 'bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-400 border-red-200 dark:border-red-800'
+              ? 'bg-green-900/20 text-green-400 border-green-800' 
+              : 'bg-red-900/20 text-red-400 border-red-800'
           }`}>
             <div className="flex items-center space-x-2">
               <ShieldCheckIcon className="w-6 h-6" />
@@ -282,90 +282,90 @@ export default function HeroSectionEditor() {
 
         <div className="space-y-10">
           {/* Hero Content */}
-          <div className="bg-card border border-border rounded-2xl shadow-xl">
-            <div className="px-6 py-4 border-b border-border bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-t-2xl">
+          <div className="bg-gray-800 border border-gray-700 rounded-2xl shadow-xl">
+            <div className="px-6 py-4 border-b border-gray-700 bg-gradient-to-r from-blue-900/20 to-indigo-900/20 rounded-t-2xl">
               <div className="flex items-center space-x-3">
                 <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
                   <Home className="w-4 h-4 text-white" />
                 </div>
-                <h2 className="text-lg font-bold text-foreground">Hero Content</h2>
+                <h2 className="text-lg font-bold text-white">Hero Content</h2>
               </div>
             </div>
             <div className="p-6 space-y-8">
               <div className="space-y-3">
-                <label className="text-base font-semibold text-foreground">
+                <label className="text-base font-semibold text-white">
                   Company Slogan
                 </label>
                 <input
                   type="text"
                   value={heroSection.slogan || ''}
                   onChange={(e) => setHeroSection({...heroSection, slogan: e.target.value})}
-                  className="w-full px-4 py-4 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-base"
+                  className="w-full px-4 py-4 bg-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-base"
                   placeholder="We believe the choices you make today will define your tomorrow"
                 />
               </div>
               
               <div className="space-y-3">
-                <label className="text-base font-semibold text-foreground">
+                <label className="text-base font-semibold text-white">
                   Main Heading
                 </label>
                 <input
                   type="text"
                   value={heroSection.main_heading || ''}
                   onChange={(e) => setHeroSection({...heroSection, main_heading: e.target.value})}
-                  className="w-full px-4 py-4 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-base"
+                  className="w-full px-4 py-4 bg-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-base"
                   placeholder="Northwestern BC's Premier Workplace Safety Training"
                 />
               </div>
               
               <div className="space-y-3">
-                <label className="text-base font-semibold text-foreground">
-                  Highlight Text <span className="text-sm text-muted-foreground">(will be colored yellow)</span>
+                <label className="text-base font-semibold text-white">
+                  Highlight Text <span className="text-sm text-gray-400">(will be colored yellow)</span>
                 </label>
                 <input
                   type="text"
                   value={heroSection.highlight_text || ''}
                   onChange={(e) => setHeroSection({...heroSection, highlight_text: e.target.value})}
-                  className="w-full px-4 py-4 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-base"
+                  className="w-full px-4 py-4 bg-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-base"
                   placeholder="Expert Safety Training"
                 />
               </div>
               
               <div className="space-y-3">
-                <label className="text-base font-semibold text-foreground">
+                <label className="text-base font-semibold text-white">
                   Subtitle
                 </label>
                 <textarea
                   value={heroSection.subtitle || ''}
                   onChange={(e) => setHeroSection({...heroSection, subtitle: e.target.value})}
                   rows={4}
-                  className="w-full px-4 py-4 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-base"
+                  className="w-full px-4 py-4 bg-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-base"
                   placeholder="Comprehensive safety courses designed for mining, forestry, construction, and industrial workers..."
                 />
               </div>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                 <div className="space-y-3">
-                  <label className="text-base font-semibold text-foreground">
+                  <label className="text-base font-semibold text-white">
                     Primary Button Text
                   </label>
                   <input
                     type="text"
                     value={heroSection.primary_button_text || ''}
                     onChange={(e) => setHeroSection({...heroSection, primary_button_text: e.target.value})}
-                    className="w-full px-4 py-4 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-base"
+                    className="w-full px-4 py-4 bg-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-base"
                     placeholder="View Our 14 Courses"
                   />
                 </div>
                 <div className="space-y-3">
-                  <label className="text-base font-semibold text-foreground">
+                  <label className="text-base font-semibold text-white">
                     Primary Button Link
                   </label>
                   <input
                     type="text"
                     value={heroSection.primary_button_link || ''}
                     onChange={(e) => setHeroSection({...heroSection, primary_button_link: e.target.value})}
-                    className="w-full px-4 py-4 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-base"
+                    className="w-full px-4 py-4 bg-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-base"
                     placeholder="/courses"
                   />
                 </div>
@@ -373,33 +373,33 @@ export default function HeroSectionEditor() {
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                 <div className="space-y-3">
-                  <label className="text-base font-semibold text-foreground">
+                  <label className="text-base font-semibold text-white">
                     Secondary Button Text
                   </label>
                   <input
                     type="text"
                     value={heroSection.secondary_button_text || ''}
                     onChange={(e) => setHeroSection({...heroSection, secondary_button_text: e.target.value})}
-                    className="w-full px-4 py-4 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-base"
+                    className="w-full px-4 py-4 bg-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-base"
                     placeholder="Contact Us"
                   />
                 </div>
                 <div className="space-y-3">
-                  <label className="text-base font-semibold text-foreground">
+                  <label className="text-base font-semibold text-white">
                     Secondary Button Link
                   </label>
                   <input
                     type="text"
                     value={heroSection.secondary_button_link || ''}
                     onChange={(e) => setHeroSection({...heroSection, secondary_button_link: e.target.value})}
-                    className="w-full px-4 py-4 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-base"
+                    className="w-full px-4 py-4 bg-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-base"
                     placeholder="/contact"
                   />
                 </div>
               </div>
               
               <div className="space-y-4">
-                <label className="text-base font-semibold text-foreground">
+                <label className="text-base font-semibold text-white">
                   Background Image
                 </label>
                 
@@ -412,7 +412,7 @@ export default function HeroSectionEditor() {
                 />
 
                 <div className="space-y-3">
-                  <label className="text-base font-medium text-muted-foreground">
+                  <label className="text-base font-medium text-gray-400">
                     Background Image Alt Text (for accessibility)
                   </label>
                   <input
@@ -420,13 +420,13 @@ export default function HeroSectionEditor() {
                     value={heroSection.background_image_alt || ''}
                     onChange={(e) => setHeroSection({...heroSection, background_image_alt: e.target.value})}
                     placeholder="e.g., Safety training in industrial workplace"
-                    className="w-full px-4 py-4 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-base"
+                    className="w-full px-4 py-4 bg-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-base"
                   />
                 </div>
 
                 {heroSection.background_image_url && (
-                  <div className="mt-4 p-4 bg-background border border-input rounded-xl">
-                    <div className="text-base font-medium text-foreground mb-2">Current Background:</div>
+                  <div className="mt-4 p-4 bg-gray-700 border border-gray-600 rounded-xl">
+                    <div className="text-base font-medium text-white mb-2">Current Background:</div>
                     <div className="relative w-full h-32 rounded-lg overflow-hidden">
                       <Image
                         src={heroSection.background_image_url}
@@ -438,15 +438,15 @@ export default function HeroSectionEditor() {
                   </div>
                 )}
 
-                <div className="border-t border-border pt-4">
-                  <div className="text-base text-muted-foreground mb-2">
+                <div className="border-t border-gray-700 pt-4">
+                  <div className="text-base text-gray-400 mb-2">
                     Or enter background image URL directly:
                   </div>
                   <input
                     type="url"
                     value={heroSection.background_image_url || ''}
                     onChange={(e) => setHeroSection({...heroSection, background_image_url: e.target.value})}
-                    className="w-full px-4 py-4 bg-background border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-base"
+                    className="w-full px-4 py-4 bg-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-base"
                     placeholder="/images/hero-bg.jpg"
                   />
                 </div>
@@ -455,63 +455,63 @@ export default function HeroSectionEditor() {
           </div>
 
           {/* Hero Statistics */}
-          <div className="bg-card border border-border rounded-2xl shadow-xl">
-            <div className="px-6 py-4 border-b border-border bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-t-2xl">
+          <div className="bg-gray-800 border border-gray-700 rounded-2xl shadow-xl">
+            <div className="px-6 py-4 border-b border-gray-700 bg-gradient-to-r from-blue-900/20 to-indigo-900/20 rounded-t-2xl">
               <div className="flex items-center space-x-3">
                 <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
                   <BarChart3 className="w-4 h-4 text-white" />
                 </div>
-                <h2 className="text-lg font-bold text-foreground">Hero Statistics</h2>
+                <h2 className="text-lg font-bold text-white">Hero Statistics</h2>
               </div>
             </div>
             <div className="p-6 space-y-6">
               {heroStats.map((stat, index) => (
-                <div key={index} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-6 bg-background border border-input rounded-xl">
+                <div key={index} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-6 bg-gray-700 border border-gray-600 rounded-xl">
                   <div className="space-y-3">
-                    <label className="text-base font-semibold text-foreground">
+                    <label className="text-base font-semibold text-white">
                       Number/Text
                     </label>
                     <input
                       type="text"
                       value={stat.number_text || ''}
                       onChange={(e) => updateStat(index, 'number_text', e.target.value)}
-                      className="w-full px-4 py-4 bg-card border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-base"
+                      className="w-full px-4 py-4 bg-gray-800 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-base"
                       placeholder="500+"
                     />
                   </div>
                   <div className="space-y-3">
-                    <label className="text-base font-semibold text-foreground">
+                    <label className="text-base font-semibold text-white">
                       Label
                     </label>
                     <input
                       type="text"
                       value={stat.label || ''}
                       onChange={(e) => updateStat(index, 'label', e.target.value)}
-                      className="w-full px-4 py-4 bg-card border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-base"
+                      className="w-full px-4 py-4 bg-gray-800 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-base"
                       placeholder="Students Trained"
                     />
                   </div>
                   <div className="space-y-3">
-                    <label className="text-base font-semibold text-foreground">
+                    <label className="text-base font-semibold text-white">
                       Description
                     </label>
                     <input
                       type="text"
                       value={stat.description || ''}
                       onChange={(e) => updateStat(index, 'description', e.target.value)}
-                      className="w-full px-4 py-4 bg-card border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-base"
+                      className="w-full px-4 py-4 bg-gray-800 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-base"
                       placeholder="Across Northwestern BC"
                     />
                   </div>
                   <div className="space-y-3">
-                    <label className="text-base font-semibold text-foreground">
+                    <label className="text-base font-semibold text-white">
                       Display Order
                     </label>
                     <input
                       type="number"
                       value={stat.display_order || 0}
                       onChange={(e) => updateStat(index, 'display_order', parseInt(e.target.value))}
-                      className="w-full px-4 py-4 bg-card border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-base"
+                      className="w-full px-4 py-4 bg-gray-800 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-base"
                       placeholder="1"
                     />
                   </div>
@@ -521,51 +521,51 @@ export default function HeroSectionEditor() {
           </div>
 
           {/* Hero Features */}
-          <div className="bg-card border border-border rounded-2xl shadow-xl">
-            <div className="px-6 py-4 border-b border-border bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-t-2xl">
+          <div className="bg-gray-800 border border-gray-700 rounded-2xl shadow-xl">
+            <div className="px-6 py-4 border-b border-gray-700 bg-gradient-to-r from-blue-900/20 to-indigo-900/20 rounded-t-2xl">
               <div className="flex items-center space-x-3">
                 <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
                   <Star className="w-4 h-4 text-white" />
                 </div>
-                <h2 className="text-lg font-bold text-foreground">Hero Features</h2>
+                <h2 className="text-lg font-bold text-white">Hero Features</h2>
               </div>
             </div>
             <div className="p-6 space-y-6">
               {heroFeatures.map((feature, index) => (
-                <div key={index} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6 bg-background border border-input rounded-xl">
+                <div key={index} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6 bg-gray-700 border border-gray-600 rounded-xl">
                   <div className="space-y-3">
-                    <label className="text-base font-semibold text-foreground">
+                    <label className="text-base font-semibold text-white">
                       Title
                     </label>
                     <input
                       type="text"
                       value={feature.title || ''}
                       onChange={(e) => updateFeature(index, 'title', e.target.value)}
-                      className="w-full px-4 py-4 bg-card border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-base"
+                      className="w-full px-4 py-4 bg-gray-800 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-base"
                       placeholder="Expert Instructors"
                     />
                   </div>
                   <div className="space-y-3">
-                    <label className="text-base font-semibold text-foreground">
+                    <label className="text-base font-semibold text-white">
                       Description
                     </label>
                     <input
                       type="text"
                       value={feature.description || ''}
                       onChange={(e) => updateFeature(index, 'description', e.target.value)}
-                      className="w-full px-4 py-4 bg-card border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-base"
+                      className="w-full px-4 py-4 bg-gray-800 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-base"
                       placeholder="Certified professionals with real-world experience"
                     />
                   </div>
                   <div className="space-y-3">
-                    <label className="text-base font-semibold text-foreground">
+                    <label className="text-base font-semibold text-white">
                       Display Order
                     </label>
                     <input
                       type="number"
                       value={feature.display_order || 0}
                       onChange={(e) => updateFeature(index, 'display_order', parseInt(e.target.value))}
-                      className="w-full px-4 py-4 bg-card border border-input rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-base"
+                      className="w-full px-4 py-4 bg-gray-800 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-base"
                       placeholder="1"
                     />
                   </div>
@@ -575,11 +575,11 @@ export default function HeroSectionEditor() {
           </div>
 
           {/* Save Button */}
-          <div className="flex justify-end pt-8 border-t border-border">
+          <div className="flex justify-end pt-8 border-t border-gray-700">
             <button
               onClick={handleSave}
               disabled={saving}
-              className="inline-flex items-center space-x-2 px-8 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 disabled:from-gray-300 disabled:to-gray-300 dark:disabled:from-gray-600 dark:disabled:to-gray-600 text-white font-semibold rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl disabled:scale-100 disabled:cursor-not-allowed text-base"
+              className="inline-flex items-center space-x-2 px-8 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 disabled:from-gray-600 disabled:to-gray-600 text-white font-semibold rounded-xl transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl disabled:scale-100 disabled:cursor-not-allowed text-base"
             >
               {saving ? (
                 <>
@@ -597,8 +597,8 @@ export default function HeroSectionEditor() {
         </div>
 
         {/* Footer */}
-        <div className="mt-12 pt-8 border-t border-border">
-          <div className="text-center text-sm text-muted-foreground space-y-2">
+        <div className="mt-12 pt-8 border-t border-gray-700">
+          <div className="text-center text-sm text-gray-400 space-y-2">
             <div className="flex items-center justify-center space-x-4">
               <span className="flex items-center">
                 <span className="mr-1">🏠</span>
