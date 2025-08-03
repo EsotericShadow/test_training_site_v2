@@ -61,7 +61,11 @@ export default function Footer({ footerContent, popularCourses }: FooterProps) {
           </div>
         </div>
         <div className="mt-16 pt-8 border-t border-gray-800 text-center text-gray-300">
-          <p>{footerContent?.copyright_text || `© ${new Date().getFullYear()} ${footerContent?.company_name}. All Rights Reserved.`}</p>
+          <p>
+            <a href="https://www.evergreenwebsolutions.ca" className="hover:text-yellow-400">
+              {footerContent?.copyright_text || `© ${new Date().getFullYear()} ${footerContent?.company_name}. All Rights Reserved.`}
+            </a>
+          </p>
         </div>
       </div>
     </footer>
