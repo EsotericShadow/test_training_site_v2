@@ -55,15 +55,7 @@ interface CourseCategories {
   [key: string]: Course[];
 }
 
-interface FooterContent {
-  company_name: string;
-  description: string;
-  phone: string;
-  email: string;
-  location: string;
-  logo_url: string;
-  copyright_text: string;
-}
+import type { FooterContent, FooterStat, FooterQuickLink, FooterCertification, FooterBottomBadge } from '../../lib/database';
 
 export interface PopularCourse {
   title: string;
@@ -73,6 +65,10 @@ export interface PopularCourse {
 interface FooterData {
   footerContent: FooterContent | null;
   popularCourses: PopularCourse[];
+  footerStats: FooterStat[];
+  footerQuickLinks: FooterQuickLink[];
+  footerCertifications: FooterCertification[];
+  footerBottomBadges: FooterBottomBadge[];
 }
 
 /**
@@ -137,10 +133,24 @@ async function getFooterData(): Promise<FooterData> {
     const response = await fetch(`${baseUrl}/api/public-footer`);
     if (!response.ok) throw new Error('Failed to fetch footer data');
     const data = await response.json();
-    return { footerContent: data.footerContent, popularCourses: data.popularCourses || [] };
+    return { 
+      footerContent: data.footerContent,
+      popularCourses: data.popularCourses || [],
+      footerStats: data.footerStats || [],
+      footerQuickLinks: data.footerQuickLinks || [],
+      footerCertifications: data.footerCertifications || [],
+      footerBottomBadges: data.footerBottomBadges || [],
+    };
   } catch (error) {
     console.error('Error fetching footer data:', error);
-    return { footerContent: null, popularCourses: [] };
+    return { 
+      footerContent: null,
+      popularCourses: [],
+      footerStats: [],
+      footerQuickLinks: [],
+      footerCertifications: [],
+      footerBottomBadges: [],
+    };
   }
 }
 
@@ -203,7 +213,14 @@ export default async function RootLayout({
             <main className="flex-grow pt-24 relative z-10">
               {children}
             </main>
-            <Footer footerContent={footerData.footerContent} popularCourses={footerData.popularCourses} />
+            <Footer 
+              footerContent={footerData.footerContent} 
+              popularCourses={footerData.popularCourses}
+              footerStats={footerData.footerStats}
+              footerQuickLinks={footerData.footerQuickLinks}
+              footerCertifications={footerData.footerCertifications}
+              footerBottomBadges={footerData.footerBottomBadges}
+            />
           </div>
         </ThemeProvider>
         

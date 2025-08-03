@@ -65,14 +65,14 @@ export default function CoursePageClient({ course }: CoursePageClientProps) {
         </div>
       </div>
 
-      <section className="relative py-12 sm:py-20 text-white overflow-hidden h-80 md:h-96">
+      <section className="relative py-12 sm:py-20 text-white overflow-hidden h-[500px] md:h-[600px]">
         <div className="absolute inset-0 z-0">
           {course.image_url ? (
             <Image
               src={course.image_url}
               alt={course.image_alt || course.title}
               fill
-              className="object-cover opacity-50"
+              className="object-cover object-top opacity-50"
               priority
               sizes="100vw"
               quality={80}
@@ -94,7 +94,7 @@ export default function CoursePageClient({ course }: CoursePageClientProps) {
       <div className="container mx-auto px-4 pt-8 pb-12 relative z-20">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-8">
-            <div className="backdrop-blur-md bg-gray-800/30 border border-gray-700/50 border-white/10 rounded-xl shadow-lg p-8">
+            <div className="backdrop-blur-md bg-white/10 backdrop-brightness-110 backdrop-saturate-150 border border-white/20 rounded-xl shadow-lg p-8">
               <h2 className="text-3xl font-bold text-white mb-6">Overview</h2>
               <div className="prose prose-lg max-w-none text-gray-200 [&>ul]:space-y-2 [&>ul>li]:flex [&>ul>li]:items-start [&>ul>li]:gap-2 [&>ul>li]:list-none [&>ul>li]:before:content-['►'] [&>ul>li]:before:text-yellow-400 [&>ul>li]:before:font-bold [&>h3]:text-2xl [&>h3]:font-bold [&>h3]:text-white [&>h3]:mt-4 [&>h3]:mb-2 [&>p]:leading-relaxed [&>p]:mb-4 [&>h2]:text-3xl [&>h2]:font-bold [&>h2]:text-white [&>h2]:mt-6 [&>h2]:mb-3">
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>
@@ -103,7 +103,7 @@ export default function CoursePageClient({ course }: CoursePageClientProps) {
               </div>
             </div>
 
-            <div className="backdrop-blur-md bg-gray-800/30 border border-gray-700/50 border-white/10 rounded-xl shadow-lg p-8">
+            <div className="backdrop-blur-md bg-white/10 backdrop-brightness-110 backdrop-saturate-150 border border-white/20 rounded-xl shadow-lg p-8">
               <h2 className="text-3xl font-bold text-white mb-6">What You&apos;ll Learn</h2>
               <div className="prose prose-lg max-w-none text-gray-200 [&>ul]:space-y-2 [&>ul>li]:flex [&>ul>li]:items-start [&>ul>li]:gap-2 [&>ul>li]:list-none [&>ul>li]:before:content-['►'] [&>ul>li]:before:text-yellow-400 [&>ul>li]:before:font-bold [&>h3]:text-2xl [&>h3]:font-bold [&>h3]:text-white [&>h3]:mt-4 [&>h3]:mb-2 [&>p]:leading-relaxed [&>p]:mb-4 [&>h2]:text-3xl [&>h2]:font-bold [&>h2]:text-white [&>h2]:mt-6 [&>h2]:mb-3">
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>
@@ -113,7 +113,7 @@ export default function CoursePageClient({ course }: CoursePageClientProps) {
             </div>
 
             {course.features && course.features.length > 0 && (
-              <div className="backdrop-blur-md bg-gray-800/30 border border-gray-700/50 border-white/10 rounded-xl shadow-lg p-8">
+              <div className="backdrop-blur-md bg-white/10 backdrop-brightness-110 backdrop-saturate-150 border border-white/20 rounded-xl shadow-lg p-8">
                 <h3 className="text-3xl font-bold text-white mb-6 border-l-4 border-yellow-400 pl-4">Learning Objectives</h3>
                 <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
                   {course.features
@@ -129,7 +129,7 @@ export default function CoursePageClient({ course }: CoursePageClientProps) {
             )}
 
             {course.includes && (
-              <div className="backdrop-blur-md bg-gray-800/30 border border-gray-700/50 border-white/10 rounded-xl shadow-lg p-8">
+              <div className="backdrop-blur-md bg-white/10 backdrop-brightness-110 backdrop-saturate-150 border border-white/20 rounded-xl shadow-lg p-8">
                 <h3 className="text-3xl font-bold text-white mb-6 border-l-4 border-yellow-400 pl-4">What&apos;s Included</h3>
                 <div className="prose prose-lg max-w-none text-gray-200 [&>ul]:space-y-2 [&>ul>li]:flex [&>ul>li]:items-start [&>ul>li]:gap-2 [&>ul>li]:list-none [&>ul>li]:before:content-['►'] [&>ul>li]:before:text-yellow-400 [&>ul>li]:before:font-bold [&>h3]:text-2xl [&>h3]:font-bold [&>h3]:text-white [&>h3]:mt-4 [&>h3]:mb-2 [&>p]:leading-relaxed [&>p]:mb-4 [&>h2]:text-3xl [&>h2]:font-bold [&>h2]:text-white [&>h2]:mt-6 [&>h2]:mb-3">
                   <ReactMarkdown remarkPlugins={[remarkGfm]}>
@@ -141,7 +141,7 @@ export default function CoursePageClient({ course }: CoursePageClientProps) {
           </div>
 
           <div className="lg:sticky top-24 self-start">
-            <div className="backdrop-blur-md bg-gray-800/30 border border-gray-700/50 border-white/10 rounded-xl shadow-lg p-8 space-y-6">
+            <div className="backdrop-blur-md bg-white/10 backdrop-brightness-110 backdrop-saturate-150 border border-white/20 rounded-xl shadow-lg p-8 space-y-6">
               <h3 className="text-2xl font-bold text-yellow-400">Course Details</h3>
               <div className="space-y-4">
                 <div className="flex items-center space-x-4">

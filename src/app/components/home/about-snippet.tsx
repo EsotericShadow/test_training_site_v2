@@ -62,7 +62,7 @@ export default function AboutSnippet({ teamMembers }: AboutSnippetProps) {
   });
 
   useEffect(() => {
-    fetch('/api/adm_f7f8556683f1cdc65391d8d2_8e91/company-info').then(res => res.json())
+    fetch('/api/public-company-info').then(res => res.json())
     .then((companyData) => {
       setCompanyInfo(companyData.companyInfo);
       setWhyChooseUs(companyData.whyChooseUs || []);
@@ -108,6 +108,7 @@ export default function AboutSnippet({ teamMembers }: AboutSnippetProps) {
                       alt={member.name}
                       fill
                       className="object-cover"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
                     <div className="absolute bottom-0 left-0 p-4">

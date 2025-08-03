@@ -107,9 +107,14 @@ export async function createSession(user: Pick<AdminUser, 'id' | 'username' | 'e
   }
 }
 
-export async function validateSession(token: string, request: NextRequest): Promise<SessionValidationResult> {
+export async function validateSession(token: string | undefined, request: NextRequest): Promise<SessionValidationResult> {
   try {
     const ip = request.headers.get('x-forwarded-for') || 'unknown';
+
+    if (!token) {
+      return { valid: false, reason: 'no_token_provided' };
+    }
+
     const tokenResult = await verifySecureToken(token, request);
 
     if (!tokenResult.valid || !tokenResult.decoded) {

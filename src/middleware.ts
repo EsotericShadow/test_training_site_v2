@@ -13,41 +13,29 @@ import { NextRequest, NextResponse } from 'next/server';
 import { validateSession, SessionValidationResult } from '../lib/session-manager';
 import { logger } from '../lib/logger';
 import { extractUserIdFromToken } from '../lib/jwt-decode-implementation';
-
-
-/*
- * Karma Industrial Safety Training Website
- * Written and developed by Gabriel Lacroix for Evergreen Web Solutions
- *
- * File: src/middleware.ts
- * Description: Next.js middleware for handling authentication, session validation, and security headers.
- * Dependencies: Next.js, session-manager, logger, jwt-decode-implementation
- * Created: 2025-06-06
- * Last Modified: 2025-08-03
- * Version: 1.0.1
- */
 export async function middleware(request: NextRequest) {
   const url = request.nextUrl.clone();
-  const userId = await extractUserIdFromToken(request);
-  
-  // HTTPS Enforcement - Redirect HTTP to HTTPS in production
-  if (process.env.NODE_ENV === 'production' &&
-      url.protocol === 'http:' &&
-      !url.hostname.includes('localhost')) {
-    url.protocol = 'https:';
-    return NextResponse.redirect(url);
-  }
 
   // Check if this is an admin path
   const isAdminPath = url.pathname.startsWith('/adm_f7f8556683f1cdc65391d8d2_8e91');
   const isLoginPage = url.pathname === '/adm_f7f8556683f1cdc65391d8d2_8e91';
 
-  // Only authenticate admin paths (except login page)
-  if (isAdminPath && !isLoginPage) {
-    const token = request.cookies.get('admin_token')?.value;
-    const ip = request.headers.get('x-forwarded-for') || 
-               request.headers.get('x-real-ip') || 
-               'unknown';
+  // If it's not an admin path, or it's the login page, proceed without authentication checks
+  if (!isAdminPath || isLoginPage) {
+    const response = NextResponse.next();
+    // Add basic security headers for all public paths
+    response.headers.set('X-Content-Type-Options', 'nosniff');
+    response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+    response.headers.set('X-XSS-Protection', '1; mode=block');
+    return response;
+  }
+
+  // For admin paths (excluding login page), perform authentication
+  const userId = await extractUserIdFromToken(request);
+  const token = request.cookies.get('admin_token')?.value;
+  const ip = request.headers.get('x-forwarded-for') || 
+             request.headers.get('x-real-ip') || 
+             'unknown';
 
     if (!token) {
       logger.warn('Middleware: No admin token found', { 
@@ -119,16 +107,8 @@ export async function middleware(request: NextRequest) {
       response.cookies.delete('admin_token');
       return response;
     }
-  }
-
-  // For non-admin paths, add basic security headers
-  const response = NextResponse.next();
-  response.headers.set('X-Content-Type-Options', 'nosniff');
-  response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
-  response.headers.set('X-XSS-Protection', '1; mode=block');
-
-  return response;
 }
+
 
 export const config = {
   matcher: [

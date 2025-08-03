@@ -90,8 +90,8 @@ export default function AboutPageClient({ teamMembers }: AboutPageClientProps) {
       try {
         const [companyDataResponse, heroImageResponse, coursesResponse] = await Promise.all([
           fetch('/api/about-snippet'),
-          fetch('/api/adm_f7f8556683f1cdc65391d8d2_8e91/files?category=other'),
-          fetch('/api/adm_f7f8556683f1cdc65391d8d2_8e91/courses'),
+          fetch('/api/public-files?category=course-images'),
+          fetch('/api/public-courses'),
         ]);
 
         if (companyDataResponse.ok) {
@@ -104,12 +104,27 @@ export default function AboutPageClient({ teamMembers }: AboutPageClientProps) {
         }
 
         if (heroImageResponse.ok) {
-          const { file } = await heroImageResponse.json();
-          setHeroImage(file.blob_url);
-          setHeroImageAlt(file.alt_text || 'About page hero image');
+          const { files } = await heroImageResponse.json();
+          if (files && files.length > 0) {
+            const randomImage = files[Math.floor(Math.random() * files.length)];
+            // Validate the URL before setting it
+            if (randomImage.blob_url && (randomImage.blob_url.startsWith('http://') || randomImage.blob_url.startsWith('https://'))) {
+              setHeroImage(randomImage.blob_url);
+              setHeroImageAlt(randomImage.alt_text || 'About page hero image');
+            } else {
+              console.error('Invalid hero image URL from API:', randomImage.blob_url);
+              setHeroImage('https://via.placeholder.com/1920x1080');
+              setHeroImageAlt('Safety training in action');
+            }
+          } else {
+            // No files returned from API, use fallback
+            console.warn('No hero images found in API response, using fallback.');
+            setHeroImage('https://via.placeholder.com/1920x1080');
+            setHeroImageAlt('Safety training in action');
+          }
         } else {
-          console.error('Failed to load hero image');
-          setHeroImage('https://bluvpssu00ym8qv7.public.blob.vercel-storage.com/other/1750011620811-IMG_8439.JPG');
+          console.error('Failed to load hero image from API, using fallback.');
+          setHeroImage('https://via.placeholder.com/1920x1080');
           setHeroImageAlt('Safety training in action');
         }
 
@@ -143,7 +158,7 @@ export default function AboutPageClient({ teamMembers }: AboutPageClientProps) {
 
   return (
     <div ref={sectionRefs} className="bg-gray-900 pt-13" >
-      <section className="relative text-white py-24">
+      <section className="relative text-white h-[500px] md:h-[600px]">
         <div className="absolute inset-0">
           {heroImage && (
             <Image
@@ -156,7 +171,7 @@ export default function AboutPageClient({ teamMembers }: AboutPageClientProps) {
             />
           )}
         </div>
-        <div className="relative container mx-auto px-4 text-center">
+        <div className="relative container mx-auto px-4 text-center flex flex-col items-center justify-center h-full">
           <h1 className="text-5xl md:text-6xl font-extrabold mb-4">About <span className="text-yellow-400">{companyInfo?.company_name || 'Us'}</span></h1>
           <p className="text-lg md:text-xl text-gray-400 font-semibold">{companyInfo?.slogan}</p>
         </div>

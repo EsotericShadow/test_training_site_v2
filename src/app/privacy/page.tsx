@@ -27,11 +27,18 @@ export default function PrivacyPolicyPage() {
         const response = await fetch('/api/adm_f7f8556683f1cdc65391d8d2_8e91/files?category=other');
         if (response.ok) {
           const { file } = await response.json();
-          setHeroImage(file.blob_url);
-          setHeroImageAlt(file.alt_text || 'Privacy policy hero image');
+          // Validate the URL before setting it
+          if (file && file.blob_url && (file.blob_url.startsWith('http://') || file.blob_url.startsWith('https://'))) {
+            setHeroImage(file.blob_url);
+            setHeroImageAlt(file.alt_text || 'Privacy policy hero image');
+          } else {
+            console.error('Invalid hero image URL from API:', file?.blob_url);
+            setHeroImage('https://via.placeholder.com/1920x1080'); // Fallback
+            setHeroImageAlt('Safety training in action');
+          }
         } else {
-          console.error('Failed to load hero image');
-          setHeroImage('https://bluvpssu00ym8qv7.public.blob.vercel-storage.com/other/1750011620811-IMG_8439.JPG'); // Fallback
+          console.error('Failed to load hero image from API, using fallback.');
+          setHeroImage('/assets/logos/logo.png'); // Fallback
           setHeroImageAlt('Safety training in action');
         }
       } catch (error) {

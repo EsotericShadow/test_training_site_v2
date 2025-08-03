@@ -38,7 +38,7 @@ export const dynamic = 'force-dynamic';
  */
 async function getHeroData() {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/adm_f7f8556683f1cdc65391d8d2_8e91/hero-section`, { cache: 'no-store' });
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/public-hero-section`, { cache: 'no-store' });
     
     if (response.ok) {
       const data = await response.json();
@@ -161,7 +161,7 @@ export default async function Home() {
   
   // Fetch hero data server-side
   const heroData = await getHeroData();
-  const teamMembersRes = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/team-members`, { cache: 'no-store' });
+  const teamMembersRes = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/public-team-members`, { cache: 'no-store' });
   const { teamMembers } = await teamMembersRes.json();
 
   // JSON-LD structured data

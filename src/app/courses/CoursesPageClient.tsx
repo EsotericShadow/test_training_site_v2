@@ -94,28 +94,24 @@ export default function CoursesPageClient() {
   useEffect(() => {
     const fetchCoursesAndHero = async () => {
       try {
-        const [coursesResponse, heroImageResponse] = await Promise.all([
-          fetch('/api/adm_f7f8556683f1cdc65391d8d2_8e91/courses'),
-          fetch('/api/adm_f7f8556683f1cdc65391d8d2_8e91/files?category=other')
+        const [coursesResponse] = await Promise.all([
+          fetch('/api/public-courses'),
+          fetch('/api/public-files?category=other')
         ]);
 
         if (coursesResponse.ok) {
           const { courses } = await coursesResponse.json();
           setCourses(courses);
 
-
+          if (courses.length > 0) {
+            const randomCourse = courses[Math.floor(Math.random() * courses.length)];
+            if (randomCourse.image_url) {
+              setHeroImage(randomCourse.image_url);
+              setHeroImageAlt(randomCourse.image_alt || randomCourse.title);
+            }
+          }
         } else {
           setError('Failed to load courses');
-        }
-
-        if (heroImageResponse.ok) {
-          const { file } = await heroImageResponse.json();
-          setHeroImage(file.blob_url);
-          setHeroImageAlt(file.alt_text || 'Courses page hero image');
-        } else {
-          console.error('Failed to load hero image');
-          setHeroImage('https://bluvpssu00ym8qv7.public.blob.vercel-storage.com/other/1750011620811-IMG_8439.JPG'); // Fallback
-          setHeroImageAlt('Safety training in action');
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -160,20 +156,20 @@ export default function CoursesPageClient() {
 
   return (
     <div ref={sectionRef} className="min-h-screen pt-13">
-      <section className="relative text-white py-32">
+      <section className="relative text-white h-[700px]">
         <div className="absolute inset-0">
           {heroImage && (
             <Image
               src={heroImage}
               alt={heroImageAlt || 'Hero background'}
               fill
-              className="object-cover opacity-30"
+              className="object-cover object-center opacity-30"
               priority
               sizes="100vw"
             />
           )}
         </div>
-        <div className="relative container mx-auto px-4 text-center">
+        <div className="relative container mx-auto px-4 text-center flex flex-col items-center justify-center h-full">
           <h1 className="text-5xl md:text-7xl font-extrabold mb-4">Our Courses</h1>
           <p className="text-xl md:text-2xl text-yellow-400 font-semibold">Comprehensive Safety Training for a Secure Workplace</p>
         </div>
@@ -229,15 +225,14 @@ export default function CoursesPageClient() {
                   key={course.id}
                   className="course-card backdrop-blur-md bg-white/10 border border-white/20 rounded-xl shadow-xl overflow-hidden"
                 >
-                  <div className="relative">
+                  <div className="relative h-48">
                     {course.image_url ? (
                       <Image
                         src={course.image_url}
                         alt={course.image_alt || course.title}
                         width={400}
                         height={300}
-                        layout="responsive"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        className="object-cover w-full h-full"
                       />
                     ) : (
                       <div className="h-full flex items-center justify-center text-gray-200">
@@ -259,11 +254,11 @@ export default function CoursesPageClient() {
                     <h3 className="text-xl font-bold text-gray-100 mb-3">{course.title}</h3>
                     <div className="flex flex-wrap gap-4 mb-4 text-sm text-gray-300">
                       <div className="flex items-center space-x-1">
-                        <CourseIcon name="clock" className="h-6 w-6 text-yellow-500" />
+                        <CourseIcon name="clock" className="h-6 w-6 text-yellow-500 flex-shrink-0" />
                         <span>{course.duration}</span>
                       </div>
                       <div className="flex items-center space-x-1">
-                        <CourseIcon name="users" className="h-10 w-10 text-yellow-500" />
+                        <CourseIcon name="users" className="h-6 w-6 text-yellow-500 flex-shrink-0" />
                         <span>{course.audience}</span>
                       </div>
                     </div>

@@ -54,20 +54,39 @@ export default function FeaturedCourses() {
     const iconContainers = ref.current.querySelectorAll('.icon-container');
     iconContainers.forEach(container => {
       const icon = container.querySelector('.icon');
-      container.addEventListener('mouseenter', () => {
-        gsap.to(icon, {
-          rotation: 360,
-          duration: 1,
-          ease: 'power3.out'
+      const iconName = icon?.getAttribute('data-icon-name'); // Assuming you add a data-icon-name attribute
+
+      if (iconName === 'clock') {
+        container.addEventListener('mouseenter', () => {
+          gsap.to(icon, {
+            rotation: 360,
+            duration: 1,
+            ease: 'power3.out'
+          });
         });
-      });
-      container.addEventListener('mouseleave', () => {
-        gsap.to(icon, {
-          rotation: 0,
-          duration: 1,
-          ease: 'power3.out'
+        container.addEventListener('mouseleave', () => {
+          gsap.to(icon, {
+            rotation: 0,
+            duration: 1,
+            ease: 'power3.out'
+          });
         });
-      });
+      } else if (iconName === 'users') {
+        container.addEventListener('mouseenter', () => {
+          gsap.to(icon, {
+            scale: 1.2,
+            duration: 0.3,
+            ease: 'power3.out'
+          });
+        });
+        container.addEventListener('mouseleave', () => {
+          gsap.to(icon, {
+            scale: 1,
+            duration: 0.3,
+            ease: 'power3.out'
+          });
+        });
+      }
     });
 
     const courseCards = ref.current.querySelectorAll('.course-card');
@@ -90,11 +109,11 @@ export default function FeaturedCourses() {
   });
 
   useEffect(() => {
-    fetch('/api/courses')
+    fetch('/api/public-courses?featured=true&limit=3')
       .then((res) => res.json())
       .then((data) => {
         if (data && Array.isArray(data.courses)) {
-          setCourses(data.courses.filter((course: Course) => course.popular).slice(0, 3));
+          setCourses(data.courses);
         } else {
           setError('Failed to load featured courses');
         }
@@ -142,16 +161,15 @@ export default function FeaturedCourses() {
               key={course.id}
               className="course-card backdrop-blur-md bg-white/10 border border-white/20 rounded-xl shadow-xl overflow-hidden"
             >
-              <div className="relative">
+              <div className="relative h-48">
                 {course.image_url ? (
                   <Image
                     src={course.image_url}
                     alt={course.image_alt || course.title}
-                    width={400}
-                    height={300}
-                    layout="responsive"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    fill
+                    sizes="100vw"
                     quality={75}
+                    className="object-cover"
                   />
                 ) : (
                   <div className="h-full flex items-center justify-center text-gray-200">
@@ -165,27 +183,29 @@ export default function FeaturedCourses() {
               </div>
 
               <div className="p-6 flex flex-col flex-1">
-                <div className="mb-4">
-                  <span className="bg-yellow-500/10 text-yellow-600 px-3 py-1 rounded-full text-sm font-medium">
-                    {course.category?.name || 'Uncategorized'}
-                  </span>
-                </div>
-                <h3 className="text-xl font-bold text-gray-100 mb-3">{course.title}</h3>
-                <div className="flex flex-wrap gap-4 mb-4 text-sm text-gray-300">
-                  <div className="flex items-center space-x-1 icon-container">
-                    <CourseIcon name="clock" className="h-6 w-6 text-yellow-500 icon" />
-                    <span>{course.duration}</span>
+                <div className="flex-1">
+                  <div className="mb-4">
+                    <span className="bg-yellow-500/10 text-yellow-600 px-3 py-1 rounded-full text-sm font-medium">
+                      {course.category?.name || 'Uncategorized'}
+                    </span>
                   </div>
-                  <div className="flex items-center space-x-1 icon-container">
-                    <CourseIcon name="users" className="h-10 w-10 text-yellow-500 icon" />
-                    <span>{course.audience}</span>
+                  <h3 className="text-xl font-bold text-gray-100 mb-3">{course.title}</h3>
+                  <div className="flex flex-wrap gap-4 mb-4 text-sm text-gray-300">
+                    <div className="flex items-center space-x-1 icon-container">
+                      <CourseIcon name="clock" className="h-6 w-6 text-yellow-500 icon flex-shrink-0" data-icon-name="clock" />
+                      <span>{course.duration}</span>
+                    </div>
+                    <div className="flex items-center space-x-1 icon-container">
+                      <CourseIcon name="users" className="h-6 w-6 text-yellow-500 icon flex-shrink-0" data-icon-name="users" />
+                      <span>{course.audience}</span>
+                    </div>
                   </div>
+                  <p className="text-gray-400 mb-6 leading-relaxed line-clamp-3">
+                    {course.description}
+                  </p>
                 </div>
-                <p className="text-gray-400 mb-6 leading-relaxed line-clamp-3">
-                  {course.description}
-                </p>
 
-                <div className="flex flex-col sm:flex-row gap-3 mt-auto mb-4">
+                <div className="flex flex-col sm:flex-row gap-3 mt-auto mb-4 flex-shrink-0">
                   <Link
                     href={`/courses/${course.slug}`}
                     className="flex-1 bg-yellow-500 hover:bg-yellow-600 text-gray-900 px-4 py-3 rounded-lg font-semibold text-center transition-all duration-200 transform hover:-translate-y-1 hover:shadow flex items-center justify-center space-x-2 animate-fadeIn"

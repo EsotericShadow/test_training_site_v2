@@ -431,7 +431,7 @@ export default function SecureContactForm({
     return (
       <div className={`text-center ${className}`}>
         <FormIcon name="check-circle" className="h-16 w-16 text-green-500 mx-auto mb-4" />
-        <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Message Sent Successfully!</h3>
+        <h3 className="text-2xl font-bold bg-white dark:bg-gray-800 text-gray-900 dark:text-white mb-2">Message Sent Successfully!</h3>
         <p className="text-gray-600 dark:text-gray-400 mb-6">
           Thank you for your inquiry. We&apos;ll get back to you within 24 hours.
         </p>
@@ -441,7 +441,7 @@ export default function SecureContactForm({
             initializeSecurity();
             startTimeRef.current = Date.now();
           }}
-          className="bg-brand-yellow hover:bg-brand-yellow-dark text-gray-900 dark:text-white px-6 py-2 rounded-lg font-semibold transition-all duration-200"
+          className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 dark:bg-yellow-500 dark:hover:bg-yellow-600 dark:text-gray-900 px-6 py-2 rounded-lg font-semibold transition-all duration-200"
         >
           Send Another Message
         </button>
@@ -504,7 +504,7 @@ export default function SecureContactForm({
               required
               value={formData.name}
               onChange={handleInputChange}
-              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-brand-yellow focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors duration-200 ${
+              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-brand-yellow focus:border-transparent bg-white dark:bg-gray-800 bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors duration-200 ${
                 errors.name ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
               }`}
               placeholder="Enter your full name"
@@ -528,7 +528,7 @@ export default function SecureContactForm({
               required
               value={formData.email}
               onChange={handleInputChange}
-              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-brand-yellow focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors duration-200 ${
+              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-brand-yellow focus:border-transparent bg-white dark:bg-gray-800 bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors duration-200 ${
                 errors.email ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
               }`}
               placeholder="Enter your email address"
@@ -554,7 +554,7 @@ export default function SecureContactForm({
               name="company"
               value={formData.company}
               onChange={handleInputChange}
-              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-brand-yellow focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors duration-200 ${
+              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-brand-yellow focus:border-transparent bg-white dark:bg-gray-800 bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors duration-200 ${
                 errors.company ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
               }`}
               placeholder="Enter your company name"
@@ -577,7 +577,7 @@ export default function SecureContactForm({
               name="phone"
               value={formData.phone}
               onChange={handleInputChange}
-              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-brand-yellow focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors duration-200 ${
+              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-brand-yellow focus:border-transparent bg-white dark:bg-gray-800 bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors duration-200 ${
                 errors.phone ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
               }`}
               placeholder="Enter your phone number"
@@ -601,7 +601,7 @@ export default function SecureContactForm({
             name="trainingType"
             value={formData.trainingType}
             onChange={handleInputChange}
-            className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-yellow focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors duration-200"
+            className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-yellow focus:border-transparent bg-white dark:bg-gray-800 bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors duration-200"
           >
             <option value="">Select a training type</option>
             <option value="fall-protection">Fall Protection</option>
@@ -626,7 +626,7 @@ export default function SecureContactForm({
             rows={6}
             value={formData.message}
             onChange={handleInputChange}
-            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-brand-yellow focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors duration-200 resize-vertical ${
+            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-brand-yellow focus:border-transparent bg-white dark:bg-gray-800 bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors duration-200 resize-vertical ${
               errors.message ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
             }`}
             placeholder="Tell us about your training needs, group size, preferred dates, or any specific requirements..."
@@ -655,7 +655,7 @@ export default function SecureContactForm({
             className={`px-8 py-3 rounded-lg font-semibold transition-all duration-200 flex items-center space-x-2 ${
               isSubmitting || isBlocked
                 ? 'bg-gray-400 cursor-not-allowed text-gray-700'
-                : 'bg-brand-yellow hover:bg-brand-yellow-dark text-gray-900 hover:shadow-lg transform hover:-translate-y-0.5'
+                : 'bg-yellow-500 hover:bg-yellow-600 text-gray-900 dark:bg-yellow-500 dark:hover:bg-yellow-600 dark:text-gray-900 hover:shadow-lg transform hover:-translate-y-0.5'
             }`}
           >
             {isSubmitting ? (
