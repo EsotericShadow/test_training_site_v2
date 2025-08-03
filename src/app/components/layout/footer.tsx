@@ -1,12 +1,14 @@
 /*
- * Evergreen Web Solutions
- * Written and developed by Gabriel Lacroix
+ * Karma Industrial Safety Training Website
+ * Written and developed by Gabriel Lacroix for Evergreen Web Solutions
  *
  * File: footer.tsx
- * Description: To be filled in with the script's purpose
- * Dependencies: To be filled in with key dependencies or modules
- * Created: August 2, 2025
- * Last Modified: August 2, 2025
+ * Description: Site footer component displaying company information, navigation links,
+ *              popular courses, contact details, and social media links. Features
+ *              responsive grid layout and consistent branding elements.
+ * Dependencies: React 19, Next.js 15, Next Image, custom LayoutIcon component
+ * Created: June 3, 2025
+ * Last Modified: August 3, 2025
  * Version: 1.0.0
  */
 'use client';
@@ -31,6 +33,23 @@ interface FooterProps {
   popularCourses: PopularCourse[];
 }
 
+/**
+ * Site footer component that displays comprehensive site information and navigation
+ * 
+ * WHY: Provides essential company information, additional navigation options,
+ *      and contact methods while maintaining consistent site branding
+ * 
+ * HOW: Uses responsive grid layout to organize content sections, integrates
+ *      CMS-managed content, and includes social media and contact links
+ * 
+ * WHAT: Renders company branding, quick links, popular courses, contact information,
+ *       and copyright details in a structured footer layout
+ * 
+ * @param {FooterProps} props - Component props
+ * @param {FooterContent|null} props.footerContent - CMS-managed footer content
+ * @param {PopularCourse[]} props.popularCourses - Array of popular courses for navigation
+ * @returns {JSX.Element} Complete site footer with all sections
+ */
 export default function Footer({ footerContent, popularCourses }: FooterProps) {
 
   return (

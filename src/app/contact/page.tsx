@@ -1,12 +1,14 @@
 /*
- * Evergreen Web Solutions
- * Written and developed by Gabriel Lacroix
+ * Karma Industrial Safety Training Website
+ * Written and developed by Gabriel Lacroix for Evergreen Web Solutions
  *
  * File: page.tsx
- * Description: To be filled in with the script's purpose
- * Dependencies: To be filled in with key dependencies or modules
- * Created: August 2, 2025
- * Last Modified: August 2, 2025
+ * Description: Contact page server component that generates contact-focused SEO metadata
+ *              and renders the contact page with structured data for enhanced local search
+ *              visibility and contact information accessibility.
+ * Dependencies: Next.js 15, React 19, custom ContactPageClient component
+ * Created: June 3, 2025
+ * Last Modified: August 3, 2025
  * Version: 1.0.0
  */
 // Fixed version of src/app/contact/page.tsx
@@ -14,7 +16,19 @@
 import { Metadata } from 'next';
 import ContactPageClient from './ContactPageClient';
 
-// Generate metadata for SEO (replaces NextSeo)
+/**
+ * Generates contact page metadata optimized for local search and contact discovery
+ * 
+ * WHY: Contact page metadata is crucial for local SEO and helps potential customers
+ *      find contact information through search engines and social media
+ * 
+ * HOW: Creates metadata emphasizing contact methods, response times, and local service
+ *      area with proper format detection for phone numbers and email addresses
+ * 
+ * WHAT: Returns metadata focused on contact accessibility and local business presence
+ * 
+ * @returns {Promise<Metadata>} Contact-optimized metadata for local search
+ */
 export async function generateMetadata(): Promise<Metadata> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://test-training-site-v2-xjey.vercel.app';
   
@@ -72,7 +86,19 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-// Server component wrapper
+/**
+ * Contact page server component that renders contact information with structured data
+ * 
+ * WHY: Server-side rendering ensures contact information is immediately available
+ *      and properly indexed by search engines for local business discovery
+ * 
+ * HOW: Generates comprehensive JSON-LD structured data for business contact information
+ *      and renders the client component for interactive contact functionality
+ * 
+ * WHAT: Returns complete contact page with structured data for enhanced local SEO
+ * 
+ * @returns {JSX.Element} Complete contact page with structured business data
+ */
 export default function ContactPage() {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://test-training-site-v2-xjey.vercel.app';
 

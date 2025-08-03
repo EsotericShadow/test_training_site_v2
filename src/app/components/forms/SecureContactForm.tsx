@@ -1,12 +1,13 @@
 /*
- * Evergreen Web Solutions
- * Written and developed by Gabriel Lacroix
+ * Karma Industrial Safety Training Website
+ * Written and developed by Gabriel Lacroix for Evergreen Web Solutions
  *
  * File: SecureContactForm.tsx
- * Description: To be filled in with the script's purpose
- * Dependencies: To be filled in with key dependencies or modules
- * Created: August 2, 2025
- * Last Modified: August 2, 2025
+ * Description: Secure contact form component implementing input validation and submission.
+ *              Integrates security measures like CSRF token, honeypot field, and security scoring.
+ * Dependencies: React 19, Next.js 15, custom FormIcon component
+ * Created: June 6, 2025
+ * Last Modified: August 3, 2025
  * Version: 1.0.0
  */
 'use client';
@@ -76,6 +77,17 @@ export default function SecureContactForm({
   const startTimeRef = useRef<number>(Date.now());
 
   // Calculate security score based on various factors
+  /**
+   * Calculates security score based on environmental and user interaction factors
+   * 
+   * WHY: Security scoring helps detect potential bot activity and ensures form
+   *      submissions come from legitimate users on supported platforms
+   * 
+   * HOW: Calculates score based on HTTPS status, browser capabilities, referrer
+   *      validation, and form completion time with total possible score of 100
+   * 
+   * WHAT: Assigns weighted scores to various security checks to create a robust security profile
+   */
   const calculateSecurityScore = useCallback(() => {
     let score = 0;
 
@@ -154,6 +166,22 @@ export default function SecureContactForm({
   }, [calculateSecurityScore]);
 
   // Real-time input validation
+  /**
+   * Validates individual form fields to ensure accurate and secure data collection
+   * 
+   * WHY: Form field validation prevents malformed data and enhances user experience
+   *      by providing immediate feedback on incorrect input
+   * 
+   * HOW: Utilizes regex patterns and logical conditions tailored to each field type
+   *      to check for completeness, format accuracy, and prevent unwanted content
+   * 
+   * WHAT: Returns an appropriate error message or an empty string for valid fields
+   *       indicating the success of validation check
+   * 
+   * @param {string} name - The name of the form field to validate
+   * @param {string} value - The current value of the form field to validate
+   * @returns {string} Error message if validation fails, empty if successful
+   */
   const validateField = (name: string, value: string): string => {
     switch (name) {
       case 'name':
@@ -295,6 +323,19 @@ export default function SecureContactForm({
   };
 
   // Handle form submission
+  /**
+   * Handles form submission process with security and validation checks
+   * 
+   * WHY: Ensures that user input is secure, valid, and processed correctly on submission
+   * 
+   * HOW: Executes a sequence of checks including validation, security checks and
+   *      interaction with server-side endpoint for data processing and response handling
+   * 
+   * WHAT: Manages submission state, handles error messages, and resets form upon success
+   * 
+   * @param {React.FormEvent} e - Form event triggering the submission process
+   * @returns {Promise<void>}
+   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -402,7 +443,7 @@ export default function SecureContactForm({
           }}
           className="bg-brand-yellow hover:bg-brand-yellow-dark text-gray-900 dark:text-white px-6 py-2 rounded-lg font-semibold transition-all duration-200"
         >
-          Try Again
+          Send Another Message
         </button>
       </div>
     );
@@ -464,13 +505,16 @@ export default function SecureContactForm({
               value={formData.name}
               onChange={handleInputChange}
               className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-brand-yellow focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors duration-200 ${
-                errors.name ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-gray-600'
+                errors.name ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
               }`}
-              placeholder="Your full name"
-              maxLength={100}
-              autoComplete="name"
+              placeholder="Enter your full name"
             />
-            {errors.name && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.name}</p>}
+            {errors.name && (
+              <p className="mt-1 text-sm text-red-600 dark:text-red-400 flex items-center">
+                <FormIcon name="alert-circle" className="h-4 w-4 mr-1" />
+                {errors.name}
+              </p>
+            )}
           </div>
 
           <div>
@@ -485,13 +529,16 @@ export default function SecureContactForm({
               value={formData.email}
               onChange={handleInputChange}
               className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-brand-yellow focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors duration-200 ${
-                errors.email ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-gray-600'
+                errors.email ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
               }`}
-              placeholder="your@email.com"
-              maxLength={254}
-              autoComplete="email"
+              placeholder="Enter your email address"
             />
-            {errors.email && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.email}</p>}
+            {errors.email && (
+              <p className="mt-1 text-sm text-red-600 dark:text-red-400 flex items-center">
+                <FormIcon name="alert-circle" className="h-4 w-4 mr-1" />
+                {errors.email}
+              </p>
+            )}
           </div>
         </div>
 
@@ -508,13 +555,16 @@ export default function SecureContactForm({
               value={formData.company}
               onChange={handleInputChange}
               className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-brand-yellow focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors duration-200 ${
-                errors.company ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-gray-600'
+                errors.company ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
               }`}
-              placeholder="Your company"
-              maxLength={200}
-              autoComplete="organization"
+              placeholder="Enter your company name"
             />
-            {errors.company && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.company}</p>}
+            {errors.company && (
+              <p className="mt-1 text-sm text-red-600 dark:text-red-400 flex items-center">
+                <FormIcon name="alert-circle" className="h-4 w-4 mr-1" />
+                {errors.company}
+              </p>
+            )}
           </div>
 
           <div>
@@ -527,21 +577,24 @@ export default function SecureContactForm({
               name="phone"
               value={formData.phone}
               onChange={handleInputChange}
-              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-brand-yellow focus:border-transparent bg-white dark:bg-gray-800 text-gray-400 dark:text-white transition-colors duration-200 ${
-                errors.phone ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-gray-600'
+              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-brand-yellow focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors duration-200 ${
+                errors.phone ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
               }`}
-              placeholder="(250) 555-0123"
-              maxLength={20}
-              autoComplete="tel"
+              placeholder="Enter your phone number"
             />
-            {errors.phone && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.phone}</p>}
+            {errors.phone && (
+              <p className="mt-1 text-sm text-red-600 dark:text-red-400 flex items-center">
+                <FormIcon name="alert-circle" className="h-4 w-4 mr-1" />
+                {errors.phone}
+              </p>
+            )}
           </div>
         </div>
 
         {/* Training Type */}
         <div>
-          <label htmlFor="trainingType" className="block text-sm font-medium text-gray-400 dark:text-gray-300 mb-2">
-            Training Interest
+          <label htmlFor="trainingType" className="block text-sm font-medium text-gray-300 dark:text-gray-300 mb-2">
+            Training Type of Interest
           </label>
           <select
             id="trainingType"
@@ -550,21 +603,20 @@ export default function SecureContactForm({
             onChange={handleInputChange}
             className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-yellow focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors duration-200"
           >
-            <option value="">Select a training program</option>
-            <option value="kist-orientation">KIST Orientation to Workplace Safety</option>
-            <option value="whmis">WHMIS 2018 GHS</option>
+            <option value="">Select a training type</option>
             <option value="fall-protection">Fall Protection</option>
             <option value="confined-space">Confined Space Entry</option>
-            <option value="equipment-training">Equipment Operator Training</option>
+            <option value="hazmat">Hazardous Materials</option>
+            <option value="first-aid">First Aid & CPR</option>
+            <option value="safety-leadership">Safety Leadership</option>
             <option value="custom">Custom Training Program</option>
-            <option value="consultation">Safety Consultation</option>
             <option value="other">Other</option>
           </select>
         </div>
 
         {/* Message */}
         <div>
-          <label htmlFor="message" className="block text-sm font-medium text-gray-400 dark:text-gray-300 mb-2">
+          <label htmlFor="message" className="block text-sm font-medium text-gray-300 dark:text-gray-300 mb-2">
             Message *
           </label>
           <textarea
@@ -575,42 +627,46 @@ export default function SecureContactForm({
             value={formData.message}
             onChange={handleInputChange}
             className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-brand-yellow focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors duration-200 resize-vertical ${
-              errors.message ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-gray-600'
+              errors.message ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
             }`}
-            placeholder="Tell us about your training needs, number of participants, preferred dates, or any specific requirements..."
-            maxLength={5000}
+            placeholder="Tell us about your training needs, group size, preferred dates, or any specific requirements..."
           />
-          {errors.message && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.message}</p>}
-          <p className="mt-1 text-sm text-gray-400 dark:text-gray-400">
+          {errors.message && (
+            <p className="mt-1 text-sm text-red-600 dark:text-red-400 flex items-center">
+              <FormIcon name="alert-circle" className="h-4 w-4 mr-1" />
+              {errors.message}
+            </p>
+          )}
+          <p className="mt-1 text-sm text-gray-500">
             {formData.message.length}/5000 characters
           </p>
         </div>
 
-        {/* Submit Button */}
+        {/* Submit button */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2 text-sm text-gray-300 dark:text-gray-400">
-            <FormIcon name="shield" className="h-6 w-6" />
+          <div className="flex items-center space-x-2 text-sm text-gray-500">
+            <FormIcon name="lock" className="h-4 w-4" />
             <span>Your information is secure and encrypted</span>
           </div>
-
+          
           <button
             type="submit"
             disabled={isSubmitting || isBlocked}
-            className={`flex items-center space-x-2 px-8 py-3 rounded-lg font-semibold text-lg transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg ${
+            className={`px-8 py-3 rounded-lg font-semibold transition-all duration-200 flex items-center space-x-2 ${
               isSubmitting || isBlocked
-                ? 'bg-gray-400 text-gray-300 cursor-not-allowed'
-                : 'bg-amber-400 hover:bg-amber-500 text-gray-900 dark:text-white'
+                ? 'bg-gray-400 cursor-not-allowed text-gray-700'
+                : 'bg-brand-yellow hover:bg-brand-yellow-dark text-gray-900 hover:shadow-lg transform hover:-translate-y-0.5'
             }`}
           >
             {isSubmitting ? (
               <>
-                <FormIcon name="loader-2" className="h-5 w-5 animate-spin" />
+                <FormIcon name="loader" className="h-5 w-5 animate-spin" />
                 <span>Sending...</span>
               </>
             ) : (
               <>
                 <FormIcon name="send" className="h-5 w-5" />
-                <span>Submit</span>
+                <span>Send Message</span>
               </>
             )}
           </button>
@@ -619,6 +675,7 @@ export default function SecureContactForm({
     </div>
   );
 }
+
 
 
 //   ___________       *Written and developed by Gabriel Lacroix*               __      ___.

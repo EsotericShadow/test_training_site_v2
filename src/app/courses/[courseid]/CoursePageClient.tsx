@@ -1,12 +1,12 @@
 /*
- * Evergreen Web Solutions
- * Written and developed by Gabriel Lacroix
+ * Karma Industrial Safety Training Website
+ * Written and developed by Gabriel Lacroix for Evergreen Web Solutions
  *
  * File: CoursePageClient.tsx
- * Description: To be filled in with the script's purpose
- * Dependencies: To be filled in with key dependencies or modules
- * Created: August 2, 2025
- * Last Modified: August 2, 2025
+ * Description: Client-side individual Course page component with detailed course information and enrollment.
+ * Dependencies: React 19, Next.js 15, course data management
+ * Created: June 3, 2025
+ * Last Modified: August 3, 2025
  * Version: 1.0.0
  */
 'use client';

@@ -1,12 +1,14 @@
 /*
- * Evergreen Web Solutions
- * Written and developed by Gabriel Lacroix
+ * Karma Industrial Safety Training Website
+ * Written and developed by Gabriel Lacroix for Evergreen Web Solutions
  *
  * File: page.tsx
- * Description: To be filled in with the script's purpose
- * Dependencies: To be filled in with key dependencies or modules
- * Created: August 2, 2025
- * Last Modified: August 2, 2025
+ * Description: Main homepage server component that handles SEO metadata generation,
+ *              fetches hero section data, and renders the home page with dynamic components.
+ *              Includes JSON-LD structured data for search engine optimization.
+ * Dependencies: Next.js 15, React 19, GSAP animations, dynamic imports
+ * Created: June 3, 2025
+ * Last Modified: August 3, 2025
  * Version: 1.0.0
  */
 import { Metadata } from 'next';
@@ -20,7 +22,20 @@ const DynamicHeroSection = dynamicComponent(() => import('@/app/components/home/
 
 export const dynamic = 'force-dynamic';
 
-// Fetch hero data server-side for better performance
+/**
+ * Fetches hero section data from the API server-side for optimal performance
+ * 
+ * WHY: Server-side data fetching improves initial page load times and SEO by
+ *      providing content during the initial HTML render rather than client-side hydration
+ * 
+ * HOW: Makes a fetch request to the internal API endpoint with cache disabled
+ *      to ensure fresh data on each page load
+ * 
+ * WHAT: Returns hero section content, statistics, and features data with fallback
+ *       values if the API call fails
+ * 
+ * @returns {Promise<Object>} Object containing heroSection, heroStats, and heroFeatures
+ */
 async function getHeroData() {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/adm_f7f8556683f1cdc65391d8d2_8e91/hero-section`, { cache: 'no-store' });
@@ -45,7 +60,20 @@ async function getHeroData() {
   };
 }
 
-// Generate metadata for SEO (replaces NextSeo)
+/**
+ * Generates comprehensive metadata for SEO optimization using Next.js 15 App Router
+ * 
+ * WHY: Proper metadata is crucial for search engine ranking, social media sharing,
+ *      and user experience. Replaces the deprecated NextSeo component.
+ * 
+ * HOW: Dynamically generates metadata including OpenGraph, Twitter Cards, structured data,
+ *      and performance optimization hints based on hero section data
+ * 
+ * WHAT: Returns a complete Metadata object with title, description, social media tags,
+ *       verification codes, and preload hints for critical resources
+ * 
+ * @returns {Promise<Metadata>} Next.js metadata object for the page
+ */
 export async function generateMetadata(): Promise<Metadata> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://test-training-site-v2-xjey.vercel.app';
   
@@ -114,7 +142,20 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-// Server component (no 'use client' directive)
+/**
+ * Main homepage server component that orchestrates the entire home page experience
+ * 
+ * WHY: Server components provide better performance by rendering on the server,
+ *      reducing client-side JavaScript bundle size and improving Core Web Vitals
+ * 
+ * HOW: Fetches all necessary data server-side, generates structured data for SEO,
+ *      and renders the page with Suspense boundaries for progressive loading
+ * 
+ * WHAT: Renders the complete homepage including hero section, featured courses,
+ *       about snippet, and includes JSON-LD structured data for rich search results
+ * 
+ * @returns {Promise<JSX.Element>} The complete homepage JSX structure
+ */
 export default async function Home() {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://test-training-site-v2-xjey.vercel.app';
   

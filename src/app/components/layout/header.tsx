@@ -1,12 +1,14 @@
 /*
- * Evergreen Web Solutions
- * Written and developed by Gabriel Lacroix
+ * Karma Industrial Safety Training Website
+ * Written and developed by Gabriel Lacroix for Evergreen Web Solutions
  *
  * File: header.tsx
- * Description: To be filled in with the script's purpose
- * Dependencies: To be filled in with key dependencies or modules
- * Created: August 2, 2025
- * Last Modified: August 2, 2025
+ * Description: Responsive navigation header with auto-hide functionality, dropdown menus,
+ *              and mobile-friendly navigation. Features contact information bar and
+ *              categorized course navigation with smooth animations and accessibility.
+ * Dependencies: React 19, Next.js 15, custom LayoutIcon component, Logo component
+ * Created: June 3, 2025
+ * Last Modified: August 3, 2025
  * Version: 1.0.0
  */
 'use client'
@@ -29,6 +31,22 @@ interface HeaderProps {
   courseCategories: CourseCategories;
 }
 
+/**
+ * Main header navigation component with responsive design and auto-hide functionality
+ * 
+ * WHY: Provides intuitive navigation experience with organized course categories,
+ *      contact information accessibility, and smooth scroll-based header behavior
+ * 
+ * HOW: Uses React hooks for state management, scroll event listeners for auto-hide,
+ *      and responsive design patterns for mobile and desktop navigation
+ * 
+ * WHAT: Renders a fixed header with contact bar, logo, navigation menu, and dropdown
+ *       for course categories with mobile hamburger menu fallback
+ * 
+ * @param {HeaderProps} props - Component props
+ * @param {CourseCategories} props.courseCategories - Organized course data for navigation
+ * @returns {JSX.Element} Complete responsive header navigation
+ */
 export default function Header({ courseCategories }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isCoursesOpen, setIsCoursesOpen] = useState(false)
@@ -38,6 +56,17 @@ export default function Header({ courseCategories }: HeaderProps) {
   const dropdownRef = useRef<HTMLDivElement>(null)
   const headerRef = useRef<HTMLElement>(null)
 
+  /**
+   * Auto-hide header functionality based on scroll direction
+   * 
+   * WHY: Improves user experience by maximizing content visibility while
+   *      maintaining navigation accessibility when scrolling up
+   * 
+   * HOW: Tracks scroll position and direction to show/hide header with
+   *      transform animations for smooth transitions
+   * 
+   * WHAT: Shows header when scrolling up or near top, hides when scrolling down
+   */
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY
@@ -48,6 +77,17 @@ export default function Header({ courseCategories }: HeaderProps) {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [lastScrollY])
 
+  /**
+   * Click outside handler to close dropdown menus and mobile navigation
+   * 
+   * WHY: Improves user experience by automatically closing menus when clicking
+   *      outside, preventing menu state conflicts and maintaining clean UI
+   * 
+   * HOW: Listens for mousedown events and checks if click target is outside
+   *      the header component boundary using ref comparison
+   * 
+   * WHAT: Closes both mobile menu and course dropdown when clicking outside header
+   */
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (headerRef.current && !headerRef.current.contains(event.target as Node)) {
@@ -59,6 +99,16 @@ export default function Header({ courseCategories }: HeaderProps) {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
+  /**
+   * Navigation handler to close all menus when navigating to a new page
+   * 
+   * WHY: Ensures clean state transition when users navigate, preventing
+   *      open menus from persisting after page changes
+   * 
+   * HOW: Resets all menu state variables to false when called on navigation links
+   * 
+   * WHAT: Closes mobile menu and course dropdown menus
+   */
   const handleNavigation = () => {
     setIsMenuOpen(false)
     setIsCoursesOpen(false)

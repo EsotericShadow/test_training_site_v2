@@ -1,12 +1,14 @@
 /*
- * Evergreen Web Solutions
- * Written and developed by Gabriel Lacroix
+ * Karma Industrial Safety Training Website
+ * Written and developed by Gabriel Lacroix for Evergreen Web Solutions
  *
  * File: Logo.tsx
- * Description: To be filled in with the script's purpose
- * Dependencies: To be filled in with key dependencies or modules
- * Created: August 2, 2025
- * Last Modified: August 2, 2025
+ * Description: Reusable logo component with multiple size variants and optional text display.
+ *              Features responsive sizing, hover animations, and optimized image loading
+ *              for consistent branding across the application.
+ * Dependencies: Next.js 15 Image and Link components
+ * Created: June 3, 2025
+ * Last Modified: August 3, 2025
  * Version: 1.0.0
  */
 import Image from 'next/image'
@@ -18,6 +20,23 @@ interface LogoProps {
   showText?: boolean
 }
 
+/**
+ * Logo component with configurable sizing and text display options
+ * 
+ * WHY: Provides consistent branding across the application while allowing flexibility
+ *      for different layout contexts and responsive design requirements
+ * 
+ * HOW: Uses Next.js optimized Image component with predefined size variants and
+ *      conditional text display based on layout needs
+ * 
+ * WHAT: Renders the company logo with optional descriptive text and hover animations
+ * 
+ * @param {LogoProps} props - Component configuration options
+ * @param {'sm'|'md'|'lg'} [props.size='md'] - Size variant for different contexts
+ * @param {string} [props.className=''] - Additional CSS classes for styling
+ * @param {boolean} [props.showText=true] - Whether to display company text alongside logo
+ * @returns {JSX.Element} Clickable logo component linking to homepage
+ */
 export default function Logo({ size = 'md', className = '', showText = true }: LogoProps) {
   const sizeMap = {
     sm: { width: 120, height: 32, textSize: 'text-lg' },

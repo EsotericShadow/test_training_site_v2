@@ -1,12 +1,14 @@
 /*
- * Evergreen Web Solutions
- * Written and developed by Gabriel Lacroix
+ * Karma Industrial Safety Training Website
+ * Written and developed by Gabriel Lacroix for Evergreen Web Solutions
  *
  * File: layout.tsx
- * Description: To be filled in with the script's purpose
- * Dependencies: To be filled in with key dependencies or modules
- * Created: August 2, 2025
- * Last Modified: August 2, 2025
+ * Description: Root layout component that provides the HTML structure, theme provider,
+ *              Google Analytics integration, and manages global layout including header,
+ *              main content area, and footer with server-side data fetching.
+ * Dependencies: Next.js 15, React 19, Vercel Analytics, custom theme provider, dynamic imports
+ * Created: June 3, 2025
+ * Last Modified: August 3, 2025
  * Version: 1.0.0
  */
 import Script from 'next/script';
@@ -74,6 +76,20 @@ interface FooterData {
   popularCourses: PopularCourse[];
 }
 
+/**
+ * Fetches and organizes course data into categories for navigation menu structure
+ * 
+ * WHY: The header navigation requires organized course data to display categorized
+ *      dropdown menus, improving user experience and content discoverability
+ * 
+ * HOW: Fetches courses from API, groups them by category, and sorts both categories
+ *      and courses alphabetically for consistent navigation presentation
+ * 
+ * WHAT: Returns a structured object with category names as keys and arrays of
+ *       course objects containing name and slug properties
+ * 
+ * @returns {Promise<CourseCategories>} Organized course data for navigation
+ */
 async function getCourseCategories(): Promise<CourseCategories> {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://test-training-site-v2-xjey.vercel.app';
@@ -102,6 +118,20 @@ async function getCourseCategories(): Promise<CourseCategories> {
   }
 }
 
+/**
+ * Fetches footer content and popular courses data for the site footer
+ * 
+ * WHY: Footer requires company information and popular course links that are
+ *      managed through the CMS and need to be dynamically loaded
+ * 
+ * HOW: Makes API request to footer endpoint and returns structured data with
+ *      fallback values if the request fails to ensure layout stability
+ * 
+ * WHAT: Returns footer content including company details and array of popular
+ *       courses for footer navigation links
+ * 
+ * @returns {Promise<FooterData>} Footer content and popular courses data
+ */
 async function getFooterData(): Promise<FooterData> {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://test-training-site-v2-xjey.vercel.app';
@@ -115,6 +145,22 @@ async function getFooterData(): Promise<FooterData> {
   }
 }
 
+/**
+ * Root layout component that wraps all pages with consistent structure and functionality
+ * 
+ * WHY: Provides the foundational HTML structure, global styling, analytics tracking,
+ *      and shared components like header and footer across all pages
+ * 
+ * HOW: Fetches necessary data server-side, sets up HTML document structure with
+ *      proper meta tags, integrates analytics, and renders shared layout components
+ * 
+ * WHAT: Returns the complete HTML document structure with theme provider, header,
+ *       main content area, footer, and analytics integration
+ * 
+ * @param {Object} props - Component props
+ * @param {React.ReactNode} props.children - Page content to render in main area
+ * @returns {Promise<JSX.Element>} Complete HTML document structure
+ */
 export default async function RootLayout({
   children,
 }: {

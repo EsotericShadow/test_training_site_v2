@@ -1,12 +1,14 @@
 /*
- * Evergreen Web Solutions
- * Written and developed by Gabriel Lacroix
+ * Karma Industrial Safety Training Website
+ * Written and developed by Gabriel Lacroix for Evergreen Web Solutions
  *
  * File: hero-section.tsx
- * Description: To be filled in with the script's purpose
- * Dependencies: To be filled in with key dependencies or modules
- * Created: August 2, 2025
- * Last Modified: August 2, 2025
+ * Description: Dynamic hero section component with GSAP animations that displays main
+ *              messaging, call-to-action buttons, and statistical highlights. Renders
+ *              server-fetched content with smooth entrance animations and responsive design.
+ * Dependencies: React 19, GSAP, Next.js Link, custom useGsap hook
+ * Created: June 3, 2025
+ * Last Modified: August 3, 2025
  * Version: 1.0.0
  */
 'use client';
@@ -43,7 +45,35 @@ interface HeroSectionProps {
   };
 }
 
+/**
+ * Main hero section component that displays the primary messaging and call-to-action
+ * 
+ * WHY: The hero section is the first thing users see and must immediately communicate
+ *      value proposition while creating visual impact and encouraging user engagement
+ * 
+ * HOW: Uses GSAP animations for smooth entrance effects, server-side data for content,
+ *      and responsive design patterns for optimal display across devices
+ * 
+ * WHAT: Renders main heading with highlight text, subtitle, dual call-to-action buttons,
+ *       and statistical highlights in a visually appealing animated layout
+ * 
+ * @param {HeroSectionProps} props - Component props containing initial data
+ * @param {Object} props.initialData - Server-fetched hero section and statistics data
+ * @returns {JSX.Element} The complete hero section with animations and content
+ */
 export default function HeroSection({ initialData }: HeroSectionProps) {
+  /**
+   * GSAP animation setup using custom hook for smooth entrance effects
+   * 
+   * WHY: Animations create engaging user experience and draw attention to key content
+   *      while maintaining professional appearance and accessibility
+   * 
+   * HOW: Uses GSAP timeline with staggered animations for sequential element reveals
+   *      with power3.out easing for natural motion feel
+   * 
+   * WHAT: Animates opacity and Y-transform on slogan, heading, subtitle, and buttons
+   *       with 150ms stagger delay between elements
+   */
   const sectionRef = useGsap(useCallback((ref) => {
     if (!ref.current) return;
 

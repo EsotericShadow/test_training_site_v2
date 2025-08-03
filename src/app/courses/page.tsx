@@ -1,12 +1,14 @@
 /*
- * Evergreen Web Solutions
- * Written and developed by Gabriel Lacroix
+ * Karma Industrial Safety Training Website
+ * Written and developed by Gabriel Lacroix for Evergreen Web Solutions
  *
  * File: page.tsx
- * Description: To be filled in with the script's purpose
- * Dependencies: To be filled in with key dependencies or modules
- * Created: August 2, 2025
- * Last Modified: August 2, 2025
+ * Description: Courses listing page server component that generates course-focused SEO metadata
+ *              and renders the courses overview page with structured data for enhanced course
+ *              discovery and educational content organization.
+ * Dependencies: Next.js 15, React 19, custom CoursesPageClient component
+ * Created: June 3, 2025
+ * Last Modified: August 3, 2025
  * Version: 1.0.0
  */
 // Fixed version of src/app/courses/page.tsx
@@ -14,7 +16,19 @@
 import { Metadata } from 'next';
 import CoursesPageClient from './CoursesPageClient';
 
-// Generate metadata for SEO (replaces NextSeo)
+/**
+ * Generates courses page metadata optimized for educational content discovery
+ * 
+ * WHY: Course listing metadata helps potential students discover training programs
+ *      through search engines and establishes educational authority
+ * 
+ * HOW: Creates metadata emphasizing course variety, compliance standards, and
+ *      educational outcomes with industry-specific keywords
+ * 
+ * WHAT: Returns metadata focused on course catalog and educational offerings
+ * 
+ * @returns {Promise<Metadata>} Course-optimized metadata for educational search
+ */
 export async function generateMetadata(): Promise<Metadata> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://test-training-site-v2-xjey.vercel.app';
   
@@ -72,7 +86,19 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-// Server component wrapper
+/**
+ * Courses page server component that renders course catalog with educational structured data
+ * 
+ * WHY: Server-side rendering ensures course information is immediately available
+ *      and properly structured for educational content indexing
+ * 
+ * HOW: Generates comprehensive JSON-LD structured data for educational organization
+ *      and course catalog information for enhanced search visibility
+ * 
+ * WHAT: Returns complete courses page with structured educational data
+ * 
+ * @returns {JSX.Element} Complete courses page with educational structured data
+ */
 export default function CoursesPage() {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://test-training-site-v2-xjey.vercel.app';
 

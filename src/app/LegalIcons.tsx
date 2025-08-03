@@ -1,13 +1,12 @@
 /*
- * Evergreen Web Solutions
- * Written and developed by Gabriel Lacroix
+ * Karma Industrial Safety Training Website
+ * Written and developed by Gabriel Lacroix for Evergreen Web Solutions
  *
  * File: LegalIcons.tsx
- * Description: This component provides a centralized way to render SVG icons used across the legal pages (e.g., Privacy Policy, Terms and Conditions).
- * It maps icon names to their corresponding SVG paths, allowing for easy reuse and consistent styling throughout the application's legal sections.
- * Dependencies: React
- * Created: 2025-07-19
- * Last Modified: August 2, 2025
+ * Description: Icon component for legal pages UI elements. Provides SVG icons for privacy and terms content.
+ * Dependencies: React 19, SVG components
+ * Created: June 3, 2025
+ * Last Modified: August 3, 2025
  * Version: 1.0.0
  */
 

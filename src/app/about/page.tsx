@@ -1,12 +1,14 @@
 /*
- * Evergreen Web Solutions
- * Written and developed by Gabriel Lacroix
+ * Karma Industrial Safety Training Website
+ * Written and developed by Gabriel Lacroix for Evergreen Web Solutions
  *
  * File: page.tsx
- * Description: To be filled in with the script's purpose
- * Dependencies: To be filled in with key dependencies or modules
- * Created: August 2, 2025
- * Last Modified: August 2, 2025
+ * Description: About page server component that generates SEO metadata, fetches team member
+ *              data, and renders structured data for the about page. Includes comprehensive
+ *              company information and team member profiles with JSON-LD integration.
+ * Dependencies: Next.js 15, React 19, custom AboutPageClient component
+ * Created: June 3, 2025
+ * Last Modified: August 3, 2025
  * Version: 1.0.0
  */
 import { Metadata } from 'next';
@@ -14,7 +16,19 @@ import AboutPageClient from './AboutPageClient';
 
 export const dynamic = 'force-dynamic';
 
-// Generate metadata for SEO (replaces NextSeo)
+/**
+ * Generates SEO metadata for the about page with company information and team details
+ * 
+ * WHY: About page metadata helps establish company credibility and expertise
+ *      while providing search engines with comprehensive business information
+ * 
+ * HOW: Creates detailed metadata including company history, team experience,
+ *      and service offerings optimized for local and industry-specific searches
+ * 
+ * WHAT: Returns metadata focused on company establishment, experience, and credentials
+ * 
+ * @returns {Promise<Metadata>} SEO-optimized metadata for the about page
+ */
 export async function generateMetadata(): Promise<Metadata> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://test-training-site-v2-xjey.vercel.app';
   
@@ -74,7 +88,19 @@ export async function generateMetadata(): Promise<Metadata> {
 
 import { type TeamMember } from '../../../types/database';
 
-// Server component wrapper
+/**
+ * About page server component that fetches team data and renders the complete about experience
+ * 
+ * WHY: Server-side rendering improves SEO and performance while ensuring team member
+ *      data is available during initial page load for better user experience
+ * 
+ * HOW: Fetches team member data from API, processes it for consistency, and renders
+ *      with structured data for enhanced search engine understanding
+ * 
+ * WHAT: Returns complete about page with team profiles and comprehensive company information
+ * 
+ * @returns {Promise<JSX.Element>} Complete about page with team data and structured data
+ */
 export default async function AboutPage() {
   const teamMembersRes = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/team-members`, { cache: 'no-store' });
   if (!teamMembersRes.ok) {
