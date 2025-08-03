@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import HomeIcon from './HomeIcons';
+import CourseIcon from '@/app/courses/CourseIcons';
 import { useGsap } from '@/app/hooks/useGsap';
 import { gsap } from 'gsap';
 
@@ -18,6 +18,7 @@ interface Course {
   popular: boolean;
   image_url?: string;
   image_alt?: string;
+  category?: { name: string };
 }
 
 export default function FeaturedCourses() {
@@ -37,6 +38,43 @@ export default function FeaturedCourses() {
         trigger: ref.current,
         start: 'top 80%',
       },
+    });
+
+    const iconContainers = ref.current.querySelectorAll('.icon-container');
+    iconContainers.forEach(container => {
+      const icon = container.querySelector('.icon');
+      container.addEventListener('mouseenter', () => {
+        gsap.to(icon, {
+          rotation: 360,
+          duration: 1,
+          ease: 'power3.out'
+        });
+      });
+      container.addEventListener('mouseleave', () => {
+        gsap.to(icon, {
+          rotation: 0,
+          duration: 1,
+          ease: 'power3.out'
+        });
+      });
+    });
+
+    const courseCards = ref.current.querySelectorAll('.course-card');
+    courseCards.forEach(card => {
+      card.addEventListener('mouseenter', () => {
+        gsap.to(card, {
+          scale: 1.05,
+          duration: 0.3,
+          ease: 'power3.out'
+        });
+      });
+      card.addEventListener('mouseleave', () => {
+        gsap.to(card, {
+          scale: 1,
+          duration: 0.3,
+          ease: 'power3.out'
+        });
+      });
     });
   });
 
@@ -89,32 +127,68 @@ export default function FeaturedCourses() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {courses.map((course) => (
-            <div key={course.id} className="course-card backdrop-blur-md bg-white/10 border border-white/20 rounded-xl shadow-xl overflow-hidden">
-              <div className="relative h-56">
+            <div
+              key={course.id}
+              className="course-card backdrop-blur-md bg-white/10 border border-white/20 rounded-xl shadow-xl overflow-hidden"
+            >
+              <div className="relative">
                 {course.image_url ? (
                   <Image
                     src={course.image_url}
                     alt={course.image_alt || course.title}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" quality={75}
+                    width={400}
+                    height={300}
+                    layout="responsive"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    quality={75}
                   />
                 ) : (
-                  <div className="h-full flex items-center justify-center">
-                    <HomeIcon name="camera" className="h-12 w-12 text-gray-300" />
+                  <div className="h-full flex items-center justify-center text-gray-200">
+                    <div className="text-center">
+                      <CourseIcon name="camera" className="h-8 w-8 mx-auto mb-2 text-yellow-500" />
+                      <p className="font-medium text-sm">{course.title}</p>
+                      <p className="text-xs">{course.image_alt || 'Professional safety training course'}</p>
+                    </div>
                   </div>
                 )}
               </div>
-              <div className="p-6">
-                <h3 className="text-2xl font-semibold mb-3 text-gray-100 dark:text-white">{course.title}</h3>
-                <p className="text-gray-200 dark:text-gray-400 mb-4 line-clamp-3">{course.description}</p>
-                <div className="flex justify-between items-center text-sm text-gray-400 dark:text-gray-400 mb-6">
-                  <div className="flex items-center"><HomeIcon name="clock" className="h-6 w-6 mr-1" /> {course.duration}</div>
-                  <div className="flex items-center"><HomeIcon name="users" className="h-10 w-10 mr-1" /> {course.audience}</div>
+
+              <div className="p-6 flex flex-col flex-1">
+                <div className="mb-4">
+                  <span className="bg-yellow-500/10 text-yellow-600 px-3 py-1 rounded-full text-sm font-medium">
+                    {course.category?.name || 'Uncategorized'}
+                  </span>
                 </div>
-                <Link href={`/courses/${course.slug}`} className="inline-flex items-center text-yellow-500 hover:text-yellow-600 font-semibold">
-                  Learn more about {course.title} <HomeIcon name="arrow-right" className="h-4 w-4 ml-2" />
-                </Link>
+                <h3 className="text-xl font-bold text-gray-100 mb-3">{course.title}</h3>
+                <div className="flex flex-wrap gap-4 mb-4 text-sm text-gray-300">
+                  <div className="flex items-center space-x-1 icon-container">
+                    <CourseIcon name="clock" className="h-6 w-6 text-yellow-500 icon" />
+                    <span>{course.duration}</span>
+                  </div>
+                  <div className="flex items-center space-x-1 icon-container">
+                    <CourseIcon name="users" className="h-10 w-10 text-yellow-500 icon" />
+                    <span>{course.audience}</span>
+                  </div>
+                </div>
+                <p className="text-gray-400 mb-6 leading-relaxed line-clamp-3">
+                  {course.description}
+                </p>
+
+                <div className="flex flex-col sm:flex-row gap-3 mt-auto mb-4">
+                  <Link
+                    href={`/courses/${course.slug}`}
+                    className="flex-1 bg-yellow-500 hover:bg-yellow-600 text-gray-900 px-4 py-3 rounded-lg font-semibold text-center transition-all duration-200 transform hover:-translate-y-1 hover:shadow flex items-center justify-center space-x-2 animate-fadeIn"
+                  >
+                    <span>Learn More</span>
+                    <CourseIcon name="arrow-right" className="h-4 w-4" />
+                  </Link>
+                  <Link
+                    href={`/courses/${course.slug}#request-syllabus`}
+                    className="inline-flex items-center justify-center space-x-2 bg-transparent border-2 border-amber-400 hover:bg-amber-400 hover:text-gray-900 text-white px-4 py-2 rounded-lg font-semibold text-lg transition-all duration-200 transform hover:-translate-y-1 hover:shadow"
+                  >
+                    <span>Get Syllabus</span>
+                  </Link>
+                </div>
               </div>
             </div>
           ))}
