@@ -1,13 +1,14 @@
 /*
- * Evergreen Web Solutions
- * Written and developed by Gabriel Lacroix
+ * Karma Industrial Safety Training Website
+ * Written and developed by Gabriel Lacroix for Evergreen Web Solutions
  *
- * File: page.tsx
- * Description: To be filled in with the script's purpose
- * Dependencies: To be filled in with key dependencies or modules
- * Created: August 2, 2025
- * Last Modified: August 2, 2025
- * Version: 1.0.0
+ * File: src/app/adm_f7f8556683f1cdc65391d8d2_8e91/footer/page.tsx
+ * Description: This component provides a comprehensive editor for managing all footer content,
+ *              including company information, stats, links, and certifications.
+ * Dependencies: React, Next.js, Lucide-React, Heroicons
+ * Created: 2025-06-08
+ * Last Modified: 2025-08-02
+ * Version: 1.0.6
  */
 'use client';
 
@@ -757,4 +758,4 @@ export default function FooterEditor() {
 //                    \_____  \ /  _ \|  | |  |  \   __\  |/  _ \ /    \ /  ___/                
 //                    /        (  <_> )  |_|  |  /|  | |  (  <_> )   |  \\___ \                 
 //                   /_______  /\____/|____/____/ |__| |__|\____/|___|  /____  >                
-//                           \/                                       \/     \/                 
+//                           \/ https://www.evergreenwebsolutions.ca  \/     \/                 

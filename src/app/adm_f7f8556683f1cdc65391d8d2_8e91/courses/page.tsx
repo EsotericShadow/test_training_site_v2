@@ -42,8 +42,8 @@
  * - Media: image_url, image_alt for accessibility
  * - SEO: URL slug for search engine optimization
  *
- * Created: August 2, 2025
- * Last Modified: August 2, 2025
+ * Created: 2025-06-06 
+ * Last Modified: 2025-08-02  
  * Version: 1.0.0
  */
 
@@ -1081,4 +1081,4 @@ export default function CourseManagement() {
 //                    \_____  \ /  _ \|  | |  |  \   __\  |/  _ \ /    \ /  ___/                
 //                    /        (  <_> )  |_|  |  /|  | |  (  <_> )   |  \\___ \                 
 //                   /_______  /\____/|____/____/ |__| |__|\____/|___|  /____  >                
-//                           \/                                       \/     \/                 
+//                           \/ https://www.evergreenwebsolutions.ca  \/     \/                 

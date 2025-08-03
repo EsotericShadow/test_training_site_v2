@@ -1,13 +1,13 @@
 /*
- * Evergreen Web Solutions
- * Written and developed by Gabriel Lacroix
+ * Karma Industrial Safety Training Website
+ * Written and developed by Gabriel Lacroix for Evergreen Web Solutions
  *
- * File: database-init.js
- * Description: To be filled in with the script's purpose
- * Dependencies: To be filled in with key dependencies or modules
- * Created: August 2, 2025
- * Last Modified: August 2, 2025
- * Version: 1.0.0
+ * File: scripts/database-init.js
+ * Description: This script initializes the database by running all pending migrations.
+ * Dependencies: @vercel/postgres, fs/promises, path
+ * Created: 2025-06-06
+ * Last Modified: 2025-08-02
+ * Version: 1.0.1
  */
 import { config } from 'dotenv';
 import { execSync } from 'child_process';

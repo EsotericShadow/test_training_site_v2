@@ -1,13 +1,13 @@
 /*
- * Evergreen Web Solutions
- * Written and developed by Gabriel Lacroix
+ * Karma Industrial Safety Training Website
+ * Written and developed by Gabriel Lacroix for Evergreen Web Solutions
  *
- * File: get-all-non-team-images.js
- * Description: To be filled in with the script's purpose
- * Dependencies: To be filled in with key dependencies or modules
- * Created: August 2, 2025
- * Last Modified: August 2, 2025
- * Version: 1.0.0
+ * File: scripts/get-all-non-team-images.js
+ * Description: Retrieves all active images from the database that are not categorized as team photos.
+ * Dependencies: @vercel/postgres
+ * Created: 2025-07-17
+ * Last Modified: 2025-08-02
+ * Version: 1.0.1
  */
 import { sql } from '@vercel/postgres';
 import { config } from 'dotenv';

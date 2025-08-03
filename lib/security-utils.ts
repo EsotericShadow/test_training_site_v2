@@ -1,13 +1,13 @@
 /*
- * Evergreen Web Solutions
- * Written and developed by Gabriel Lacroix
+ * Karma Industrial Safety Training Website
+ * Written and developed by Gabriel Lacroix for Evergreen Web Solutions
  *
- * File: security-utils.ts
- * Description: To be filled in with the script's purpose
- * Dependencies: To be filled in with key dependencies or modules
- * Created: August 2, 2025
- * Last Modified: August 2, 2025
- * Version: 1.0.0
+ * File: lib/security-utils.ts
+ * Description: Provides a suite of security utilities for input sanitization, validation, rate limiting, and more.
+ * Dependencies: isomorphic-dompurify, validator
+ * Created: 2025-07-17
+ * Last Modified: 2025-08-02
+ * Version: 1.0.3
  */
 
 // lib/security-utils.ts
@@ -402,4 +402,4 @@ export const securityHeaders: { [key: string]: string } = {
 //                    \_____  \ /  _ \|  | |  |  \   __\  |/  _ \ /    \ /  ___/                
 //                    /        (  <_> )  |_|  |  /|  | |  (  <_> )   |  \\___ \                 
 //                   /_______  /\____/|____/____/ |__| |__|\____/|___|  /____  >                
-//                           \/                                       \/     \/                 
+//                           \/ https://www.evergreenwebsolutions.ca  \/     \/                 

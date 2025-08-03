@@ -1,9 +1,9 @@
 
 /*
- * Evergreen Web Solutions
- * Written and developed by Gabriel Lacroix
+ * Karma Industrial Safety Training Website
+ * Written and developed by Gabriel Lacroix for Evergreen Web Solutions
  *
- * File: page.tsx (files/page.tsx)
+ * File: src/app/adm_f7f8556683f1cdc65391d8d2_8e91/files/page.tsx
  * Description: Comprehensive File Management System for Karma Training Website CMS.
  * This component provides a full-featured file management interface allowing administrators
  * to upload, organize, edit, and manage media files and documents. Features include
@@ -42,9 +42,9 @@
  * - company: Corporate branding and company assets
  * - other: Uncategorized or special purpose files
  *
- * Created: August 2, 2025
- * Last Modified: August 2, 2025
- * Version: 1.0.0
+ * Created: 2025-06-14
+ * Last Modified: 2025-08-02
+ * Version: 1.0.6
  */
 
 'use client';
@@ -1660,4 +1660,4 @@ export default function FileManagement() {
 //                    \_____  \ /  _ \|  | |  |  \   __\  |/  _ \ /    \ /  ___/                
 //                    /        (  <_> )  |_|  |  /|  | |  (  <_> )   |  \\___ \                 
 //                   /_______  /\____/|____/____/ |__| |__|\____/|___|  /____  >                
-//                           \/                                       \/     \/                 
+//                           \/ https://www.evergreenwebsolutions.ca  \/     \/                 

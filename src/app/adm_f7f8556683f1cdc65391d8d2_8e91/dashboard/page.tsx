@@ -1,8 +1,8 @@
 /*
- * Evergreen Web Solutions
- * Written and developed by Gabriel Lacroix
+ * Karma Industrial Safety Training Website
+ * Written and developed by Gabriel Lacroix for Evergreen Web Solutions
  *
- * File: page.tsx
+ * File: src/app/adm_f7f8556683f1cdc65391d8d2_8e91/dashboard/page.tsx
  * Description: Admin Dashboard Main Page Component for Karma Training Website CMS.
  * This component serves as the central hub for content management, providing administrators
  * with an overview of site statistics, quick access to content management features,
@@ -36,9 +36,9 @@
  * - /api/adm_f7f8556683f1cdc65391d8d2_8e91/logout (session termination)
  * - /api/adm_f7f8556683f1cdc65391d8d2_8e91/csrf-token (CSRF protection)
  *
- * Created: August 2, 2025
- * Last Modified: August 2, 2025
- * Version: 1.0.0
+ * Created: 2025-06-08
+ * Last Modified: 2025-08-02
+ * Version: 1.0.9
  */
 
 'use client';
