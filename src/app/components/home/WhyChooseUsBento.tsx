@@ -35,101 +35,149 @@ const FALLBACK_ALT = 'Placeholder image';
 
 export default function WhyChooseUsBento({ items, courseImages }: WhyChooseUsBentoProps) {
   const bentoRef = useRef<HTMLDivElement>(null);
-  const historyRef = useRef<Set<string>[]>([]);
+  const itemHistoryRef = useRef<Set<string>[]>([]); // Track last 2 cycles of text points
+  const imageHistoryRef = useRef<Set<string>[]>([]); // Track last 2 cycles of images
   const [bentoSlots, setBentoSlots] = useState<BentoSlot[]>([]);
   const [isVisible, setIsVisible] = useState(false);
 
   const getSlots = useCallback(() => {
     const newSlots: BentoSlot[] = [];
-    const availableItemsForThisCycle = [...items];
+    let availableItems = [...items];
     let availableImages = [...courseImages];
-    const recentImages = new Set<string>(historyRef.current.flatMap(set => [...set]));
+    const recentItems = new Set<string>(itemHistoryRef.current.flatMap(set => [...set]));
+    const recentImages = new Set<string>(imageHistoryRef.current.flatMap(set => [...set]));
 
-    const pickAndReturnRemaining = <T,>(
+    const selectItems = <T,>(
       pool: T[],
-      filterFn: (item: T) => boolean
-    ): { selected: T | undefined, remaining: T[] } => {
-      const filteredPool = pool.filter(filterFn);
-      if (filteredPool.length === 0) return { selected: undefined, remaining: pool };
+      count: number,
+      getId: (item: T) => string,
+      recentIds: Set<string>
+    ): T[] => {
+      const selected: T[] = [];
+      let candidates = pool.filter(item => !recentIds.has(getId(item))); // Prefer non-recent items
+      if (candidates.length < count) candidates = pool; // Fallback to all items if needed
 
-      const randIdx = Math.floor(Math.random() * filteredPool.length);
-      const selected = filteredPool[randIdx];
-      const remaining = selected ? pool.filter((_, i) => i !== pool.indexOf(selected)) : pool;
-      return { selected, remaining };
+      for (let i = 0; i < count && candidates.length > 0; i++) {
+        const randomIndex = Math.floor(Math.random() * candidates.length);
+        const selectedItem = candidates[randomIndex];
+        if (selectedItem) { // Ensure selectedItem is defined
+          selected.push(selectedItem);
+          candidates = candidates.filter((_, idx) => idx !== randomIndex); // Remove selected item
+        }
+      }
+
+      return selected;
     };
 
     // Select 2 items for text slots
-    for (let i = 0; i < 2; i++) {
-      const { selected: selectedItem, remaining } = pickAndReturnRemaining(availableItemsForThisCycle, item => !!item.point);
-      availableItemsForThisCycle.length = 0;
-      availableItemsForThisCycle.push(...remaining);
-
-      if (!selectedItem) {
-        newSlots.push({
-          id: `slot-fallback-text-${Date.now()}-${i}`,
-          type: 'text',
-          item: { point: 'More insights!', image_url: FALLBACK_IMAGE, image_alt: FALLBACK_ALT },
-        });
-        continue;
-      }
-
-      // Assign a course image if none exists
-      if (!selectedItem.image_url && availableImages.length > 0) {
-        const { selected: imgSelected, remaining: imgRemaining } = pickAndReturnRemaining(availableImages, img => !recentImages.has(img.url));
-        if (imgSelected) {
-          selectedItem.image_url = imgSelected.url;
-          selectedItem.image_alt = imgSelected.alt;
-          availableImages = imgRemaining;
-        }
-      }
-
-      newSlots.push({
-        id: `slot-${selectedItem.id ?? 'unknown'}-text-${i}`,
-        type: 'text',
-        item: selectedItem,
-      });
-    }
+    const textItems = selectItems(
+      availableItems,
+      Math.min(2, availableItems.length),
+      item => item.point,
+      recentItems
+    );
+    availableItems = availableItems.filter(item => !textItems.includes(item));
 
     // Select 4 items for image slots
-    for (let i = 0; i < 4; i++) {
-      const { selected: selectedItem, remaining } = pickAndReturnRemaining(availableItemsForThisCycle, item => !!item.point);
-      availableItemsForThisCycle.length = 0;
-      availableItemsForThisCycle.push(...remaining);
+    const imageItems = selectItems(
+      availableItems,
+      Math.min(4, availableItems.length),
+      item => item.point,
+      recentItems
+    );
+    availableItems = availableItems.filter(item => !imageItems.includes(item));
 
-      if (!selectedItem) {
-        newSlots.push({
-          id: `slot-fallback-image-${Date.now()}-${i}`,
-          type: 'image',
-          item: { point: 'Explore more!', image_url: FALLBACK_IMAGE, image_alt: FALLBACK_ALT },
-        });
-        continue;
-      }
+    // Select 6 images for all slots
+    const allImages = selectItems(
+      availableImages,
+      Math.min(6, availableImages.length),
+      img => img.url,
+      recentImages
+    );
+    availableImages = availableImages.filter(img => !allImages.includes(img));
 
-      // Assign a course image if none exists
-      if (!selectedItem.image_url && availableImages.length > 0) {
-        const { selected: imgSelected, remaining: imgRemaining } = pickAndReturnRemaining(availableImages, img => !recentImages.has(img.url));
-        if (imgSelected) {
-          selectedItem.image_url = imgSelected.url;
-          selectedItem.image_alt = imgSelected.alt;
-          availableImages = imgRemaining;
-        }
-      }
-
+    // Create text slots
+    textItems.forEach((item, index) => {
+      const assignedImage = allImages[index] || { url: FALLBACK_IMAGE, alt: FALLBACK_ALT };
       newSlots.push({
-        id: `slot-${selectedItem.id ?? 'unknown'}-image-${i}`,
-        type: 'image',
-        item: selectedItem,
+        id: `slot-text-${item.id ?? 'unknown'}-${Date.now()}-${index}`,
+        type: 'text',
+        item: {
+          ...item,
+          image_url: assignedImage.url,
+          image_alt: assignedImage.alt,
+        },
+      });
+    });
+
+    // Fill remaining text slots with fallbacks if needed
+    while (newSlots.length < 2 && items.length > 0) {
+      const fallbackItem = items[Math.floor(Math.random() * items.length)] || {
+        point: 'More insights!',
+        image_url: FALLBACK_IMAGE,
+        image_alt: FALLBACK_ALT,
+      };
+      const assignedImage = allImages[newSlots.length] || { url: FALLBACK_IMAGE, alt: FALLBACK_ALT };
+      newSlots.push({
+        id: `slot-fallback-text-${Date.now()}-${newSlots.length}`,
+        type: 'text',
+        item: {
+          point: fallbackItem.point,
+          image_url: assignedImage.url,
+          image_alt: assignedImage.alt,
+        },
       });
     }
 
-    const shuffleArray = (array: BentoSlot[]) => {
-      for (let i = array.length - 1; i > 0; i--) {
+    // Create image slots
+    imageItems.forEach((item, index) => {
+      const assignedImage = allImages[index + 2] || { url: FALLBACK_IMAGE, alt: FALLBACK_ALT };
+      newSlots.push({
+        id: `slot-image-${item.id ?? 'unknown'}-${Date.now()}-${index}`,
+        type: 'image',
+        item: {
+          ...item,
+          image_url: assignedImage.url,
+          image_alt: assignedImage.alt,
+        },
+      });
+    });
+
+    // Fill remaining image slots with fallbacks if needed
+    while (newSlots.length < 6 && items.length > 0) {
+      const fallbackItem = items[Math.floor(Math.random() * items.length)] || {
+        point: 'Explore more!',
+        image_url: FALLBACK_IMAGE,
+        image_alt: FALLBACK_ALT,
+      };
+      const assignedImage = allImages[newSlots.length] || { url: FALLBACK_IMAGE, alt: FALLBACK_ALT };
+      newSlots.push({
+        id: `slot-fallback-image-${Date.now()}-${newSlots.length}`,
+        type: 'image',
+        item: {
+          point: fallbackItem.point,
+          image_url: assignedImage.url,
+          image_alt: assignedImage.alt,
+        },
+      });
+    }
+
+    // Update history
+    const currentItemIds = new Set(newSlots.map(slot => slot.item.point));
+    const currentImageIds = new Set(newSlots.map(slot => slot.item.image_url).filter(Boolean) as string[]);
+    itemHistoryRef.current = [...itemHistoryRef.current, currentItemIds].slice(-2); // Keep last 2 cycles
+    imageHistoryRef.current = [...imageHistoryRef.current, currentImageIds].slice(-2); // Keep last 2 cycles
+
+    // Shuffle slots to randomize positions
+    const shuffleArray = (array: BentoSlot[]): BentoSlot[] => {
+      const shuffled = [...array];
+      for (let i = shuffled.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        const temp = array[i]!;
-        array[i] = array[j]!;
-        array[j] = temp;
+        const temp = shuffled[i];
+        shuffled[i] = shuffled[j]!;
+        shuffled[j] = temp!;
       }
-      return array;
+      return shuffled;
     };
 
     return shuffleArray(newSlots);
@@ -169,9 +217,6 @@ export default function WhyChooseUsBento({ items, courseImages }: WhyChooseUsBen
       const regenerate = () => {
         const newSlots = getSlots();
         setBentoSlots(newSlots);
-
-        const displayedImages = new Set(newSlots.map(slot => slot.item.image_url).filter(Boolean) as string[]);
-        historyRef.current = [...historyRef.current, displayedImages].slice(-3);
       };
 
       regenerate();
@@ -213,6 +258,7 @@ export default function WhyChooseUsBento({ items, courseImages }: WhyChooseUsBen
                 fill
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 className="object-cover"
+                quality={75}
               />
               {slot.type === 'text' && (
                 <div className="absolute inset-0 bg-gray-900/70 flex items-center justify-center p-4">
