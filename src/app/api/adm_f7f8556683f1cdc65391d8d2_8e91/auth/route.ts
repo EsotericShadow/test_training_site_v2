@@ -15,16 +15,19 @@ import { NextRequest, NextResponse } from 'next/server';
 export const runtime = 'nodejs';
 import { logger, handleApiError } from '../../../../../lib/logger';
 import { validateSession, renewSession, SessionValidationResult } from '../../../../../lib/session-manager';
+import { extractUserIdFromToken } from '../../../../../lib/jwt-decode-implementation';
 import { AdminSession } from '../../../../../types/database';
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const ip = request.headers.get('x-forwarded-for') || 'unknown';
+    const userId = await extractUserIdFromToken(request);
     
     logger.info('Auth check attempt', { 
       ip, 
       route: request.nextUrl.pathname,
-      method: request.method
+      method: request.method,
+      userId: userId || 'anonymous'
     });
     
     const token = request.cookies.get('admin_token')?.value;
@@ -64,9 +67,10 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     }
 
     logger.info('Auth check successful', { 
-      ip, 
+      ip,
       userId: session.user_id,
-      username: session.username
+      username: session.username,
+      route: request.nextUrl.pathname
     });
 
     return response;

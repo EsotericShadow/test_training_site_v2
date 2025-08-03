@@ -90,7 +90,7 @@ export default function FeaturedCourses() {
   });
 
   useEffect(() => {
-    fetch('/api/adm_f7f8556683f1cdc65391d8d2_8e91/courses')
+    fetch('/api/courses')
       .then((res) => res.json())
       .then((data) => {
         if (data && Array.isArray(data.courses)) {

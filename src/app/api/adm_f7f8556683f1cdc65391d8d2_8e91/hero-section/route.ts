@@ -117,7 +117,7 @@ async function updateHeroSection(
 }
 
 // Export routes
-export const GET = getHeroSection;
+export const GET: AppRouteHandlerFn = withSecureAuth(getHeroSection);
 export const PUT: AppRouteHandlerFn = withSecureAuth(updateHeroSection);
 export const dynamic = 'force-dynamic'; // Ensure this route is always fresh
 export const revalidate = 0; // Disable revalidation for this route 

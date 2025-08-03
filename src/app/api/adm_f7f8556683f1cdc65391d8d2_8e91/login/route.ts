@@ -176,12 +176,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
     }
 
-    await resetFailedLoginAttempts(username);
+    await resetFailedLoginAttempts(username, ip, user.id);
     logger.info('Login successful', { ip, username, userId: user.id });
 
     try {
       await adminSessionsOps.deleteByUserId(user.id);
-      logger.info('Cleared existing sessions for user', { userId: user.id });
+      logger.info('Cleared existing sessions for user', { ip, userId: user.id, route: request.nextUrl.pathname });
     } catch (clearError: unknown) {
       const message = clearError instanceof Error ? clearError.message : String(clearError);
       logger.warn('Failed to clear existing sessions', { 
@@ -209,7 +209,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       );
       logger.info('Session created successfully', { 
         userId: user.id, 
-        tokenLength: token.length 
+        tokenLength: token.length,
+        ip,
+        route: request.nextUrl.pathname
       });
     } catch (sessionError: unknown) {
       const message = sessionError instanceof Error ? sessionError.message : String(sessionError);

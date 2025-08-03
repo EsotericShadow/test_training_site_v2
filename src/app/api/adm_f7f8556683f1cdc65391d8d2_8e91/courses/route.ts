@@ -125,7 +125,7 @@ async function createCourse(
 }
 
 // Export routes
-export const GET = getAllCourses;
+export const GET: AppRouteHandlerFn = withSecureAuth(getAllCourses);
 export const POST: AppRouteHandlerFn = withSecureAuth(createCourse);
 
 

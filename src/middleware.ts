@@ -1,21 +1,34 @@
 /*
- * Evergreen Web Solutions
- * Written and developed by Gabriel Lacroix
+ * Karma Industrial Safety Training Website
+ * Written and developed by Gabriel Lacroix for Evergreen Web Solutions
  *
- * File: middleware.ts
- * Description: To be filled in with the script's purpose
- * Dependencies: To be filled in with key dependencies or modules
- * Created: August 2, 2025
- * Last Modified: August 2, 2025
- * Version: 1.0.0
+ * File: src/middleware.ts
+ * Description: Next.js middleware for handling authentication, session validation, and security headers.
+ * Dependencies: Next.js, session-manager, logger, jwt-decode-implementation
+ * Created: 2025-06-06
+ * Last Modified: 2025-08-03
+ * Version: 1.0.1
  */
 import { NextRequest, NextResponse } from 'next/server';
 import { validateSession, SessionValidationResult } from '../lib/session-manager';
 import { logger } from '../lib/logger';
+import { extractUserIdFromToken } from '../lib/jwt-decode-implementation';
 
 
+/*
+ * Karma Industrial Safety Training Website
+ * Written and developed by Gabriel Lacroix for Evergreen Web Solutions
+ *
+ * File: src/middleware.ts
+ * Description: Next.js middleware for handling authentication, session validation, and security headers.
+ * Dependencies: Next.js, session-manager, logger, jwt-decode-implementation
+ * Created: 2025-06-06
+ * Last Modified: 2025-08-03
+ * Version: 1.0.1
+ */
 export async function middleware(request: NextRequest) {
   const url = request.nextUrl.clone();
+  const userId = await extractUserIdFromToken(request);
   
   // HTTPS Enforcement - Redirect HTTP to HTTPS in production
   if (process.env.NODE_ENV === 'production' &&
@@ -39,7 +52,8 @@ export async function middleware(request: NextRequest) {
     if (!token) {
       logger.warn('Middleware: No admin token found', { 
         path: url.pathname, 
-        ip 
+        ip, 
+        userId 
       });
       return NextResponse.redirect(new URL('/adm_f7f8556683f1cdc65391d8d2_8e91', request.url));
     }
@@ -50,10 +64,11 @@ export async function middleware(request: NextRequest) {
 
       if (!sessionResult.valid) {
         logger.warn('Middleware: Session validation failed', { 
-          path: url.pathname, 
-          ip, 
-          reason: sessionResult.reason 
-        });
+        path: url.pathname, 
+        ip, 
+        reason: sessionResult.reason, 
+        userId 
+      });
         
         const response = NextResponse.redirect(new URL('/adm_f7f8556683f1cdc65391d8d2_8e91', request.url));
         response.cookies.delete('admin_token');
@@ -64,7 +79,8 @@ export async function middleware(request: NextRequest) {
         path: url.pathname, 
         ip, 
         userId: sessionResult.session?.user_id || 'anonymous',
-        securityLevel: sessionResult.securityLevel 
+        securityLevel: sessionResult.securityLevel,
+        route: url.pathname
       });
 
       const response = NextResponse.next();
@@ -77,9 +93,9 @@ export async function middleware(request: NextRequest) {
       // Define Content Security Policy based on environment
       let csp = "default-src 'self'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://www.google-analytics.com;";
       if (process.env.NODE_ENV === 'production') {
-        csp += " script-src 'self' https://www.googletagmanager.com https://va.vercel-scripts.com; style-src 'self' 'sha256-zlqnbDt84zf1iSefLU/ImC54isoprH/MRiVZGskwexk=';";
+        csp += " script-src 'self' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline';";
       } else {
-        csp += " script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://va.vercel-scripts.com; style-src 'self' 'unsafe-inline';";
+        csp += " script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline';";
       }
 
       response.headers.set('Content-Security-Policy', csp);
@@ -95,7 +111,8 @@ export async function middleware(request: NextRequest) {
       logger.error('Middleware: Session validation error', { 
         path: url.pathname, 
         ip, 
-        error: error instanceof Error ? error.message : 'Unknown error' 
+        error: error instanceof Error ? error.message : 'Unknown error', 
+        userId 
       });
       
       const response = NextResponse.redirect(new URL('/adm_f7f8556683f1cdc65391d8d2_8e91', request.url));

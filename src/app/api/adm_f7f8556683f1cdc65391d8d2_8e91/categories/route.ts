@@ -13,11 +13,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 export const runtime = 'nodejs';
+import { withSecureAuth, AuthResult } from '../../../../../lib/secure-jwt';
 import { courseCategoriesOps } from '../../../../../lib/database';
 import type { CourseCategory } from '../../../../../types/database';
 
+type AppRouteHandlerFn<T extends { params?: Promise<Record<string, string | string[]>> }> = (
+  req: NextRequest,
+  context: T & { auth: AuthResult }
+) => Promise<NextResponse | Response>;
+
 // GET - Get all categories
-export async function GET(): Promise<NextResponse> {
+async function getCategories(
+  _request: NextRequest,
+  _context: { params: Promise<Record<string, never>>; auth: AuthResult }
+): Promise<NextResponse> {
   try {
     const categories = await courseCategoriesOps.getAll();
     return NextResponse.json({ categories });
@@ -31,7 +40,7 @@ export async function GET(): Promise<NextResponse> {
 }
 
 // POST - Create new category
-export async function POST(request: NextRequest): Promise<NextResponse> {
+async function createCategory(request: NextRequest): Promise<NextResponse> {
   try {
     const categoryData: Partial<CourseCategory> = await request.json();
 
@@ -58,6 +67,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     );
   }
 }
+
+// Export routes
+export const GET: AppRouteHandlerFn<{ params: Promise<Record<string, never>> }> = withSecureAuth(getCategories);
+export const POST: AppRouteHandlerFn<{ params: Promise<Record<string, never>> }> = withSecureAuth(createCategory);
 
 //   ___________       *Written and developed by Gabriel Lacroix*               __      ___.
 //   \_   _____/__  __ ___________  ___________   ____   ____   ____   /  \    /  \ ____\_ |__  

@@ -23,8 +23,7 @@ import { Suspense } from 'react';
 
 const DynamicSilk = nextDynamic(() => import('@/app/components/ui/Silk'));
 
-import { Analytics } from '@vercel/analytics/next';
-import { SpeedInsights } from '@vercel/speed-insights/next';
+
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -93,7 +92,7 @@ interface FooterData {
 async function getCourseCategories(): Promise<CourseCategories> {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://test-training-site-v2-xjey.vercel.app';
-    const response = await fetch(`${baseUrl}/api/adm_f7f8556683f1cdc65391d8d2_8e91/courses`);
+    const response = await fetch(`${baseUrl}/api/public-courses`);
     if (!response.ok) throw new Error('Failed to fetch courses');
     const { courses }: { courses: ApiCourse[] } = await response.json();
 
@@ -135,7 +134,7 @@ async function getCourseCategories(): Promise<CourseCategories> {
 async function getFooterData(): Promise<FooterData> {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://test-training-site-v2-xjey.vercel.app';
-    const response = await fetch(`${baseUrl}/api/adm_f7f8556683f1cdc65391d8d2_8e91/footer`);
+    const response = await fetch(`${baseUrl}/api/public-footer`);
     if (!response.ok) throw new Error('Failed to fetch footer data');
     const data = await response.json();
     return { footerContent: data.footerContent, popularCourses: data.popularCourses || [] };
@@ -207,13 +206,7 @@ export default async function RootLayout({
             <Footer footerContent={footerData.footerContent} popularCourses={footerData.popularCourses} />
           </div>
         </ThemeProvider>
-        {/* Keep Vercel Analytics too - they work great together */}
-        {process.env.NODE_ENV === 'production' && (
-          <>
-            <Analytics />
-            <SpeedInsights />
-          </>
-        )}
+        
       </body>
     </html>
   );

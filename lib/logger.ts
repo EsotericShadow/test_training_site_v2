@@ -205,7 +205,6 @@ export async function handleApiError(
       if (verificationResult.valid && verificationResult.decoded) {
         userId = verificationResult.decoded.userId || verificationResult.decoded.id || 'authenticated_user';
       }
-      userId = 'authenticated_user';
     }
   } catch (e) {
     // Ignore token extraction errors and use the default userId

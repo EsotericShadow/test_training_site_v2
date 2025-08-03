@@ -109,7 +109,7 @@ const nextConfig: NextConfig = {
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: blob: http://192.168.1.222:3000 https://*.vercel.app https://*.vercel-storage.com https://images.unsplash.com https://cdn.pixabay.com https://via.placeholder.com",
               "font-src 'self'",
-              "connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://vitals.vercel-insights.com",
+              "connect-src 'self' https://www.google-analytics.com https://analytics.google.com",
               "media-src 'self'",
               "object-src 'none'",
               "frame-ancestors 'none'",

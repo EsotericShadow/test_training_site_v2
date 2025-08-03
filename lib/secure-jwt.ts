@@ -16,7 +16,7 @@
  * - ../types/database: Contains TypeScript type definitions for `AdminSession`.
  *
  * Created: 2025-07-17
- * Last Modified: 2025-07-17
+ * Last Modified: 2025-08-03
  * Version: 1.0.1
  */
 
@@ -359,7 +359,7 @@ export async function authenticateSecure(request: NextRequest): Promise<AuthResu
       return { success: false, error: 'Session expired due to age', status: 401, needsRenewal: false, timeLeft: 0, securityLevel: 'enhanced' };
     }
 
-    logger.info('Authentication successful', { userId: tokenResult.decoded.userId });
+    logger.info('Authentication successful', { ip: ipAddress, userId: tokenResult.decoded.userId, route: request.nextUrl.pathname });
     return {
       success: true,
       user: tokenResult.decoded,

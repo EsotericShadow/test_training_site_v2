@@ -142,7 +142,7 @@ async function putHandler(
   }
 }
 
-export const GET: AppRouteHandlerFn = getHandler;
+export const GET: AppRouteHandlerFn = withSecureAuth(getHandler);
 export const PUT: AppRouteHandlerFn = withSecureAuth(putHandler);
 
 

@@ -219,7 +219,7 @@ async function updateFooterData(
 }
 
 // Export routes
-export const GET = getFooterData;
+export const GET: AppRouteHandlerFn = withSecureAuth(getFooterData);
 export const PUT: AppRouteHandlerFn = withSecureAuth(updateFooterData);
 
 

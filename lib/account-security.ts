@@ -161,7 +161,7 @@ export async function recordFailedLoginAttempt(username: string, ipAddress: stri
  * This should be called after a successful login to clear the slate for the user.
  * @param {string} username - The username for which to reset the failed attempts.
  */
-export async function resetFailedLoginAttempts(username: string): Promise<void> {
+export async function resetFailedLoginAttempts(username: string, ip?: string, userId?: number): Promise<void> {
   try {
     const result = await sql`
       DELETE FROM failed_login_attempts
@@ -169,7 +169,9 @@ export async function resetFailedLoginAttempts(username: string): Promise<void> 
     `;
     logger.info('Reset failed login attempts', { 
       username, 
-      count: result.rowCount || 0
+      count: result.rowCount || 0,
+      ip: ip || 'unknown',
+      userId: userId || 'anonymous'
     });
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : String(error);
